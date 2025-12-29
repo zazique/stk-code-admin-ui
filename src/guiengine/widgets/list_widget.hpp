@@ -293,11 +293,6 @@ namespace GUIEngine
 
         /** \brief implement common core parts of upPressed and downPressed */ 
         EventPropagation moveToNextItem(const bool down);
-
-        /* Apply page up, page down, list end or list start effects */
-        void pageMove(bool up);
-        void listStart();
-        void listEnd();
         
         void setColumnListener(IListWidgetHeaderListener* listener)
         {

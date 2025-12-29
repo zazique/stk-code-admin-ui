@@ -24,17 +24,6 @@
 #include "network/stk_host.hpp"
 #include "network/stk_peer.hpp"
 
-namespace ProtocolUtils
-{
-    // ----------------------------------------------------------------------------
-    /** Returns a network string with the given type.
-    *  \capacity Default preallocated size for the message. */
-    NetworkString* getNetworkString(ProtocolType type, size_t capacity)
-    {
-        return new NetworkString(type, (int)capacity);
-    } // getNetworkString
-}
-
 /** \brief Constructor
  *  Sets the basic protocol parameters, as the callback object and the
  *  protocol type.
@@ -56,6 +45,15 @@ Protocol::Protocol(ProtocolType type)
 Protocol::~Protocol()
 {
 }   // ~Protocol
+
+// ----------------------------------------------------------------------------
+/** Returns a network string with the given type.
+ *  \capacity Default preallocated size for the message.
+ */
+NetworkString* Protocol::getNetworkString(size_t capacity) const
+{
+    return new NetworkString(m_type, (int)capacity);
+}   // getNetworkString
 
 // ----------------------------------------------------------------------------
 /** Checks if the message has at least the specified size, and if not prints

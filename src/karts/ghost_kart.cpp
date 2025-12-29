@@ -428,11 +428,7 @@ float GhostKart::getTimeForEggs(int egg_number)
     // This determines in which direction we will search a matching frame
     bool search_forward = (current_eggs < egg_number);
 
-    // These variables are used to compute the time. We ensure that the
-    // lower frame index cannot be negative. It's not as if we expect
-    // any eggs to be caught right as the kart starts anyways.
-    if (current_index == 0)
-        current_index = 1;
+    // This used to compute the time
     int lower_frame_index = current_index-1;
     unsigned int upper_frame_index = current_index;
 
@@ -443,7 +439,7 @@ float GhostKart::getTimeForEggs(int egg_number)
         // If we have reached the end of the replay file without finding the
         // searched number of eggs, break
         if ((upper_frame_index >= m_all_bonus_info.size() && search_forward) ||
-            (lower_frame_index < 0))
+            (lower_frame_index < 0 && !search_forward))
             break;
 
         // The target egg number was reached between those two frames

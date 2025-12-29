@@ -331,11 +331,11 @@ void KartSelectionScreen::beforeAddingWidget()
     //I18N: kart group name
     FOR_GETTEXT_ONLY( _("Add-Ons") )
     //I18N: kart class name
-    FOR_GETTEXT_ONLY( _C("Kart class", "Light") )
+    FOR_GETTEXT_ONLY( _("Light") )
     //I18N: kart class name
-    FOR_GETTEXT_ONLY( _C("Kart class", "Medium") )
+    FOR_GETTEXT_ONLY( _("Medium") )
     //I18N: kart class name
-    FOR_GETTEXT_ONLY( _C("Kart class", "Heavy") )
+    FOR_GETTEXT_ONLY( _("Heavy") )
 
 
     // Add other groups after
@@ -362,9 +362,9 @@ void KartSelectionScreen::beforeAddingWidget()
         {
             class_str[0] += 'A' - 'a';
         }
-        kart_class->addLabel(_C("Kart class", class_str.c_str()));
+        kart_class->addLabel(_(class_str.c_str()));
     }
-    kart_class->addLabel(_C("Kart class", "All"));
+    kart_class->addLabel(_("All"));
 }   // beforeAddingWidget
 
 // ----------------------------------------------------------------------------
@@ -1107,7 +1107,7 @@ void KartSelectionScreen::addMultiplayerMessage()
         m_multiplayer_message = new BubbleWidget();
         m_multiplayer_message->m_properties[PROP_TEXT_ALIGN] = "center";
         m_multiplayer_message->setText(_("Everyone:\n"
-            "Press the 'Fire' or 'Select' button to join the game"));
+            "Press the 'Select' button to join the game"));
         m_multiplayer_message->m_x = message_x;
         m_multiplayer_message->m_y = (int) (fullarea->m_y + fullarea->m_h * 0.3f);
         m_multiplayer_message->m_w = (int) (splitWidth * 0.6f);

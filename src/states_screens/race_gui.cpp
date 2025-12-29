@@ -116,20 +116,24 @@ void RaceGUI::initSize()
     // Determine maximum length of the rank/lap text, in order to
     // align those texts properly on the right side of the viewport.
     gui::ScalableFont* font = GUIEngine::getHighresDigitFont();
-    core::dimension2du area = font->getDimension(L"99:99.999");
+    core::dimension2du area = font->getDimension(L"99:99:99.999");
     m_timer_width = area.Width;
     m_font_height = area.Height;
 
-    area = font->getDimension(L"99.999");
+    area = font->getDimension(L"99:99:99.999");
     m_small_precise_timer_width = area.Width;
 
-    area = font->getDimension(L"99:99.999");
+    area = font->getDimension(L"99:99:99.999");
     m_big_precise_timer_width = area.Width;
 
     area = font->getDimension(L"-");
     m_negative_timer_additional_width = area.Width;
 
-    if (RaceManager::get()->getMinorMode()==RaceManager::MINOR_MODE_FOLLOW_LEADER ||
+    if (RaceManager::get()->getNumLaps() > 999)
+        m_lap_width = font->getDimension(L"9999/9999").Width;
+    else if (RaceManager::get()->getNumLaps() > 99)
+        m_lap_width = font->getDimension(L"999/999").Width;
+    else if (RaceManager::get()->getMinorMode()==RaceManager::MINOR_MODE_FOLLOW_LEADER ||
         RaceManager::get()->isBattleMode()     ||
         RaceManager::get()->getNumLaps() > 9)
         m_lap_width = font->getDimension(L"99/99").Width;
@@ -949,9 +953,9 @@ void RaceGUI::drawRank(const AbstractKart *kart,
     }
 
     float scale = 1.0f;
-    int shown_number = number;
-    const float DURATION = 0.4f;
-    const float MIN_SHRINK = 0.3f;
+    float shown_number = number;
+    const float DURATION = 0.0f;
+    const float MIN_SHRINK = 0.0f;
     if (m_animation_states[id] == AS_SMALLER)
     {
         scale = 1.0f - m_animation_duration[id]/ DURATION;
@@ -981,12 +985,16 @@ void RaceGUI::drawRank(const AbstractKart *kart,
         m_last_digit[id] = number;
     }
 
+    scale = 1.0f;
+    const float speed =  kart->getSpeed();
+    shown_number = roundf((speed * 3.6f) * 10.0f) / 10.0f;
+
     gui::ScalableFont* font = GUIEngine::getHighresDigitFont();
     
     int font_height = font->getDimension(L"X").Height;
-    font->setScale((float)meter_height / font_height * 0.4f * scale);
+    font->setScale((float)meter_height / font_height * 0.2f * scale);
     std::ostringstream oss;
-    oss << shown_number; // the current font has no . :(   << ".";
+    oss << std::fixed << std::setprecision(1) << shown_number; // the current font has no . :(   << ".";
 
     core::recti pos;
     pos.LowerRightCorner = core::vector2di(int(offset.X + 0.64f*meter_width),

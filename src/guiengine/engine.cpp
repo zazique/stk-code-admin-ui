@@ -674,6 +674,9 @@ namespace GUIEngine
 #include "font/font_settings.hpp"
 #include "font/regular_face.hpp"
 #include "input/input_manager.hpp"
+#include "karts/controller/local_player_controller.hpp"
+#include "input/input_device.hpp"
+#include "input/device_manager.hpp"
 #include "io/file_manager.hpp"
 #ifndef SERVER_ONLY
 #include "graphics/2dutils.hpp"
@@ -697,6 +700,9 @@ namespace GUIEngine
 #include "utils/string_utils.hpp"
 #include "utils/stk_process.hpp"
 #include "utils/translation.hpp"
+#include "karts/abstract_kart.hpp"
+#include "karts/controller/kart_control.hpp"
+#include "states_screens/state_manager.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -738,6 +744,14 @@ namespace GUIEngine
         int title_font_height;
         int small_title_font_height;
         int tiny_title_font_height;
+        video::ITexture* t_key_up      = nullptr;
+		video::ITexture* t_key_down    = nullptr;
+		video::ITexture* t_key_left    = nullptr;
+		video::ITexture* t_key_right   = nullptr;
+		video::ITexture* t_key_drift   = nullptr;
+		video::ITexture* t_key_nitro   = nullptr;
+		video::ITexture* t_key_back    = nullptr;
+		video::ITexture* t_key_powerup = nullptr;
 #ifdef ANDROID
         std::mutex m_gui_functions_mutex;
         std::vector<std::function<void()> > m_gui_functions;
@@ -1199,6 +1213,16 @@ namespace GUIEngine
             renderLoading(true, true);
             g_device->getVideoDriver()->endScene();
         }
+        // В STK 1.5 используем перегруженный метод getTexture, 
+        // который сам знает, где лежат GUI_ICON
+        t_key_up      = irr_driver->getTexture(FileManager::GUI_ICON, "key_up.png");
+        t_key_down    = irr_driver->getTexture(FileManager::GUI_ICON, "key_down.png");
+        t_key_left    = irr_driver->getTexture(FileManager::GUI_ICON, "key_left.png");
+        t_key_right   = irr_driver->getTexture(FileManager::GUI_ICON, "key_right.png");
+        t_key_drift   = irr_driver->getTexture(FileManager::GUI_ICON, "key_drift.png");
+        t_key_nitro   = irr_driver->getTexture(FileManager::GUI_ICON, "key_nitro.png");
+        t_key_back    = irr_driver->getTexture(FileManager::GUI_ICON, "key_back.png");
+        t_key_powerup = irr_driver->getTexture(FileManager::GUI_ICON, "key_powerup.png");
     }   // init
 
     // -----------------------------------------------------------------------
@@ -1422,7 +1446,74 @@ namespace GUIEngine
 
         // draw FPS if enabled
         if ( UserConfigParams::m_display_fps ) irr_driver->displayFPS();
+		if (UserConfigParams::m_display_inputs)
+        {
+            // --- ГЕОМЕТРИЯ ---
+            int s = UserConfigParams::m_input_overlay_size;
+            int offset = UserConfigParams::m_input_overlay_offset;
+            int offset_y = UserConfigParams::m_input_overlay_offset_y;
+            int gap = 6;          
+            int cols = 6;         
+            int total_w = (s * cols) + (gap * (cols - 1));
+            
+            int x_base = ((screen_size.Width - total_w) / 2) + offset;
+            int y_base = ((screen_size.Height - (s * 2) - gap) / 2) + offset_y; 
 
+            const KartControl* ctrl = nullptr;
+            if (World::getWorld())
+            {
+                // Ищем карту, которой управляет реальный человек (локальный игрок)
+                AbstractKart* k = World::getWorld()->getLocalPlayerKart(0); 
+                
+                // Если вдруг локальный игрок не найден (например, в режиме реплея), 
+                // берем первую попавшуюся карту, чтобы не было пустоты
+                if (!k && World::getWorld()->getNumKarts() > 0)
+                    k = World::getWorld()->getKart(0);
+
+                if (k) ctrl = &k->getControls();
+            }
+
+            auto drawInput = [&](video::ITexture* tex, int col, int row, int action_type) {
+                if (!tex) return;
+
+                bool pressed = false;
+                if (ctrl) {
+                    if      (action_type == 1) pressed = ctrl->getAccel() > 0.1f;
+                    else if (action_type == 2) pressed = ctrl->getBrake() > 0.1f;
+                    else if (action_type == 3) pressed = ctrl->getNitro();
+                    else if (action_type == 4) pressed = (ctrl->getSkidControl() != KartControl::SC_NONE);
+                    else if (action_type == 5) pressed = ctrl->getFire();
+                    else if (action_type == 6) pressed = ctrl->getSteer() < -0.1f;
+                    else if (action_type == 7) pressed = ctrl->getSteer() > 0.1f;
+                    else if (action_type == 8) pressed = ctrl->getLookBack();
+                }
+
+                core::rect<s32> dest(x_base + col * (s + gap), y_base + row * (s + gap),  
+                                     x_base + col * (s + gap) + s, y_base + row * (s + gap) + s);
+                
+                // Делаем цвета ярче
+                // 255 - полностью видно при нажатии
+                // 130 - достаточно заметно в покое (было 60)
+                video::SColor color(pressed ? 255 : 130, 255, 255, 255);
+
+                core::rect<s32> source(core::position2d<s32>(0,0), tex->getSize());
+                ::draw2DImage(tex, dest, source, nullptr, color, true);
+            };
+
+            // Ряд 1
+            drawInput(t_key_powerup, 1, 0, 5);  
+            drawInput(t_key_back,    2, 0, 8); 
+            drawInput(t_key_up,      4, 0, 1); 
+
+            // Ряд 2
+            drawInput(t_key_drift,   1, 1, 4); 
+            drawInput(t_key_nitro,   2, 1, 3);    
+            drawInput(t_key_left,    3, 1, 6);  
+            drawInput(t_key_down,    4, 1, 2);  
+            drawInput(t_key_right,   5, 1, 7);  
+        }
+        
+        
         // draw speedrun timer if enabled
         if ( UserConfigParams::m_speedrun_mode ) irr_driver->displayStoryModeTimer();
         // Update the story mode and speedrun timer (even if not enabled)

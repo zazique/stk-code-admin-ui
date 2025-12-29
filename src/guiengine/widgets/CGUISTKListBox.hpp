@@ -167,9 +167,6 @@ namespace irr
             //! set global itemHeight
             virtual void setItemHeight( s32 height );
 
-            /* return item height */
-            int getItemHeight() { return (int) m_item_height; }
-
             //! Sets whether to draw the background
             virtual void setDrawBackground(bool draw);
 
@@ -194,7 +191,7 @@ namespace irr
 
             core::array< ListItem > Items;
             s32 Selected;
-            s32 m_item_height;
+            s32 ItemHeight;
             s32 ItemHeightOverride;
             s32 TotalItemHeight;
             s32 ItemsIconWidth;

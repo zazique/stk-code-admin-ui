@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stkgui>
+    <icon-button id="back" x="1%" y="0" height="9%" icon="gui/icons/back.png"/>
+
+    <div x="1%" y="1%" width="98%" height="98%" layout="vertical-row" >
+        <header width="80%" height="8%" align="center" text="Admin Control Panel" text_align="center"/>
+        <spacer width="100%" height="1%"/>
+
+        <div width="100%" height="91%" layout="horizontal-row" >
+
+            <vertical-tabs id="admin_choice" height="100%" width="20%">
+                <icon-button id="tab_basic" width="128" height="128" icon="gui/icons/options_general.png" text="Basic"/>
+                <icon-button id="tab_misc" width="128" height="128" icon="gui/icons/options_general.png" text="Misc"/>
+                <icon-button id="tab_fun" width="128" height="128" icon="gui/icons/options_general.png" text="Fun"/>
+            </vertical-tabs>
+
+            <spacer width="2%" height="100%"/>
+
+            <box width="78%" height="100%" layout="vertical-row">
+                <spacer width="5" height="2%"/>
+
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="show_inputs"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Show Input Overlay" word_wrap="true"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
+
+                <div width="100%" height="fit" layout="horizontal-row">
+                    <gauge id="input_overlay_size" width="10f" align="center" min_value="1" max_value="100" />
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" x="0" y="0" text="Input Overlay Size"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
+
+                <div width="100%" height="fit" layout="horizontal-row">
+                    <gauge id="input_overlay_pos" width="10f" align="center" min_value="-1000" max_value="1000" />
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" x="0" y="0" text="Input overlay X-offset"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
+                
+                <div width="100%" height="fit" layout="horizontal-row">
+                    <gauge id="input_overlay_pos_y" width="10f" align="center" min_value="-1000" max_value="1000" />
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" x="0" y="0" text="Input overlay Y-offset"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
+                
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="debug_mode"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Enable debug mode" word_wrap="true"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
+                
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="show_check"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Show Checklines" word_wrap="true"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
+                
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="fast_start"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Disable fast start in debug mode" word_wrap="true"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
+            </box>
+        </div>
+    </div>
+</stkgui>

@@ -62,7 +62,7 @@ GameProtocol::GameProtocol()
 {
     m_network_item_manager = static_cast<NetworkItemManager*>
         (Track::getCurrentTrack()->getItemManager());
-    m_data_to_send = ProtocolUtils::getNetworkString(m_type);
+    m_data_to_send = getNetworkString();
 }   // GameProtocol
 
 //-----------------------------------------------------------------------------
@@ -257,7 +257,7 @@ void GameProtocol::handleControllerAction(Event *event)
 void GameProtocol::sendItemEventConfirmation(int ticks)
 {
     assert(NetworkConfig::get()->isClient());
-    NetworkString *ns = ProtocolUtils::getNetworkString(m_type, 5);
+    NetworkString *ns = getNetworkString(5);
     ns->addUInt8(GP_ITEM_CONFIRMATION).addUInt32(ticks);
     // This message can be sent unreliable, it's not critical if it doesn't
     // get delivered, a future update will come through

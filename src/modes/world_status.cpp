@@ -234,7 +234,7 @@ void WorldStatus::updateTime(int ticks)
         case TRACK_INTRO_PHASE:
             m_auxiliary_ticks++;
 
-            if (UserConfigParams::m_artist_debug_mode &&
+            if (UserConfigParams::m_artist_debug_mode && !UserConfigParams::m_fast_start &&
                 !NetworkConfig::get()->isNetworking() &&
                 RaceManager::get()->getNumberOfKarts() -
                 RaceManager::get()->getNumSpareTireKarts() == 1 &&
@@ -334,6 +334,7 @@ void WorldStatus::updateTime(int ticks)
             // In artist debug mode, when without opponents, skip the
             // ready/set/go counter faster
             if (UserConfigParams::m_artist_debug_mode     &&
+				!UserConfigParams::m_fast_start 			  &&
                 !NetworkConfig::get()->isNetworking()     &&
                 RaceManager::get()->getNumberOfKarts() -
                 RaceManager::get()->getNumSpareTireKarts() == 1 &&
@@ -366,6 +367,7 @@ void WorldStatus::updateTime(int ticks)
                 // skip the ready/set/go counter faster
                 m_start_music_ticks =
                     UserConfigParams::m_artist_debug_mode &&
+                    !UserConfigParams::m_fast_start            &&
                     !NetworkConfig::get()->isNetworking()     &&
                     RaceManager::get()->getNumberOfKarts() -
                     RaceManager::get()->getNumSpareTireKarts() == 1 &&
@@ -379,6 +381,7 @@ void WorldStatus::updateTime(int ticks)
             // In artist debug mode, when without opponents, 
             // skip the ready/set/go counter faster
             if (UserConfigParams::m_artist_debug_mode &&
+				!UserConfigParams::m_fast_start        &&
                 !NetworkConfig::get()->isNetworking() &&
                 RaceManager::get()->getNumberOfKarts() -
                 RaceManager::get()->getNumSpareTireKarts() == 1 &&

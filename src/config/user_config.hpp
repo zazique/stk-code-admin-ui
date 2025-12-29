@@ -651,6 +651,19 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_display_fps
             PARAM_DEFAULT(  BoolUserConfigParam(false, "show_fps",
                             &m_video_group, "Display frame per seconds") );
+    PARAM_PREFIX BoolUserConfigParam        m_display_inputs
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "show_inputs",
+                            &m_video_group, "Display input overlay (keyboard visualizer)") );
+    PARAM_PREFIX IntUserConfigParam         m_input_overlay_size
+            PARAM_DEFAULT(  IntUserConfigParam(44, "input_overlay_size",
+                            &m_video_group, "Size of the input overlay icons") );
+
+    PARAM_PREFIX IntUserConfigParam         m_input_overlay_offset
+            PARAM_DEFAULT(  IntUserConfigParam(0, "input_overlay_offset",
+                            &m_video_group, "X-offset for the input overlay") );
+    PARAM_PREFIX IntUserConfigParam         m_input_overlay_offset_y
+            PARAM_DEFAULT(  IntUserConfigParam(0, "input_overlay_offset_y",
+                            &m_video_group, "Y-offset for the input overlay") );
     PARAM_PREFIX BoolUserConfigParam        m_display_story_mode_timer
             PARAM_DEFAULT(  BoolUserConfigParam(true, "show_story_mode_timer",
                             &m_video_group, "Display the story mode timer") );
@@ -770,6 +783,10 @@ namespace UserConfigParams
     PARAM_PREFIX IntUserConfigParam         m_record_fps
         PARAM_DEFAULT(IntUserConfigParam(30, "record_fps",
         &m_recording_group, "Specify the fps of recording video"));
+        
+    PARAM_PREFIX BoolUserConfigParam m_fast_start
+		PARAM_DEFAULT( BoolUserConfigParam(false, "fast_start", 
+                   &m_video_group, "True if fast start in debug mode should be removed"));
 
     // ---- Debug - not saved to config file
     /** If high scores will not be saved. For repeated testing on tracks. */
@@ -798,7 +815,9 @@ namespace UserConfigParams
     PARAM_PREFIX int m_track_debug PARAM_DEFAULT( false );
 
     /** True if check structures should be debugged. */
-    PARAM_PREFIX bool m_check_debug PARAM_DEFAULT( false );
+    PARAM_PREFIX BoolUserConfigParam m_check_debug
+    PARAM_DEFAULT( BoolUserConfigParam(false, "check_debug", 
+                   &m_video_group, "True if checkline structures should be debugged") );
 
     /** True if physics debugging should be enabled. */
     PARAM_PREFIX bool m_physics_debug PARAM_DEFAULT( false );

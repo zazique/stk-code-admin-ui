@@ -275,7 +275,6 @@ void EventHandler::processGUIAction(const PlayerAction action,
     }
 
     const bool pressedDown = value > Input::MAX_VALUE*2/3;
-    bool page_up = false;
 
     if (!pressedDown) return;
 
@@ -298,6 +297,8 @@ void EventHandler::processGUIAction(const PlayerAction action,
         case PA_ACCEL:
         case PA_MENU_UP:
         {
+            if (type == Input::IT_STICKBUTTON && !pressedDown)
+                break;
             sendNavigationEvent(NAV_UP, playerID);
             break;
         }
@@ -305,13 +306,15 @@ void EventHandler::processGUIAction(const PlayerAction action,
         case PA_BRAKE:
         case PA_MENU_DOWN:
         {
+            if (type == Input::IT_STICKBUTTON && !pressedDown)
+                break;
             sendNavigationEvent(NAV_DOWN, playerID);
             break;
         }
 
         case PA_RESCUE:
         case PA_MENU_CANCEL:
-            if (!isWithinATextBox())
+            if (pressedDown&& !isWithinATextBox())
             {
                 GUIEngine::getStateManager()->escapePressed();
             }
@@ -319,59 +322,19 @@ void EventHandler::processGUIAction(const PlayerAction action,
 
         case PA_FIRE:
         case PA_MENU_SELECT:
-        {
-            Widget* w = GUIEngine::getFocusForPlayer(playerID);
-            if (w == NULL) break;
-
-            // FIXME : consider returned value?
-            onWidgetActivated(w, playerID, type);
-            break;
-        }
-
-        case PA_MENU_PAGE_UP:
-            page_up = true;
-            // Fall-through
-        case PA_MENU_PAGE_DOWN:
-        {
-            Widget* w = GUIEngine::getFocusForPlayer(playerID);
-            if (w != nullptr && w->getType() == WTYPE_LIST)
+            if (pressedDown)
             {
-                ListWidget* list = dynamic_cast<ListWidget*>(w);
-                list->pageMove(page_up);
-            }
-            else
-            {
-                screen->handlePaging(page_up);
+                Widget* w = GUIEngine::getFocusForPlayer(playerID);
+                if (w == NULL) break;
+
+                // FIXME : consider returned value?
+                onWidgetActivated(w, playerID, type);
             }
             break;
-        }
-
-        case PA_MENU_END:
-        {
-            Widget* w = GUIEngine::getFocusForPlayer(playerID);
-            if (w != nullptr && w->getType() == WTYPE_LIST)
-            {
-                ListWidget* list = dynamic_cast<ListWidget*>(w);
-                list->listEnd();
-            }
-            break;
-        }
-
-        case PA_MENU_START:
-        {
-            Widget* w = GUIEngine::getFocusForPlayer(playerID);
-            if (w != nullptr && w->getType() == WTYPE_LIST)
-            {
-                ListWidget* list = dynamic_cast<ListWidget*>(w);
-                list->listStart();
-            }
-            break;
-        }
-
         default:
             return;
     }
-} // processGUIAction
+}
 
 // -----------------------------------------------------------------------------
 
@@ -380,8 +343,9 @@ static EventHandler* event_handler_singleton = NULL;
 EventHandler* EventHandler::get()
 {
     if (event_handler_singleton == NULL)
+    {
         event_handler_singleton = new EventHandler();
-
+    }
     return event_handler_singleton;
 }
 
@@ -406,16 +370,19 @@ void EventHandler::sendNavigationEvent(const NavigationDirection nav, const int 
     
     if (w != NULL)
     {
-        // Screen keyboard and modal dialogs override focus.
-        if (ScreenKeyboard::isActive() &&
-            !ScreenKeyboard::getCurrent()->isMyIrrChild(w->getIrrlichtElement()))
+        if (ScreenKeyboard::isActive())
         {
-            w = NULL;
+            if (!ScreenKeyboard::getCurrent()->isMyIrrChild(w->getIrrlichtElement()))
+            {
+                w = NULL;
+            }
         }
-        else if (ModalDialog::isADialogActive() &&
-            !ModalDialog::getCurrent()->isMyIrrChild(w->getIrrlichtElement()))
+        else if (ModalDialog::isADialogActive())
         {
-            w = NULL;
+            if (!ModalDialog::getCurrent()->isMyIrrChild(w->getIrrlichtElement()))
+            {
+                w = NULL;
+            }
         }
     }
     
@@ -424,11 +391,17 @@ void EventHandler::sendNavigationEvent(const NavigationDirection nav, const int 
         Widget* defaultWidget = NULL;
         
         if (ScreenKeyboard::isActive())
+        {
             defaultWidget = ScreenKeyboard::getCurrent()->getFirstWidget();
+        }
         else if (ModalDialog::isADialogActive())
+        {
             defaultWidget = ModalDialog::getCurrent()->getFirstWidget();
+        }
         else if (GUIEngine::getCurrentScreen() != NULL)
+        {
             defaultWidget = GUIEngine::getCurrentScreen()->getFirstWidget();
+        }
 
         if (defaultWidget != NULL)
         {
@@ -728,16 +701,20 @@ int EventHandler::findIDClosestWidget(const NavigationDirection nav, const int p
 
 void EventHandler::sendEventToUser(GUIEngine::Widget* widget, std::string& name, const int playerID)
 {
-    if (ScreenKeyboard::isActive() &&
-        ScreenKeyboard::getCurrent()->processEvent(widget->m_properties[PROP_ID]) != EVENT_LET)
+    if (ScreenKeyboard::isActive())
     {
-        return;
+        if (ScreenKeyboard::getCurrent()->processEvent(widget->m_properties[PROP_ID]) != EVENT_LET)
+        {
+            return;
+        }
     }
     
-    if (ModalDialog::isADialogActive() &&
-        ModalDialog::getCurrent()->processEvent(widget->m_properties[PROP_ID]) != EVENT_LET)
+    if (ModalDialog::isADialogActive())
     {
-        return;
+        if (ModalDialog::getCurrent()->processEvent(widget->m_properties[PROP_ID]) != EVENT_LET)
+        {
+            return;
+        }
     }
 
     if (getCurrentScreen() != NULL)

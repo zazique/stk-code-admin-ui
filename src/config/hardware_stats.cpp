@@ -42,7 +42,7 @@
 #      include <sys/utsname.h>
 #  endif
 #endif
-#if defined(__APPLE__) || (defined(BSD) && !defined(__gnu_hurd__))
+#if defined(__APPLE__) || defined(BSD)
 #  include <sys/sysctl.h>
 #endif
 

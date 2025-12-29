@@ -56,6 +56,7 @@
 #include "states_screens/options/options_screen_general.hpp"
 #include "states_screens/state_manager.hpp"
 #include "states_screens/options/user_screen.hpp"
+#include "states_screens/admin_screen.hpp"
 #if DEBUG_MENU_ITEM
 #include "states_screens/feature_unlocked.hpp"
 #include "states_screens/grand_prix_lose.hpp"
@@ -651,6 +652,10 @@ void MainMenuScreen::eventCallback(Widget* widget, const std::string& name,
             }
         }
         AddonsScreen::getInstance()->push();
+    }
+    else if (selection == "admin")
+    {
+        AdminScreen::getInstance()->push();
     }
     else if (selection == "gpEditor")
     {

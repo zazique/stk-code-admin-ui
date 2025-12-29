@@ -16,7 +16,6 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef SERVER_ONLY // No GUI files in server builds
 #ifndef HEADER_RACE_RESULT_GUI_HPP
 #define HEADER_RACE_RESULT_GUI_HPP
 
@@ -287,4 +286,3 @@ public:
 };   // RaceResultGUI
 
 #endif
-#endif // ifndef SERVER_ONLY

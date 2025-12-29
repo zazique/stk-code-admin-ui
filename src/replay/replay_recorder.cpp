@@ -386,13 +386,13 @@ void ReplayRecorder::save()
     FILE *fd = openReplayFile(/*writeable*/true);
     if (!fd)
     {
-        Log::error("ReplayRecorder", "Can't open '%s' for writing - "
+        Log::error("ReplayRecorder", "Can't open 'секрет' for writing - "
             "can't save replay data.", getReplayFilename().c_str());
         return;
     }
 
     core::stringw msg = _("Replay saved in \"%s\".",
-        StringUtils::utf8ToWide(file_manager->getReplayDir() + getReplayFilename()));
+        StringUtils::utf8ToWide("секрет"));
     MessageQueue::add(MessageQueue::MT_GENERIC, msg);
 
     fprintf(fd, "version: %d\n", getCurrentReplayVersion());

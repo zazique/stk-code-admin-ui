@@ -796,7 +796,6 @@ void World::terminateRace()
 
     if (!GUIEngine::isNoGraphics())
     {
-#ifndef SERVER_ONLY
         RaceResultGUI* results = RaceResultGUI::getInstance();
         m_race_gui = results;
         if (best_highscore_rank > 0)
@@ -804,7 +803,6 @@ void World::terminateRace()
         else
             results->clearHighscores();
         results->push();
-#endif
     }
 
     WorldStatus::terminateRace();

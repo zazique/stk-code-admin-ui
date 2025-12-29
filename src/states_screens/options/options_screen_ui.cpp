@@ -15,8 +15,6 @@
 //  along with this program; if not, write to the Free Software
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-#ifndef SERVER_ONLY // No GUI files in server builds
-
 // Manages includes common to all options screens
 #include "states_screens/options/options_common.hpp"
 
@@ -88,15 +86,15 @@ void OptionsScreenUI::loadedFromFile()
     font_size->clearLabels();
     font_size->addLabel(L"Extremely small");
     //I18N: In the UI options, Very small font size
-    font_size->addLabel(_C("Font size", "Very small"));
+    font_size->addLabel(_("Very small"));
     //I18N: In the UI options, Small font size
-    font_size->addLabel(_C("Font size", "Small"));
+    font_size->addLabel(_("Small"));
     //I18N: In the UI options, Medium font size
-    font_size->addLabel(_C("Font size", "Medium"));
+    font_size->addLabel(_("Medium"));
     //I18N: In the UI options, Large font size
-    font_size->addLabel(_C("Font size", "Large"));
+    font_size->addLabel(_("Large"));
     //I18N: In the UI options, Very large font size
-    font_size->addLabel(_C("Font size", "Very large"));
+    font_size->addLabel(_("Very large"));
     font_size->addLabel(L"Extremely large");
 
     if (UserConfigParams::m_artist_debug_mode)
@@ -305,10 +303,6 @@ void OptionsScreenUI::loadSkins(const std::set<std::string>& files, bool addon)
                 return;
             }
 
-            // Localize the skin names
-            skin.m_base_theme_name = _(skin.m_base_theme_name.c_str());
-            skin.m_variant_name    = _(skin.m_variant_name.c_str());
-
             skin.m_folder_name = folder_name;
             m_skins.push_back(skin);
 
@@ -404,6 +398,7 @@ std::string OptionsScreenUI::getCurrentSpinnerSkin()
 // -----------------------------------------------------------------------------
 void OptionsScreenUI::eventCallback(Widget* widget, const std::string& name, const int playerID)
 {
+#ifndef SERVER_ONLY
     if (name == "options_choice")
     {
         std::string selection = ((RibbonWidget*)widget)->getSelectionIDString(PLAYER_ID_GAME_MASTER);
@@ -464,6 +459,7 @@ void OptionsScreenUI::eventCallback(Widget* widget, const std::string& name, con
         assert( fps != NULL );
         UserConfigParams::m_display_fps = fps->getState();
     }
+    
     else if (name == "story-mode-timer")
     {
         CheckBoxWidget* story_timer = getWidget<CheckBoxWidget>("story-mode-timer");
@@ -504,6 +500,7 @@ void OptionsScreenUI::eventCallback(Widget* widget, const std::string& name, con
         }
         UserConfigParams::m_speedrun_mode = speedrun_timer->getState();
     }
+#endif
 }   // eventCallback
 
 // -----------------------------------------------------------------------------
@@ -600,4 +597,4 @@ void OptionsScreenUI::unloaded()
     m_inited = false;
 }   // unloaded
 
-#endif // ifndef SERVER_ONLY
+// -----------------------------------------------------------------------------

@@ -19,6 +19,9 @@
             <icon-button id="addons" width="128" height="128"
                          icon="gui/icons/menu_addons.png" focus_icon="gui/icons/menu_addons_focus.png"
                          I18N="Main menu button"  text="Addons" word_wrap="true"/>
+            <icon-button id="admin" width="128" height="128"
+                         icon="gui/icons/menu_admin.png" focus_icon="gui/icons/menu_admin_focus.png"
+                         I18N="Main menu button"  text="ADMIN UI" word_wrap="true"/>
         </buttonbar>
 
         <spacer width="10" height="6%"/>

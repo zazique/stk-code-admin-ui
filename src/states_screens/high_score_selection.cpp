@@ -400,34 +400,15 @@ void HighScoreSelection::onColumnClicked(int column_id, bool sort_desc, bool sor
     }
 
     if (column_id == 0)
-    {
-        if (m_major_mode == RaceManager::MAJOR_MODE_GRAND_PRIX)
-            Highscores::setSortOrder(Highscores::SO_GP_NAME);
-        else
-            Highscores::setSortOrder(Highscores::SO_TRACK);
-    }
+        Highscores::setSortOrder(Highscores::SO_TRACK);
     else if (column_id == 1)
-    {
         Highscores::setSortOrder(Highscores::SO_DIFF);
-    }
     else if (column_id == 2)
-    {
         Highscores::setSortOrder(Highscores::SO_KART_NUM);
-    }
     else if (column_id == 3)
-    {
-        if (m_major_mode == RaceManager::MAJOR_MODE_GRAND_PRIX)
-            Highscores::setSortOrder(Highscores::SO_MODE);
-        else
-            Highscores::setSortOrder(Highscores::SO_LAPS);
-    }
+        Highscores::setSortOrder(Highscores::SO_LAPS);
     else if (column_id == 4)
-    {
-        if (m_major_mode == RaceManager::MAJOR_MODE_GRAND_PRIX)
-            Highscores::setSortOrder(Highscores::SO_REV_GP);
-        else
-            Highscores::setSortOrder(Highscores::SO_REV);
-    }
+        Highscores::setSortOrder(Highscores::SO_REV);
     else
         assert(0);
 
@@ -444,9 +425,6 @@ void HighScoreSelection::onColumnClicked(int column_id, bool sort_desc, bool sor
 void HighScoreSelection::defaultSort()
 {
     m_reverse_sort = false;
-    if (m_major_mode == RaceManager::MAJOR_MODE_GRAND_PRIX)
-        Highscores::setSortOrder(Highscores::SO_GP_NAME);
-    else
-        Highscores::setSortOrder(Highscores::SO_TRACK);
+    Highscores::setSortOrder(Highscores::SO_DEFAULT);
     highscore_manager->sortHighscores(false);
 }   // defaultSort

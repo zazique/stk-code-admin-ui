@@ -149,7 +149,6 @@ void RegisterScreen::init()
 
     TextBoxWidget* local_username = getWidget<TextBoxWidget>("local_username");
     local_username->setText(username);
-    local_username->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
 
     m_password_widget->setPasswordBox(true, L'*');
     getWidget<TextBoxWidget>("password_confirm")->setPasswordBox(true, L'*');
@@ -195,9 +194,8 @@ void RegisterScreen::onDialogClose()
     }
     else
     {
+        m_account_mode = ACCOUNT_OFFLINE;
         ribbon->select("tab_offline", PLAYER_ID_GAME_MASTER);
-        // Set the account mode and the info text
-        eventCallback(ribbon, "mode_tabs", PLAYER_ID_GAME_MASTER);
     }
     makeEntryFieldsVisible();
 }   // onDialogClose
@@ -316,10 +314,8 @@ void RegisterScreen::doRegister()
     {
         core::stringw password = m_password_widget->getText();
         core::stringw online_name = getWidget<TextBoxWidget>("username")->getText().trim();
-#ifndef SERVER_ONLY
         m_parent_screen->setNewAccountData(true, /*auto login*/true,
                                            online_name, password);
-#endif
         StateManager::get()->popMenu();
         return;
     }
@@ -363,7 +359,7 @@ void RegisterScreen::doRegister()
     }
     else if (username == password)
     {
-        m_info_widget->setText(_("Online username and password must be different!"), false);
+        m_info_widget->setText(_("Online username and password must not be the same!"), false);
     }
     else if (email != email_confirm)
     {
@@ -371,31 +367,29 @@ void RegisterScreen::doRegister()
     }
     else if (namecheck)
     {
-        m_info_widget->setText(_("The online username can only contain alphanumeric characters, periods, dashes and underscores!"), false);
-        // TODO: When setting a text, there should automatically be a check in the widget to see if the text-size has to be reduced
-        // Currently, this string overflows with big text sizes, but any slight resizing of the window gets it to shrink back.
+        m_info_widget->setText(_("Online username can only contain alphanumeric (ASCII) characters, periods, dashes and underscores!"), false);
     }
     else if (username.size() < 3 || username.size() > 30)
     {
-        m_info_widget->setText(_("The online username must be between %i and %i characters long!", 3, 30), false);
+        m_info_widget->setText(_("Online username has to be between 3 and 30 characters long!"), false);
     }
     else if (username[0]>='0' && username[0]<='9')
     {
-        m_info_widget->setText(_("The online username cannot start with a number!"), false);
+        m_info_widget->setText(_("Online username must not start with a number!"), false);
     }
     else if (password.size() < 8 || password.size() > 30)
     {
-        m_info_widget->setText(_("The password must be between %i and %i characters long!", 8, 30), false);
+        m_info_widget->setText(_("Password has to be between 8 and 30 characters long!"), false);
     }
     else if (email.size() < 5 || email.size() > 254)
     {
-        m_info_widget->setText(_("The email address must be between %i and %i characters long!", 5, 254), false);
+        m_info_widget->setText(_("Email has to be between 5 and 254 characters long!"), false);
     }
     else if (  email.find(L"@")== -1 || email.find(L".")== -1 ||
               (email.findLast(L'.') - email.findLast(L'@') <= 1 ) ||
                 email.findLast(L'@')==0 || email[(email.size())-1]=='.')
     {
-        m_info_widget->setText(_("The email address is invalid!"), false);
+        m_info_widget->setText(_("Email is invalid!"), false);
     }
    
     else
@@ -408,11 +402,10 @@ void RegisterScreen::doRegister()
             if (player)
             {
                 core::stringw online_name = getWidget<TextBoxWidget>("username")->getText().trim();
-#ifndef SERVER_ONLY
                 m_parent_screen->setNewAccountData(/*online*/true, 
                                                    /*auto_login*/false,
                                                    username, password);
-#endif
+
                 player->setLastOnlineName(username);
                 player->setWasOnlineLastTime(true);
             }
@@ -501,18 +494,6 @@ void RegisterScreen::eventCallback(Widget* widget, const std::string& name,
             m_info_widget->setErrorColor();
             m_info_widget->setText(_("Internet access is disabled, please enable it in the options"), false);
             return;
-        }
-        else if (selection == "tab_offline")
-        {
-            m_info_widget->setDefaultColor();
-            m_info_widget->setText(_("You can play without creating an online account.")
-                + L"\n\n" + _("An online account is required for online multiplayer, "
-                    "to be notified when friends are online, etc."), false);
-            m_info_widget->setVisible(true);
-        }
-        else
-        {
-            m_info_widget->setVisible(false);
         }
         if (selection == "tab_new_online")
             m_account_mode = ACCOUNT_NEW_ONLINE;

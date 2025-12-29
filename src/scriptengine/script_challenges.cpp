@@ -26,6 +26,7 @@
 #include "guiengine/engine.hpp"
 #include "modes/world.hpp"
 #include "config/player_manager.hpp"
+#include "states_screens/dialogs/tutorial_message_dialog.hpp"
 #include "tracks/track.hpp"
 #include "tracks/track_object.hpp"
 #include "tracks/track_object_manager.hpp"

@@ -423,7 +423,6 @@ void InputManager::inputSensing(Input::InputType type, int deviceID,
                                 int button, Input::AxisDirection axisDirection,
                                 int value)
 {
-#ifndef SERVER_ONLY
 #if INPUT_MODE_DEBUG
     Log::info("InputManager::inputSensing", "Start sensing input");
 #endif
@@ -564,7 +563,6 @@ void InputManager::inputSensing(Input::InputType type, int deviceID,
             // nothing with them, and thus to fix warnings)
             break;
     }   // switch
-#endif // SERVER_ONLY
 }   // inputSensing
 
 //-----------------------------------------------------------------------------
@@ -653,61 +651,48 @@ void InputManager::dispatchInput(Input::InputType type, int deviceID,
     // fall back to check the defaults.
     if (!action_found &&
             StateManager::get()->getGameState() != GUIEngine::GAME &&
-            type == Input::IT_KEYBOARD && m_mode == MENU &&
-            m_device_manager->getAssignMode() != DETECT_NEW)
+            type == Input::IT_KEYBOARD &&
+            m_mode == MENU && m_device_manager->getAssignMode() == NO_ASSIGN)
     {
         action = PA_BEFORE_FIRST;
-        bool always_valid = false;
 
-        // Listen for page-up, page-down, home and end even in assign-only mode
-        if      (button == IRR_KEY_PRIOR)         action = PA_MENU_PAGE_UP;
-        else if (button == IRR_KEY_NEXT)          action = PA_MENU_PAGE_DOWN;
-        else if (button == IRR_KEY_END)           action = PA_MENU_END;
-        else if (button == IRR_KEY_HOME)          action = PA_MENU_START;
-
-        if (action != PA_BEFORE_FIRST)
-            always_valid = true;
-        
-        if (m_device_manager->getAssignMode() == NO_ASSIGN)
+        if      (button == IRR_KEY_UP)            action = PA_MENU_UP;
+        else if (button == IRR_KEY_DOWN)          action = PA_MENU_DOWN;
+        else if (button == IRR_KEY_LEFT)          action = PA_MENU_LEFT;
+        else if (button == IRR_KEY_RIGHT)         action = PA_MENU_RIGHT;
+        else if (button == IRR_KEY_SPACE)         action = PA_MENU_SELECT;
+        else if (button == IRR_KEY_RETURN)        action = PA_MENU_SELECT;
+        else if (button == IRR_KEY_BUTTON_UP)     action = PA_MENU_DOWN;
+        else if (button == IRR_KEY_BUTTON_DOWN)   action = PA_MENU_UP;
+        else if (button == IRR_KEY_BUTTON_LEFT)   action = PA_MENU_LEFT;
+        else if (button == IRR_KEY_BUTTON_RIGHT)  action = PA_MENU_RIGHT;
+        else if (button == IRR_KEY_BUTTON_A)      action = PA_MENU_SELECT;
+        else if (button == IRR_KEY_TAB)
         {
-            if      (button == IRR_KEY_UP)            action = PA_MENU_UP;
-            else if (button == IRR_KEY_DOWN)          action = PA_MENU_DOWN;
-            else if (button == IRR_KEY_LEFT)          action = PA_MENU_LEFT;
-            else if (button == IRR_KEY_RIGHT)         action = PA_MENU_RIGHT;
-            else if (button == IRR_KEY_SPACE)         action = PA_MENU_SELECT;
-            else if (button == IRR_KEY_RETURN)        action = PA_MENU_SELECT;
-            else if (button == IRR_KEY_BUTTON_UP)     action = PA_MENU_DOWN;
-            else if (button == IRR_KEY_BUTTON_DOWN)   action = PA_MENU_UP;
-            else if (button == IRR_KEY_BUTTON_LEFT)   action = PA_MENU_LEFT;
-            else if (button == IRR_KEY_BUTTON_RIGHT)  action = PA_MENU_RIGHT;
-            else if (button == IRR_KEY_BUTTON_A)      action = PA_MENU_SELECT;
-
-            else if (button == IRR_KEY_TAB)
+            if (shift_mask)
             {
-                if (shift_mask)
-                    action = PA_MENU_UP;
-                else
-                    action = PA_MENU_DOWN;
+                action = PA_MENU_UP;
             }
-
-            if (button == IRR_KEY_RETURN || button == IRR_KEY_BUTTON_A)
+            else
             {
-                if (GUIEngine::ModalDialog::isADialogActive() &&
-                    !GUIEngine::ScreenKeyboard::isActive())
-                {
-                    GUIEngine::ModalDialog::onEnterPressed();
-                }
+                action = PA_MENU_DOWN;
             }
-        } // NO_ASSIGN
+        }
+
+        if (button == IRR_KEY_RETURN || button == IRR_KEY_BUTTON_A)
+        {
+            if (GUIEngine::ModalDialog::isADialogActive() &&
+                !GUIEngine::ScreenKeyboard::isActive())
+            {
+                GUIEngine::ModalDialog::onEnterPressed();
+            }
+        }
 
         if (action != PA_BEFORE_FIRST)
         {
             action_found = true;
-            player = nullptr;
-            if (always_valid && m_device_manager->getAssignMode() == ASSIGN)
-                player = StateManager::get()->getActivePlayer(PLAYER_ID_GAME_MASTER);
+            player = NULL;
         }
-        
     }
 
     // do something with the key if it matches a binding
@@ -799,7 +784,7 @@ void InputManager::dispatchInput(Input::InputType type, int deviceID,
                 return; // we're done here, ignore devices that aren't
                         // associated with players
             }
-        } // DETECT_NEW
+        }
 
         auto cl = LobbyProtocol::get<ClientLobby>();
         bool is_nw_spectator = cl && cl->isSpectator() &&
