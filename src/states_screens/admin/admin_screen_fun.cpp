@@ -4,6 +4,7 @@
 #include "guiengine/widgets/spinner_widget.hpp"
 #include "guiengine/widgets/check_box_widget.hpp"
 #include "states_screens/state_manager.hpp"
+#include "utils/string_utils.hpp"
 #include "config/user_config.hpp"
 
 using namespace GUIEngine;
@@ -22,6 +23,8 @@ void AdminScreenFun::init()
     if (CheckBoxWidget* check = getWidget<CheckBoxWidget>("show_powerup_msg"))
     {
         check->setState(UserConfigParams::m_show_powerup_msg);
+        check->setTooltip(_("Enables classic STK 0.7-style messages when powerups are used. \n"
+                            "Includes updated messages for modern powerups."));
     }
 }
 

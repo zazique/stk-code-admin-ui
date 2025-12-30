@@ -4,6 +4,7 @@
 #include "guiengine/widgets/spinner_widget.hpp"
 #include "guiengine/widgets/check_box_widget.hpp"
 #include "states_screens/state_manager.hpp"
+#include "utils/string_utils.hpp"
 #include "config/user_config.hpp"
 
 using namespace GUIEngine;
@@ -23,31 +24,45 @@ void AdminScreenBasic::init()
     if (CheckBoxWidget* inputs = getWidget<CheckBoxWidget>("show_inputs"))
     {
         inputs->setState(UserConfigParams::m_display_inputs);
+        inputs->setTooltip(_("Adds on-screen buttons that highlight your current\n"
+                    "actions, such as drifting, using nitro, or accelerating.\n"
+                    "Only active during races."));
     }
     if (GUIEngine::SpinnerWidget* size = getWidget<GUIEngine::SpinnerWidget>("input_overlay_size"))
     {
         size->setValue(UserConfigParams::m_input_overlay_size);
+        size->setTooltip(_("Adjusts the scale of the input overlay buttons."));
     }
     if (GUIEngine::SpinnerWidget* pos_x = getWidget<GUIEngine::SpinnerWidget>("input_overlay_pos"))
     {
         pos_x->setValue(UserConfigParams::m_input_overlay_offset);
+        pos_x->setTooltip(_("Adjusts the horizontal of the input overlay buttons.\n"
+							"Negative values move it left, positive values move it right."));
     }
 
     if (GUIEngine::SpinnerWidget* pos_y = getWidget<GUIEngine::SpinnerWidget>("input_overlay_pos_y"))
     {
         pos_y->setValue(UserConfigParams::m_input_overlay_offset_y);
+        pos_y->setTooltip(_("Adjusts the horizontal of the input overlay buttons.\n"
+							"Negative values move it left, positive values move it right."));
     }
     if (CheckBoxWidget* debug = getWidget<CheckBoxWidget>("debug_mode"))
     {
         debug->setState(UserConfigParams::m_artist_debug_mode);
+        debug->setTooltip(_("Enables the built-in Artist Debug mode.\n"
+							"Use it to test tracks or just explore."));
     }
     if (CheckBoxWidget* check = getWidget<CheckBoxWidget>("show_check"))
 	{
 		check->setState(UserConfigParams::m_check_debug);
+		check->setTooltip(_("Displays track checklines.\n"
+							"Originally these were only visible via Artist Debug mode."));
 	}
-	if (CheckBoxWidget* check = getWidget<CheckBoxWidget>("fast_start"))
+	if (CheckBoxWidget* start = getWidget<CheckBoxWidget>("fast_start"))
 	{
-		check->setState(UserConfigParams::m_fast_start);
+		start->setState(UserConfigParams::m_fast_start);
+		start->setTooltip(_("Disables the fast countdown when starting a race\n"
+							"in Artist Debug mode with no other karts."));
 	}
     if (Widget* w = getWidget("input_overlay_size"))  w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);

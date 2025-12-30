@@ -4,6 +4,7 @@
 #include "guiengine/widgets/spinner_widget.hpp"
 #include "guiengine/widgets/check_box_widget.hpp"
 #include "states_screens/state_manager.hpp"
+#include "utils/string_utils.hpp"
 #include "config/user_config.hpp"
 
 using namespace GUIEngine;
@@ -24,8 +25,12 @@ void AdminScreenMisc::init()
     }
 
     // Пример: устанавливаем состояние галочки (пока просто в лог или память)
-    CheckBoxWidget* check = getWidget<CheckBoxWidget>("test_checkbox2");
-    if (check) check->setState(false); 
+    CheckBoxWidget* check = getWidget<CheckBoxWidget>("test_checkbox3");
+    if (check) 
+    {
+		check->setState(false); 
+		check->setTooltip(_("Not yet implemented."));
+	}
 }
 
 void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, const int playerID)
