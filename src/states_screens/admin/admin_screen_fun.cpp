@@ -13,19 +13,16 @@ AdminScreenFun::AdminScreenFun() : Screen("admin/admin_fun.stkgui") {}
 void AdminScreenFun::init()
 {
     Screen::init();
-    
-    // Выделяем текущую вкладку в меню слева
     RibbonWidget* tabs = getWidget<RibbonWidget>("admin_choice");
     if (tabs) 
     {
-        // Сначала даем фокус, потом выбираем вкладку
         tabs->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
         tabs->select("tab_fun", PLAYER_ID_GAME_MASTER);
     }
-
-    // Пример: устанавливаем состояние галочки (пока просто в лог или память)
-    CheckBoxWidget* check = getWidget<CheckBoxWidget>("test_checkbox3");
-    if (check) check->setState(false); 
+    if (CheckBoxWidget* check = getWidget<CheckBoxWidget>("show_powerup_msg"))
+    {
+        check->setState(UserConfigParams::m_show_powerup_msg);
+    }
 }
 
 void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, const int playerID)
@@ -39,11 +36,9 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     {
         StateManager::get()->escapePressed();
     }
-    else if (name == "test_checkbox")
+    else if (name == "show_powerup_msg")
     {
-        CheckBoxWidget* check = (CheckBoxWidget*)widget;
-        // Тут будет твоя логика, когда галочку нажали
-        // printf("Checkbox state: %d\n", check->getState());
+		UserConfigParams::m_show_powerup_msg = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

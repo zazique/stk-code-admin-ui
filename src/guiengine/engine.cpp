@@ -1448,7 +1448,6 @@ namespace GUIEngine
         if ( UserConfigParams::m_display_fps ) irr_driver->displayFPS();
 		if (UserConfigParams::m_display_inputs)
         {
-            // --- ГЕОМЕТРИЯ ---
             int s = UserConfigParams::m_input_overlay_size;
             int offset = UserConfigParams::m_input_overlay_offset;
             int offset_y = UserConfigParams::m_input_overlay_offset_y;
@@ -1462,11 +1461,8 @@ namespace GUIEngine
             const KartControl* ctrl = nullptr;
             if (World::getWorld())
             {
-                // Ищем карту, которой управляет реальный человек (локальный игрок)
                 AbstractKart* k = World::getWorld()->getLocalPlayerKart(0); 
                 
-                // Если вдруг локальный игрок не найден (например, в режиме реплея), 
-                // берем первую попавшуюся карту, чтобы не было пустоты
                 if (!k && World::getWorld()->getNumKarts() > 0)
                     k = World::getWorld()->getKart(0);
 
@@ -1491,21 +1487,16 @@ namespace GUIEngine
                 core::rect<s32> dest(x_base + col * (s + gap), y_base + row * (s + gap),  
                                      x_base + col * (s + gap) + s, y_base + row * (s + gap) + s);
                 
-                // Делаем цвета ярче
-                // 255 - полностью видно при нажатии
-                // 130 - достаточно заметно в покое (было 60)
                 video::SColor color(pressed ? 255 : 130, 255, 255, 255);
 
                 core::rect<s32> source(core::position2d<s32>(0,0), tex->getSize());
                 ::draw2DImage(tex, dest, source, nullptr, color, true);
             };
 
-            // Ряд 1
             drawInput(t_key_powerup, 1, 0, 5);  
             drawInput(t_key_back,    2, 0, 8); 
             drawInput(t_key_up,      4, 0, 1); 
 
-            // Ряд 2
             drawInput(t_key_drift,   1, 1, 4); 
             drawInput(t_key_nitro,   2, 1, 3);    
             drawInput(t_key_left,    3, 1, 6);  

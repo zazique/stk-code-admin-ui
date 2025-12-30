@@ -36,6 +36,11 @@
 #include "physics/triangle_mesh.hpp"
 #include "tracks/track.hpp"
 #include "utils/string_utils.hpp"
+#include "race/race_manager.hpp"
+#include "states_screens/race_gui_base.hpp"
+#include "utils/translation.hpp"
+#include "modes/world.hpp"
+#include "config/user_config.hpp"
 #include "utils/log.hpp" //TODO: remove after debugging is done
 
 //-----------------------------------------------------------------------------
@@ -56,6 +61,33 @@ Powerup::~Powerup()
 {
     if(m_sound_use) m_sound_use->deleteSFX();
 }   // ~Powerup
+
+const char* getAnchorString() {
+    static const char* anchor_strings[] = {
+        "Arrr, the %s dropped anchor, Captain!",
+        "%s pays the next round of grog!",
+        "%s is a mighty pirate!"
+    };
+    return anchor_strings[rand() % 3];
+}
+
+const char* getParachuteString() {
+    static const char* parachute_strings[] = {
+        "Geronimo!!!",
+        "The Space Shuttle has landed!",
+        "Do you want to fly kites?"
+    };
+    return parachute_strings[rand() % 3];
+}
+
+const char* getSwapperString() {
+    static const char* swapper_strings[] = {
+        "Magic, son. Nothing else in the world smells like that.",
+        "A wizard did it!",
+        "Banana? Box? Banana? Box? Banana? Box?"
+    };
+    return swapper_strings[rand() % 3];
+}
 
 //-----------------------------------------------------------------------------
 /** Resets the powerup, called at begin of a race.
@@ -293,6 +325,11 @@ void Powerup::use()
                 m_sound_use->setPosition(m_kart->getXYZ());
                 m_sound_use->play();
             }
+            if (world->getRaceGUI() && UserConfigParams::m_show_powerup_msg)
+			{
+				world->getRaceGUI()->addMessage(_(getSwapperString()), NULL, 3.0f, 
+				video::SColor(255, 255, 255, 255), false, true, true);
+			}
             break;
         }
     case PowerupManager::POWERUP_CAKE:
@@ -413,11 +450,27 @@ void Powerup::use()
                         m_sound_use->setPosition(m_kart->getXYZ());
 
                     m_sound_use->play();
+
                 }
+				if (world->getRaceGUI() && UserConfigParams::m_show_powerup_msg)
+				{
+					core::stringw victim_name = kart->getName();
+					core::stringw wide_msg = translations->STK_GETTEXT(getAnchorString());
+					int pos = wide_msg.findFirst('%');
+					if (pos != -1 && pos + 1 < (int)wide_msg.size() && wide_msg[pos + 1] == 's')
+					{
+						core::stringw final_text = wide_msg.subString(0, pos);
+						final_text += victim_name;
+						final_text += wide_msg.subString(pos + 2, wide_msg.size());
+						wide_msg = final_text;
+					}
+					world->getRaceGUI()->addMessage(wide_msg, NULL, 3.0f, 
+													video::SColor(255, 255, 255, 255), 
+													false, true, true);
+				}
                 break;
             }
         }
-
         break;
 
     case PowerupManager::POWERUP_PARACHUTE:
@@ -476,6 +529,12 @@ void Powerup::use()
                     m_sound_use->setPosition(player_kart->getXYZ());
                 m_sound_use->play();
             }
+            
+			if (world->getRaceGUI() && UserConfigParams::m_show_powerup_msg)
+			{
+				world->getRaceGUI()->addMessage(_(getParachuteString()), NULL, 3.0f, 
+				video::SColor(255, 255, 255, 255), false, true, true);
+			}
         }
         break;
 

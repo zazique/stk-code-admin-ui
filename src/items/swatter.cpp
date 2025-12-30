@@ -42,6 +42,9 @@
 #include "modes/capture_the_flag.hpp"
 #include "network/network_string.hpp"
 #include "network/rewind_manager.hpp"
+#include "utils/translation.hpp"
+#include "modes/world.hpp"
+#include "config/user_config.hpp"
 
 #include <IAnimatedMeshSceneNode.h>
 
@@ -50,6 +53,16 @@
 #define SWAT_ANGLE_MAX  135
 #define SWAT_ANGLE_OFFSET (90.0f + 15.0f)
 #define SWATTER_ANIMATION_SPEED 100.0f
+
+static const char* getSwatterHitString()
+{
+    static const char* swatter_msgs[] = {
+        "%1 squashes %0 like a fly",
+        "%0 is flattened by %1's swatter",
+        "%1 swat %0"
+    };
+    return swatter_msgs[rand() % 3];
+}
 
 // ----------------------------------------------------------------------------
 /** Constructor: creates a swatter at a given attachment for a kart. If there
@@ -406,6 +419,21 @@ void Swatter::squashThingsAround()
     {
         World::getWorld()->kartHit(m_closest_kart->getWorldKartId(),
             m_kart->getWorldKartId());
+            
+        if (UserConfigParams::m_show_powerup_msg)
+        {
+            RaceGUIBase* gui = World::getWorld()->getRaceGUI();
+            if (gui)
+            {
+                core::stringw wide_msg = translations->STK_GETTEXT(getSwatterHitString());
+                wide_msg.replace(L"%0", m_closest_kart->getName().c_str());
+                wide_msg.replace(L"%1", m_kart->getName().c_str());
+
+                gui->addMessage(wide_msg, NULL, 3.0f, 
+                                video::SColor(255, 255, 255, 255), 
+                                false, true, true);
+            }
+        }
 
         CaptureTheFlag* ctf = dynamic_cast<CaptureTheFlag*>(World::getWorld());
         if (ctf)

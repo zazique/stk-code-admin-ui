@@ -818,6 +818,10 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam m_check_debug
     PARAM_DEFAULT( BoolUserConfigParam(false, "check_debug", 
                    &m_video_group, "True if checkline structures should be debugged") );
+                   
+    PARAM_PREFIX BoolUserConfigParam m_show_powerup_msg
+    PARAM_DEFAULT( BoolUserConfigParam(false, "show_powerup_msg", 
+                   &m_video_group, "True if powerup messages should be shown") );
 
     /** True if physics debugging should be enabled. */
     PARAM_PREFIX bool m_physics_debug PARAM_DEFAULT( false );

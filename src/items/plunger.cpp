@@ -35,8 +35,20 @@
 #include "tracks/track.hpp"
 #include "utils/constants.hpp"
 #include "utils/string_utils.hpp"
+#include "utils/translation.hpp"
+#include "modes/world.hpp"
+#include "config/user_config.hpp"
 
 #include <ISceneNode.h>
+
+static const char* getPlungerInFaceString()
+{
+    static const char* face_msgs[] = {
+        "%0 gets a fancy mask from %1",
+        "%1 merges %0's face with a plunger"
+    };
+    return face_msgs[rand() % 2];
+}
 
 // -----------------------------------------------------------------------------
 Plunger::Plunger(AbstractKart *kart)
@@ -203,6 +215,22 @@ bool Plunger::hit(AbstractKart *kart, PhysicalObject *obj)
         if(kart)
         {
             kart->blockViewWithPlunger();
+            
+            if (UserConfigParams::m_show_powerup_msg)
+            {
+                RaceGUIBase* gui = World::getWorld()->getRaceGUI();
+                if (gui)
+                {
+                    core::stringw wide_msg = translations->STK_GETTEXT(getPlungerInFaceString());
+                    wide_msg.replace(L"%0", kart->getName().c_str());
+                    wide_msg.replace(L"%1", m_owner->getName().c_str());
+
+                    gui->addMessage(wide_msg, NULL, 3.0f, 
+                                    video::SColor(255, 255, 255, 255), 
+                                    false, true, true);
+                }
+            }
+            
             if (kart->getController()->isLocalPlayerController() &&
                 !m_has_locally_played_sound)
             {

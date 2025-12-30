@@ -14,11 +14,9 @@ void AdminScreenBasic::init()
 {
     Screen::init();
     bool active = UserConfigParams::m_display_inputs;
-    // Выделяем текущую вкладку в меню слева
     RibbonWidget* tabs = getWidget<RibbonWidget>("admin_choice");
     if (tabs) 
     {
-        // Сначала даем фокус, потом выбираем вкладку
         tabs->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
         tabs->select("tab_basic", PLAYER_ID_GAME_MASTER);
     }

@@ -33,6 +33,9 @@
 #include "physics/physics.hpp"
 #include "race/race_manager.hpp"
 #include "utils/string_utils.hpp"
+#include "utils/translation.hpp"
+#include "modes/world.hpp"
+#include "config/user_config.hpp"
 
 #ifndef SERVER_ONLY
 #include <array>
@@ -44,6 +47,16 @@
 #include <IVideoDriver.h>
 #include <SMesh.h>
 #include <SMeshBuffer.h>
+
+static const char* getPlungerString()
+{
+    static const char* plunger_msgs[] = {
+        "%0 bites %1's bait",
+        "%1 latches onto %0 for a free ride",
+        "%1 tests a tractor beam on %0"
+    };
+    return plunger_msgs[rand() % 3];
+}
 
 /** RubberBand constructor. It creates a simple quad and attaches it to the
  *  root(!) of the graph. It's easier this way to get the right coordinates
@@ -376,6 +389,22 @@ void RubberBand::hit(AbstractKart *kart_hit, const Vec3 *track_xyz)
 
         m_hit_kart       = kart_hit;
         m_attached_state = RB_TO_KART;
+        
+        if (UserConfigParams::m_show_powerup_msg)
+        {
+            RaceGUIBase* gui = World::getWorld()->getRaceGUI();
+            if (gui)
+            {
+                core::stringw wide_msg = translations->STK_GETTEXT(getPlungerString());
+                wide_msg.replace(L"%0", kart_hit->getName().c_str());
+                wide_msg.replace(L"%1", m_owner->getName().c_str());
+
+                gui->addMessage(wide_msg, NULL, 3.0f, 
+                                video::SColor(255, 255, 255, 255), 
+                                false, true, true);
+            }
+        }
+        
         return;
     }
 

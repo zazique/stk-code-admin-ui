@@ -38,6 +38,9 @@
 #include "tracks/drive_node.hpp"
 #include "tracks/track.hpp"
 #include "utils/stk_process.hpp"
+#include "utils/translation.hpp"
+#include "modes/world.hpp"
+#include "config/user_config.hpp"
 
 #include "utils/log.hpp" //TODO: remove after debugging is done
 
@@ -57,6 +60,16 @@ float RubberBall::m_st_min_speed_offset;
 float RubberBall::m_st_max_speed_offset;
 float RubberBall::m_st_min_offset_distance;
 float RubberBall::m_st_max_offset_distance;
+
+static const char* getRubberBallString()
+{
+    static const char* ball_msgs[] = {
+        "%1 scores a three-pointer on %0",
+        "%0 is bounced by %1's ball",
+        "%0 serves as a basket for %1"
+    };
+    return ball_msgs[rand() % 3];
+}
 
 // Debug only, so that we can get a feel on how well balls are aiming etc.
 #undef PRINT_BALL_REMOVE_INFO
@@ -867,6 +880,19 @@ bool RubberBall::hit(AbstractKart* kart, PhysicalObject* object)
             kart->getAttachment()->update(10000);
             return false;
         }
+        
+        if (UserConfigParams::m_show_powerup_msg)
+        {
+            RaceGUIBase* gui = World::getWorld()->getRaceGUI();
+            if (gui)
+            {
+                core::stringw wide_msg = translations->STK_GETTEXT("%0 is squashed by %1's ball");
+                wide_msg.replace(L"%0", kart->getName().c_str());
+                wide_msg.replace(L"%1", m_owner->getName().c_str());
+                gui->addMessage(wide_msg, NULL, 3.0f, video::SColor(255, 255, 255, 255), false, true, true);
+            }
+        }
+        
         kart->setSquash(m_st_squash_duration, m_st_squash_slowdown);
         return false;
     }
@@ -878,7 +904,20 @@ bool RubberBall::hit(AbstractKart* kart, PhysicalObject* object)
             kart->decreaseShieldTime();
         }
         else
+        {
+			if (kart && UserConfigParams::m_show_powerup_msg)
+            {
+                RaceGUIBase* gui = World::getWorld()->getRaceGUI();
+                if (gui)
+                {
+                    core::stringw wide_msg = translations->STK_GETTEXT(getRubberBallString());
+                    wide_msg.replace(L"%0", kart->getName().c_str());
+                    wide_msg.replace(L"%1", m_owner->getName().c_str());
+                    gui->addMessage(wide_msg, NULL, 3.0f, video::SColor(255, 255, 255, 255), false, true, true);
+                }
+            }
             explode(kart, object);
+        }
     }
     return was_real_hit;
 }   // hit

@@ -20,9 +20,9 @@
                 <spacer width="5" height="2%"/>
 
                 <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="test_checkbox2"/>
+                    <checkbox id="show_powerup_msg"/>
                     <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable super fun" word_wrap="true"/>
+                    <label height="100%" text="Enable powerup messages" word_wrap="true"/>
                 </div>
 
                 <spacer width="5" height="2%"/>

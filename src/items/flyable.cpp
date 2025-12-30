@@ -49,7 +49,10 @@
 #include "tracks/track.hpp"
 #include "utils/constants.hpp"
 #include "utils/string_utils.hpp"
+#include "utils/translation.hpp"
+#include "modes/world.hpp"
 #include "utils/vs.hpp"
+#include "config/user_config.hpp"
 
 #include <typeinfo>
 
@@ -61,6 +64,33 @@ float         Flyable::m_st_max_height  [PowerupManager::POWERUP_MAX];
 float         Flyable::m_st_force_updown[PowerupManager::POWERUP_MAX];
 Vec3          Flyable::m_st_extend      [PowerupManager::POWERUP_MAX];
 // ----------------------------------------------------------------------------
+
+static const char* getCakeString() {
+    static const char* cake_msgs[] = {
+        "%0 eats too much of %1's cake",
+        "%0 is dubious of %1's cooking skills",
+        "%0 should not play with %1's lunch"
+    };
+    return cake_msgs[rand() % 3];
+}
+
+static const char* getBowlingString() {
+    static const char* bowling_msgs[] = {
+        "%0 will not play bowling with %1 again",
+        "%1 strikes %0",
+        "%0 is bowled over by %1"
+    };
+    return bowling_msgs[rand() % 3];
+}
+
+static const char* getSelfBowlingString() {
+    static const char* self_msgs[] = {
+        "%s is practicing with a blue, big, spheric yo-yo",
+        "%s is the world master of the boomerang ball",
+        "%s should play (rubber) darts instead of bowling"
+    };
+    return self_msgs[rand() % 3];
+}
 
 Flyable::Flyable(AbstractKart *kart, PowerupManager::PowerupType type,
                  float mass)
@@ -571,6 +601,42 @@ bool Flyable::hit(AbstractKart *kart_hit, PhysicalObject* object)
 void Flyable::explode(AbstractKart *kart_hit, PhysicalObject *object,
                       bool secondary_hits)
 {
+	if (kart_hit && UserConfigParams::m_show_powerup_msg)
+    {
+        RaceGUIBase* gui = World::getWorld()->getRaceGUI();
+        if (gui)
+        {
+            core::stringw wide_msg = L"";
+            
+            if (m_type == PowerupManager::POWERUP_CAKE)
+            {
+                wide_msg = translations->STK_GETTEXT(getCakeString());
+                wide_msg.replace(L"%0", kart_hit->getName().c_str());
+                wide_msg.replace(L"%1", m_owner->getName().c_str());
+            }
+            else if (m_type == PowerupManager::POWERUP_BOWLING)
+            {
+                if (kart_hit == m_owner)
+                {
+                    wide_msg = translations->STK_GETTEXT(getSelfBowlingString());
+                    wide_msg.replace(L"%s", m_owner->getName().c_str());
+                }
+                else
+                {
+                    wide_msg = translations->STK_GETTEXT(getBowlingString());
+                    wide_msg.replace(L"%0", kart_hit->getName().c_str());
+                    wide_msg.replace(L"%1", m_owner->getName().c_str());
+                }
+            }
+
+            if (wide_msg.size() > 0)
+            {
+                gui->addMessage(wide_msg, NULL, 3.0f, 
+                                video::SColor(255, 255, 255, 255), 
+                                false, true, true);
+            }
+        }
+    }
     // Apply explosion effect
     // ----------------------
     World *world = World::getWorld();
