@@ -287,13 +287,22 @@ MusicInformation* MusicManager::getMusicInformation(const std::string& filename)
     {
         return NULL;
     }
-    const std::string basename = StringUtils::getBasename(filename);
+    std::string final_filename = filename;
+    if (filename == "main_theme.music") 
+    {
+        if (UserConfigParams::m_menu_music_theme == 1)
+            final_filename = "main_theme_2.music";
+        else if (UserConfigParams::m_menu_music_theme == 2)
+            final_filename = "main_theme_3.music";
+    }
+    
+    const std::string basename = StringUtils::getBasename(final_filename);
     std::map<std::string, MusicInformation*>::iterator p;
     p = m_all_music.find(basename);
     if(p==m_all_music.end())
     {
         // Note that this might raise an exception
-        MusicInformation *mi = MusicInformation::create(filename);
+        MusicInformation *mi = MusicInformation::create(final_filename);
         if(mi)
         {
             SFXManager::get()->queue(SFXManager::SFX_MUSIC_DEFAULT_VOLUME, mi);

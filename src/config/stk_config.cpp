@@ -23,6 +23,7 @@
 #include <sstream>
 
 #include "audio/music_information.hpp"
+#include "config/user_config.hpp"
 #include "io/file_manager.hpp"
 #include "io/xml_node.hpp"
 #include "items/item.hpp"
@@ -428,6 +429,13 @@ void STKConfig::getAllData(const XMLNode * root)
     {
         music_node->get("title", &m_title_music_file);
         assert(m_title_music_file.size() > 0);
+        if (m_title_music_file == "main_theme.music")
+		{
+			if (UserConfigParams::m_menu_music_theme == 1)
+				m_title_music_file = "main_theme_2.music";
+			else if (UserConfigParams::m_menu_music_theme == 2)
+				m_title_music_file = "main_theme_3.music";
+		}
         m_title_music_file = file_manager->getAsset(FileManager::MUSIC, m_title_music_file);
 
         music_node->get("default", &m_default_music_file);
@@ -643,6 +651,13 @@ void STKConfig::getAllData(const XMLNode * root)
  */
 void STKConfig::initMusicFiles()
 {
+	m_title_music_file = "main_theme.music"; 
+    if (UserConfigParams::m_menu_music_theme == 1)
+        m_title_music_file = "main_theme_2.music";
+    else if (UserConfigParams::m_menu_music_theme == 2)
+        m_title_music_file = "main_theme_3.music";
+
+    m_title_music_file = file_manager->getAsset(FileManager::MUSIC, m_title_music_file);
     m_title_music = MusicInformation::create(m_title_music_file);
     if (!m_title_music)
     {

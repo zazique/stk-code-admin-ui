@@ -423,6 +423,10 @@ namespace UserConfigParams
                             &m_audio_group,
                             "Number of steps for volume adjustment") );
 
+	PARAM_PREFIX IntUserConfigParam         m_menu_music_theme
+            PARAM_DEFAULT(  IntUserConfigParam(0, "menu_music",
+            &m_audio_group, "Selected menu music") );
+
     // ---- Race setup
     PARAM_PREFIX GroupUserConfigParam        m_race_setup_group
         PARAM_DEFAULT( GroupUserConfigParam("RaceSetup",
