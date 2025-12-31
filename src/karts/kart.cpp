@@ -93,6 +93,7 @@
 #include <ICameraSceneNode.h>
 #include <IDummyTransformationSceneNode.h>
 #include <ISceneManager.h>
+#include <ge_render_info.hpp>
 
 #include <algorithm> // for min and max
 #include <iostream>
@@ -1799,7 +1800,18 @@ void Kart::update(int ticks)
             ProjectileManager::get()->addHitEffect(effect);
         }
     }
-
+    
+	if (UserConfigParams::m_fun_rainbow_kart)
+	{
+		auto render_info = m_kart_model->getRenderInfo();
+		
+		if (render_info) 
+		{
+			float time = World::getWorld()->getTime();
+			float hue = 0.01f + fmod(time * 0.3f, 0.98f);
+			render_info->setHue(hue);
+		}
+	}
 }   // update
 
 //-----------------------------------------------------------------------------

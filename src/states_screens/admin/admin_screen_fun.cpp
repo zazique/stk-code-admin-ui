@@ -31,6 +31,13 @@ void AdminScreenFun::init()
         camera->setState(UserConfigParams::m_camera_far_reset);
         camera->setTooltip(_("Always sets camera distance to 0."));
     }
+    if (CheckBoxWidget* hue = getWidget<CheckBoxWidget>("kart_hue"))
+    {
+        hue->setState(UserConfigParams::m_fun_rainbow_kart);
+        hue->setTooltip(_("Enables rainbow kart color change.\n"
+						"(NOTE: this feature woks only for karts\n"
+						"where it is implemented)"));
+    }
 }
 
 
@@ -52,6 +59,10 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "camera_far_null")
     {
 		UserConfigParams::m_camera_far_reset = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "kart_hue")
+    {
+		UserConfigParams::m_fun_rainbow_kart = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

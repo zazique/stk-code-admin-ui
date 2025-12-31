@@ -19,10 +19,9 @@
             <box width="78%" height="100%" layout="vertical-row">
                 <spacer width="5" height="2%"/>
 
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="test_checkbox3"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable useless settings" word_wrap="true"/>
+                <div width="100%" height="fit" layout="horizontal-row">
+                    <spinner id="menu_music" width="10f" align="center" />
+                    <label height="100%" x="0" y="0" text="Menu music"/>
                 </div>
 
                 <spacer width="5" height="2%"/>
