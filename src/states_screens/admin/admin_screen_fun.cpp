@@ -26,7 +26,13 @@ void AdminScreenFun::init()
         check->setTooltip(_("Enables classic STK 0.7-style messages when powerups are used. \n"
                             "Includes updated messages for modern powerups."));
     }
+    if (CheckBoxWidget* camera = getWidget<CheckBoxWidget>("camera_far_null"))
+    {
+        camera->setState(UserConfigParams::m_camera_far_reset);
+        camera->setTooltip(_("Always sets camera distance to 0."));
+    }
 }
+
 
 void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, const int playerID)
 {
@@ -42,6 +48,10 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "show_powerup_msg")
     {
 		UserConfigParams::m_show_powerup_msg = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "camera_far_null")
+    {
+		UserConfigParams::m_camera_far_reset = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

@@ -758,6 +758,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_non_ge_fullscreen_desktop
         PARAM_DEFAULT(BoolUserConfigParam(false, "non_ge_fullscreen_desktop",
         &m_video_group, "Use SDL_WINDOW_FULLSCREEN_DESKTOP for non-ge device"));
+    PARAM_PREFIX BoolUserConfigParam        m_camera_far_reset
+        PARAM_DEFAULT(BoolUserConfigParam(false, "camera_far_null",
+        &m_video_group, "True if camera_far value should be always set to 0"));
 
     // ---- Recording
     PARAM_PREFIX GroupUserConfigParam        m_recording_group

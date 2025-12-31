@@ -185,7 +185,14 @@ void Camera::setupCamera()
         float(irr_driver->getActualScreenSize().Height) / m_viewport.getHeight());
 
     m_camera->setAspectRatio(m_aspect);
-    m_camera->setFarValue(Track::getCurrentTrack()->getCameraFar());
+    if (UserConfigParams::m_camera_far_reset)
+	{
+		m_camera->setFarValue(0.0f);
+	}
+	else
+	{
+		m_camera->setFarValue(Track::getCurrentTrack()->getCameraFar());
+	}
 }   // setupCamera
 
 // ----------------------------------------------------------------------------
