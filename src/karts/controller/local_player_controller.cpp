@@ -38,6 +38,7 @@
 #include "karts/skidding.hpp"
 #include "karts/rescue_animation.hpp"
 #include "modes/world.hpp"
+#include "modes/world_status.hpp"
 #include "network/network_config.hpp"
 #include "network/protocols/game_events_protocol.hpp"
 #include "network/protocols/game_protocol.hpp"
@@ -176,6 +177,22 @@ bool LocalPlayerController::action(PlayerAction action, int value,
     if (action == PA_PAUSE_RACE)
     {
         PlayerController::action(action, value);
+        return true;
+    }
+    
+    if (action == PA_RESTART_RACE)
+    {
+        if (value != 0 && UserConfigParams::m_allow_restart_bind &&
+            !NetworkConfig::get()->isNetworking())
+        {
+            if (World::getWorld() && 
+               (World::getWorld()->getPhase() == WorldStatus::RACE_PHASE || 
+                World::getWorld()->getPhase() == WorldStatus::MUSIC_PHASE))
+            {
+                this->action(PA_ACCEL, 0);
+                RaceManager::get()->rerunRace();
+            }
+        }
         return true;
     }
 

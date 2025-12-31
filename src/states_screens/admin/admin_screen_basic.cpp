@@ -64,6 +64,12 @@ void AdminScreenBasic::init()
 		start->setTooltip(_("Disables the fast countdown when starting a race\n"
 							"in Artist Debug mode with no other karts."));
 	}
+	if (CheckBoxWidget* start = getWidget<CheckBoxWidget>("restart_bind"))
+	{
+		start->setState(UserConfigParams::m_allow_restart_bind);
+		start->setTooltip(_("Enables restart bind function.\n"
+							"Bind can be configured in Controls settings."));
+	}
     if (Widget* w = getWidget("input_overlay_size"))  w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos_y")) w->setActive(active);
@@ -112,6 +118,10 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
     if (name == "fast_start")
     {
         UserConfigParams::m_fast_start = ((CheckBoxWidget*)widget)->getState();
+    }
+    if (name == "restart_bind")
+    {
+        UserConfigParams::m_allow_restart_bind = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

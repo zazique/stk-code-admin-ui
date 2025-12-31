@@ -503,6 +503,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam          m_random_player_pos
             PARAM_DEFAULT(  BoolUserConfigParam(false, "random-player-pos",
             &m_race_setup_group, "Randomize the position of the players at the start of a race. Doesn't apply to story mode.") );
+    PARAM_PREFIX BoolUserConfigParam          m_allow_restart_bind
+            PARAM_DEFAULT(BoolUserConfigParam(false, "restart_bind",
+            &m_race_setup_group, "True if restart bind can be used"));
 
     // ---- Wiimote data
     PARAM_PREFIX GroupUserConfigParam        m_wiimote_group

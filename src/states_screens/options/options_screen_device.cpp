@@ -166,6 +166,10 @@ void OptionsScreenDevice::init()
     addListItem(actions, PA_LOOK_BACK);
     addListItem(actions, PA_RESCUE);
     addListItem(actions, PA_PAUSE_RACE);
+    if (UserConfigParams::m_allow_restart_bind) 
+    {
+        addListItem(actions, PA_RESTART_RACE);
+    }
 
 
     //I18N: Key binding section
@@ -271,6 +275,11 @@ void OptionsScreenDevice::updateInputButtons()
 
     //I18N: Key binding name
     renameRow(actions, i++, _("Pause Game"), PA_PAUSE_RACE);
+    
+    if (UserConfigParams::m_allow_restart_bind)
+    {
+        renameRow(actions, i++, _("Restart Race"), PA_RESTART_RACE);
+    }
 
     i++; // section header
 
