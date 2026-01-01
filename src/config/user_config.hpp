@@ -797,6 +797,10 @@ namespace UserConfigParams
         PARAM_DEFAULT(IntUserConfigParam(30, "record_fps",
         &m_recording_group, "Specify the fps of recording video"));
         
+    PARAM_PREFIX BoolUserConfigParam         m_privacy_mode
+        PARAM_DEFAULT(BoolUserConfigParam(false, "privacy_mode",
+        &m_recording_group, "True if we need to hide save path shown when you record video or replay"));
+        
     PARAM_PREFIX BoolUserConfigParam m_fast_start
 		PARAM_DEFAULT( BoolUserConfigParam(false, "fast_start", 
                    &m_video_group, "True if fast start in debug mode should be removed"));

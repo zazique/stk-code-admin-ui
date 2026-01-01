@@ -761,9 +761,12 @@ begin:
         [](const char* s, void* user_data)
         { Log::error("openglrecorder", "%s", s); }, NULL);
     ogrRegStringCallback(OGR_CBT_SAVED_RECORDING,
-        [] (const char* s, void* user_data) { MessageQueue::add
-        (MessageQueue::MT_GENERIC, _("Video saved in \"%s\".", s));
-        }, NULL);
+		[] (const char* s, void* user_data) {
+			const char* display_path = UserConfigParams::m_privacy_mode ? "secret" : s;
+			
+			MessageQueue::add(MessageQueue::MT_GENERIC, 
+							_("Video saved in \"%s\".", display_path));
+		}, NULL);
     ogrRegIntCallback(OGR_CBT_PROGRESS_RECORDING,
         [] (const int i, void* user_data)
         { MessageQueue::showProgressBar(i, _("Encoding progress:")); }, NULL);
@@ -2074,33 +2077,35 @@ void IrrDriver::doScreenShot()
 
     std::string track_name = RaceManager::get()->getTrackName();
     if (World::getWorld() == NULL) track_name = "menu";
-    std::string path = file_manager->getScreenshotDir()+track_name+"-"
-                     + time_buffer+".png";
-
-    if (irr_driver->getVideoDriver()->writeImageToFile(image, path.c_str(), 0))
-    {
-        RaceGUIBase* base = World::getWorld()
-                          ? World::getWorld()->getRaceGUI()
-                          : NULL;
-        if (base)
-        {
-            base->addMessage(
-                      core::stringw(("Screenshot saved to\n" + path).c_str()),
-                      NULL, 2.0f, video::SColor(255,255,255,255), true, false);
-        }   // if base
-    }
-    else
-    {
-        RaceGUIBase* base = World::getWorld()->getRaceGUI();
-        if (base)
-        {
-            base->addMessage(
-                core::stringw(("FAILED saving screenshot to\n" + path +
-                              "\n:(").c_str()),
-                NULL, 2.0f, video::SColor(255,255,255,255),
-                true, false);
-        }   // if base
-    }   // if failed writing screenshot file
+    std::string path = file_manager->getScreenshotDir() + track_name + "-"
+                   + time_buffer + ".png";
+    std::string display_path;
+	if (UserConfigParams::m_privacy_mode) {
+		display_path = "secret";
+	} else {
+		display_path = path;
+	}
+	
+	if (irr_driver->getVideoDriver()->writeImageToFile(image, path.c_str(), 0))
+	{
+		RaceGUIBase* base = World::getWorld() ? World::getWorld()->getRaceGUI() : NULL;
+		if (base)
+		{
+			base->addMessage(
+				core::stringw(("Screenshot saved to\n" + display_path).c_str()),
+				NULL, 2.0f, video::SColor(255,255,255,255), true, false);
+		}
+	}
+	else
+	{
+		RaceGUIBase* base = World::getWorld() ? World::getWorld()->getRaceGUI() : NULL;
+		if (base)
+		{
+			base->addMessage(
+				core::stringw(("FAILED saving screenshot to\n" + display_path + "\n:(").c_str()),
+				NULL, 2.0f, video::SColor(255,255,255,255), true, false);
+		}
+	}
     image->drop();
 }   // doScreenShot
 

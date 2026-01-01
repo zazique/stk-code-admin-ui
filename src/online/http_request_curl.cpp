@@ -153,9 +153,9 @@ void Online::HTTPRequest::operation()
         if (!fout)
         {
             Log::error("HTTPRequest",
-                       "Can't open '%s' for writing, ignored.",
-                       (m_filename+".part").c_str());
-            return;
+               "Can't open '%s' for writing, ignored.",
+               UserConfigParams::m_privacy_mode ? "secret_path.part" : (m_filename + ".part").c_str());
+			return;
         }
         curl_easy_setopt(curl_session,  CURLOPT_WRITEDATA,     fout  );
         curl_easy_setopt(curl_session,  CURLOPT_WRITEFUNCTION, fwrite);

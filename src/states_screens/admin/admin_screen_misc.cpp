@@ -37,6 +37,12 @@ void AdminScreenMisc::init()
         menu_music->setTooltip(_("Allows you to switch between every\n"
 								 "existing official menu theme."));
     }
+    if (CheckBoxWidget* privacy = getWidget<CheckBoxWidget>("privacy_mode"))
+    {
+        privacy->setState(UserConfigParams::m_privacy_mode);
+        privacy->setTooltip(_("Hides save paths shown when you record\n"
+						"video, replay or screenshot."));
+    }
 }
 
 void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, const int playerID)
@@ -75,6 +81,10 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
 			}
 		}
 	}
+	else if (name == "privacy_mode")
+    {
+		UserConfigParams::m_privacy_mode = ((CheckBoxWidget*)widget)->getState();
+    }
 }
 
 void AdminScreenMisc::tearDown() { Screen::tearDown(); }

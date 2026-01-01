@@ -19,6 +19,7 @@
 #include "replay/replay_recorder.hpp"
 
 #include "config/stk_config.hpp"
+#include "config/user_config.hpp"
 #include "io/file_manager.hpp"
 #include "items/attachment.hpp"
 #include "items/powerup.hpp"
@@ -386,13 +387,31 @@ void ReplayRecorder::save()
     FILE *fd = openReplayFile(/*writeable*/true);
     if (!fd)
     {
-        Log::error("ReplayRecorder", "Can't open 'секрет' for writing - "
-            "can't save replay data.", getReplayFilename().c_str());
+        if (UserConfigParams::m_privacy_mode)
+		{
+			Log::error("ReplayRecorder", "Can't open 'secret' for writing - "
+										"can't save replay data.");
+		}
+		else
+		{
+			Log::error("ReplayRecorder", "Can't open '%s' for writing - "
+										"can't save replay data.", getReplayFilename().c_str());
+		}
         return;
     }
 
-    core::stringw msg = _("Replay saved in \"%s\".",
-        StringUtils::utf8ToWide("секрет"));
+    core::stringw msg;
+
+	if (UserConfigParams::m_privacy_mode)
+	{
+		msg = _("Replay saved in \"%s\".", 
+				StringUtils::utf8ToWide("secret"));
+	}
+	else
+	{
+		msg = _("Replay saved in \"%s\".",
+				StringUtils::utf8ToWide(file_manager->getReplayDir() + getReplayFilename()).c_str());
+	}
     MessageQueue::add(MessageQueue::MT_GENERIC, msg);
 
     fprintf(fd, "version: %d\n", getCurrentReplayVersion());
