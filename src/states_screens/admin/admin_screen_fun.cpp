@@ -45,6 +45,11 @@ void AdminScreenFun::init()
 						   "gives ability to jump like in older STK versions.\n"
 						   "Bind can be configured in Controls settings."));
     }
+    if (CheckBoxWidget* rescue = getWidget<CheckBoxWidget>("disable_rescue"))
+    {
+        rescue->setState(UserConfigParams::m_disable_auto_rescue);
+        rescue->setTooltip(_("Bird cannot rescue you automatically if enabled."));
+    }
 }
 
 
@@ -74,6 +79,10 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "jump_bind")
     {
 		UserConfigParams::m_allow_jump_bind = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "disable_rescue")
+    {
+		UserConfigParams::m_disable_auto_rescue = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

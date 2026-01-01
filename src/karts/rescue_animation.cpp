@@ -27,6 +27,7 @@
 #include "modes/three_strikes_battle.hpp"
 #include "network/network_string.hpp"
 #include "mini_glm.hpp"
+#include "controller/controller.hpp"
 
 #include <IAnimatedMeshSceneNode.h>
 
@@ -38,6 +39,17 @@ RescueAnimation* RescueAnimation::create(AbstractKart* kart,
 {
     // When goal phase is happening karts is made stationary, so no animation
     // will be created
+    if (UserConfigParams::m_disable_auto_rescue)
+    {
+        // Проверяем: а нажал ли игрок кнопку физически?
+        // Нам нужно достучаться до контроллера карта
+        if (kart->getControls().getRescue() == false)
+        {
+            // Кнопка НЕ нажата, значит это вызов от триггера или системы.
+            // Блокируем!
+            return NULL;
+        }
+    }
     if (World::getWorld()->isGoalPhase())
         return NULL;
     return new RescueAnimation(kart, is_auto_rescue);

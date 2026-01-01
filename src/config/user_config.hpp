@@ -509,6 +509,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam          m_allow_jump_bind
             PARAM_DEFAULT(BoolUserConfigParam(false, "jump_bind",
             &m_race_setup_group, "True if jump bind can be used"));
+    PARAM_PREFIX BoolUserConfigParam          m_disable_auto_rescue
+            PARAM_DEFAULT(BoolUserConfigParam(false, "disable_rescue",
+            &m_race_setup_group, "True if auto rescue should be disabled"));
 
     // ---- Wiimote data
     PARAM_PREFIX GroupUserConfigParam        m_wiimote_group

@@ -1608,6 +1608,7 @@ void Kart::update(int ticks)
                ((Vec3(0, 1, 0).rotate(q.getAxis(), q.getAngle())));
 
         if (Track::getCurrentTrack()->isAutoRescueEnabled() &&
+			!UserConfigParams::m_disable_auto_rescue &&
             (!m_terrain_info->getMaterial() ||
             !m_terrain_info->getMaterial()->hasGravity()) &&
             !has_animation_before && fabs(roll) > 60 * DEGREE_TO_RAD &&
@@ -1702,7 +1703,7 @@ void Kart::update(int ticks)
         Track::getCurrentTrack()->getAABB(&min, &max);
 
         if((min->getY() - getXYZ().getY() > 17 || dist_to_sector > 25) && !m_flying &&
-           !has_animation_before)
+           !has_animation_before && !UserConfigParams::m_disable_auto_rescue)
         {
             RescueAnimation::create(this);
             m_last_factor_engine_sound = 0.0f;
@@ -1710,7 +1711,7 @@ void Kart::update(int ticks)
     }
     else
     {
-        if (!has_animation_before && material->isDriveReset() && isOnGround())
+        if (!has_animation_before && material->isDriveReset() && isOnGround() && !UserConfigParams::m_disable_auto_rescue)
         {
             RescueAnimation::create(this);
             m_last_factor_engine_sound = 0.0f;
@@ -2117,7 +2118,10 @@ void Kart::handleMaterialGFX(float dt)
 
             if (falling && m_falling_time <= 0)
             {
-                camera->setMode(Camera::CM_FALLING);
+                if (!UserConfigParams::m_disable_auto_rescue)
+                {
+                    camera->setMode(Camera::CM_FALLING);
+                }
             }
             else if (camera->getMode() != Camera::CM_NORMAL &&
                      camera->getMode() != Camera::CM_REVERSE)
