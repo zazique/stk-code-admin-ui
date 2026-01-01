@@ -170,6 +170,10 @@ void OptionsScreenDevice::init()
     {
         addListItem(actions, PA_RESTART_RACE);
     }
+    if (UserConfigParams::m_allow_jump_bind) 
+    {
+        addListItem(actions, PA_JUMP);
+    }
 
 
     //I18N: Key binding section
@@ -279,6 +283,11 @@ void OptionsScreenDevice::updateInputButtons()
     if (UserConfigParams::m_allow_restart_bind)
     {
         renameRow(actions, i++, _("Restart Race"), PA_RESTART_RACE);
+    }
+
+	if (UserConfigParams::m_allow_jump_bind)
+    {
+        renameRow(actions, i++, _("Jump"), PA_JUMP);
     }
 
     i++; // section header

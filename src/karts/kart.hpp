@@ -74,6 +74,7 @@ class Kart : public AbstractKart
 private:
     int m_network_finish_check_ticks;
     int m_network_confirmed_finish_ticks;
+    bool m_jump_pressed_last_frame;
 protected:
     /** Offset of the graphical kart chassis from the physical chassis. */
     float m_graphical_y_offset;

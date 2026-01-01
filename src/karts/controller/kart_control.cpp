@@ -80,6 +80,12 @@ void KartControl::setLookBack(bool b)
     m_look_back   = b;
 }   // setLookBack
 // ----------------------------------------------------------------------------
+/** Sets if the kart wants to jump. */
+void KartControl::setJump(bool b)
+{
+    m_jump = b;
+}   // setJump
+// ----------------------------------------------------------------------------
 /** Copies the important data from this objects into a memory buffer. */
 void KartControl::saveState(BareNetworkString *buffer) const
 {

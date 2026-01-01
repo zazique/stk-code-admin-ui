@@ -506,6 +506,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam          m_allow_restart_bind
             PARAM_DEFAULT(BoolUserConfigParam(false, "restart_bind",
             &m_race_setup_group, "True if restart bind can be used"));
+    PARAM_PREFIX BoolUserConfigParam          m_allow_jump_bind
+            PARAM_DEFAULT(BoolUserConfigParam(false, "jump_bind",
+            &m_race_setup_group, "True if jump bind can be used"));
 
     // ---- Wiimote data
     PARAM_PREFIX GroupUserConfigParam        m_wiimote_group

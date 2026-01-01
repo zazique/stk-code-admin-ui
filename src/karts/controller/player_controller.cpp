@@ -244,6 +244,12 @@ bool PlayerController::action(PlayerAction action, int value, bool dry_run)
     case PA_PAUSE_RACE:
         if (value != 0) StateManager::get()->escapePressed();
         break;
+    case PA_JUMP:
+        if (UserConfigParams::m_allow_jump_bind)
+        {
+            SET_OR_TEST_GETTER(Jump, value != 0);
+        }
+        break;
     default:
        break;
     }

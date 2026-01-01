@@ -38,6 +38,13 @@ void AdminScreenFun::init()
 						"(NOTE: this feature woks only for karts\n"
 						"where it is implemented)"));
     }
+    if (CheckBoxWidget* jump = getWidget<CheckBoxWidget>("jump_bind"))
+    {
+        jump->setState(UserConfigParams::m_allow_jump_bind);
+        jump->setTooltip(_("Enables jump bind function, which\n"
+						   "gives ability to jump like in older STK versions.\n"
+						   "Bind can be configured in Controls settings."));
+    }
 }
 
 
@@ -63,6 +70,10 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "kart_hue")
     {
 		UserConfigParams::m_fun_rainbow_kart = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "jump_bind")
+    {
+		UserConfigParams::m_allow_jump_bind = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

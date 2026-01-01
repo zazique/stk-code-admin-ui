@@ -322,6 +322,7 @@ void Kart::reset()
 
     m_network_finish_check_ticks = 0;
     m_network_confirmed_finish_ticks = 0;
+    m_jump_pressed_last_frame = false;
     // Add karts back in case that they have been removed (i.e. in battle
     // mode) - but only if they actually have a body (e.g. ghost karts
     // don't have one).
@@ -2671,6 +2672,38 @@ void Kart::updatePhysics(int ticks)
     m_max_speed->setMinSpeed(min_speed);
     m_max_speed->update(ticks);
 
+    bool is_jump_pressed = m_controls.getJump();
+
+    if (UserConfigParams::m_allow_jump_bind && is_jump_pressed && 
+        !m_jump_pressed_last_frame &&
+        !NetworkConfig::get()->isNetworking())
+    {
+        btRigidBody* body = m_vehicle->getRigidBody();
+        btTransform tr = body->getWorldTransform();
+        btVector3 localUp = tr.getBasis().getColumn(1); 
+        
+        int validGroundContacts = 0;
+        for (int i = 0; i < 4; i++)
+        {
+            const btWheelInfo& wheel = m_vehicle->getWheelInfo(i);
+            if (wheel.m_raycastInfo.m_isInContact)
+            {
+                btVector3 groundNormal = wheel.m_raycastInfo.m_contactNormalWS;
+                float cosAngle = localUp.dot(groundNormal);
+                if (cosAngle > 0.7f) validGroundContacts++;
+            }
+        }
+
+        if (validGroundContacts > 0 && localUp.y() > 0.0f)
+        {
+            float jumpVelocity = 8.5f;
+            btVector3 currentVel = body->getLinearVelocity();
+            body->setLinearVelocity(currentVel + localUp * jumpVelocity);
+        }
+    }
+
+    m_jump_pressed_last_frame = is_jump_pressed;
+    // ------------------
 #ifdef XX
     Log::info("Kart","angVel %f %f %f heading %f suspension %f %f %f %f"
        ,m_body->getAngularVelocity().getX()
