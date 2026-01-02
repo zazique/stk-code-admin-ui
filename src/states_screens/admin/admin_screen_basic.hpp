@@ -7,6 +7,7 @@ class AdminScreenBasic : public GUIEngine::Screen, public GUIEngine::ScreenSingl
 {
     AdminScreenBasic();
     friend class GUIEngine::ScreenSingleton<AdminScreenBasic>;
+    int m_current_page = 1;
 
 public:
     virtual void init() OVERRIDE;

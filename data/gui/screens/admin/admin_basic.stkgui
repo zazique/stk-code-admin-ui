@@ -2,95 +2,76 @@
 <stkgui>
     <icon-button id="back" x="1%" y="0" height="9%" icon="gui/icons/back.png"/>
 
-    <div x="1%" y="1%" width="98%" height="98%" layout="vertical-row" >
+    <div x="1%" y="1%" width="98%" height="98%" layout="vertical-row">
         <header width="80%" height="8%" align="center" text="Admin Control Panel" text_align="center"/>
         <spacer width="100%" height="1%"/>
 
-        <div width="100%" height="91%" layout="horizontal-row" >
-
+        <div width="100%" height="91%" layout="horizontal-row">
             <vertical-tabs id="admin_choice" height="100%" width="20%">
                 <icon-button id="tab_basic" width="128" height="128" icon="gui/icons/admin_basic.png" text="Basic"/>
                 <icon-button id="tab_misc" width="128" height="128" icon="gui/icons/admin_misc.png" text="Misc"/>
                 <icon-button id="tab_fun" width="128" height="128" icon="gui/icons/admin_fun.png" text="Fun"/>
             </vertical-tabs>
 
-            <spacer width="2%" height="100%"/>
+            <spacer width="1%" height="100%"/>
 
-            <box width="78%" height="100%" layout="vertical-row">
-                <spacer width="5" height="2%"/>
-
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="show_inputs"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Show Input Overlay" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-
-                <div width="100%" height="fit" layout="horizontal-row">
-                    <gauge id="input_overlay_size" width="10f" align="center" min_value="1" max_value="100" />
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" x="0" y="0" text="Input Overlay Size"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-
-                <div width="100%" height="fit" layout="horizontal-row">
-                    <gauge id="input_overlay_pos" width="10f" align="center" min_value="-1000" max_value="1000" />
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" x="0" y="0" text="Input overlay X-offset"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
+            <box width="77%" height="100%" layout="horizontal-row">
                 
-                <div width="100%" height="fit" layout="horizontal-row">
-                    <gauge id="input_overlay_pos_y" width="10f" align="center" min_value="-1000" max_value="1000" />
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" x="0" y="0" text="Input overlay Y-offset"/>
+                <icon-button id="prev_page" width="5%" height="100%" align="center" 
+                             icon="skins/classic-coal/left_arrow_focus.png"/>
+
+                <div id="page_container" width="90%" height="100%">
+                    <div id="page_1" x="20" y="0" width="100%" height="100%" layout="vertical-row">
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <checkbox id="show_inputs"/><spacer width="2%"/><label text="Show Input Overlay"/>
+                        </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <gauge id="input_overlay_size" width="10f" min_value="1" max_value="100"/><spacer width="2%"/><label text="Input Overlay Size"/>
+                        </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <gauge id="input_overlay_pos" width="10f" min_value="-1000" max_value="1000"/><spacer width="2%"/><label text="Input overlay X-offset"/>
+                        </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <gauge id="input_overlay_pos_y" width="10f" min_value="-1000" max_value="1000"/><spacer width="2%"/><label text="Input overlay Y-offset"/>
+                        </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <checkbox id="debug_mode"/><spacer width="2%"/><label text="Enable debug mode"/>
+                        </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <checkbox id="show_check"/><spacer width="2%"/><label text="Show Checklines"/>
+                        </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <checkbox id="show_drive"/><spacer width="2%"/><label text="Show Driveline"/>
+                        </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <checkbox id="fast_start"/><spacer width="2%"/><label text="Disable fast start in debug mode"/>
+                        </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <checkbox id="restart_bind"/><spacer width="2%"/><label text="Allow restart bind"/>
+                        </div>
+                    </div>
+
+                    <div id="page_2" x="0" y="0" width="100%" height="100%" layout="vertical-row" visible="false">
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <checkbox id="record_replay"/><spacer width="2%"/><label text="Always record replay"/>
+                        </div>
+                    </div>
                 </div>
 
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="debug_mode"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable debug mode" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="show_check"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Show Checklines" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="fast_start"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Disable fast start in debug mode" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="restart_bind"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Allow restart bind" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="record_replay"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Always record replay" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
+                <icon-button id="next_page" width="5%" height="100%" align="center" 
+                             icon="skins/classic-coal/right_arrow_focus.png"/>
             </box>
+
         </div>
     </div>
 </stkgui>

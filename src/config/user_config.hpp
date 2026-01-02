@@ -838,7 +838,9 @@ namespace UserConfigParams
     PARAM_PREFIX bool m_material_debug PARAM_DEFAULT( false );
 
     /** If track debugging is enabled. */
-    PARAM_PREFIX int m_track_debug PARAM_DEFAULT( false );
+    PARAM_PREFIX BoolUserConfigParam m_track_debug
+    PARAM_DEFAULT( BoolUserConfigParam(false, "track_debug", 
+                   &m_video_group, "True if track driveline should be debugged") );
 
     /** True if check structures should be debugged. */
     PARAM_PREFIX BoolUserConfigParam m_check_debug

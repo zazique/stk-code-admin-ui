@@ -14,6 +14,7 @@ AdminScreenBasic::AdminScreenBasic() : Screen("admin/admin_basic.stkgui") {}
 void AdminScreenBasic::init()
 {
     Screen::init();
+    m_current_page = 1;
     bool active = UserConfigParams::m_display_inputs;
     RibbonWidget* tabs = getWidget<RibbonWidget>("admin_choice");
     if (tabs) 
@@ -21,6 +22,8 @@ void AdminScreenBasic::init()
         tabs->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
         tabs->select("tab_basic", PLAYER_ID_GAME_MASTER);
     }
+	if (Widget* p1 = getWidget("page_1")) p1->setVisible(true);
+    if (Widget* p2 = getWidget("page_2")) p2->setVisible(false);
     if (CheckBoxWidget* inputs = getWidget<CheckBoxWidget>("show_inputs"))
     {
         inputs->setState(UserConfigParams::m_display_inputs);
@@ -58,6 +61,12 @@ void AdminScreenBasic::init()
 		check->setTooltip(_("Displays track checklines.\n"
 							"Originally these were only visible via Artist Debug mode."));
 	}
+	if (CheckBoxWidget* track = getWidget<CheckBoxWidget>("show_drive"))
+	{
+		track->setState(UserConfigParams::m_track_debug);
+		track->setTooltip(_("Displays track driveline.\n"
+							"Originally this are only visible via Artist Debug mode."));
+	}
 	if (CheckBoxWidget* start = getWidget<CheckBoxWidget>("fast_start"))
 	{
 		start->setState(UserConfigParams::m_fast_start);
@@ -79,10 +88,26 @@ void AdminScreenBasic::init()
     if (Widget* w = getWidget("input_overlay_size"))  w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos_y")) w->setActive(active);
+    
+    this->calculateLayout();
 }
 
 void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, const int playerID)
 {
+	if (name == "next_page" && m_current_page < 2)
+    {
+        m_current_page = 2;
+        if (Widget* p1 = getWidget("page_1")) p1->setVisible(false);
+        if (Widget* p2 = getWidget("page_2")) p2->setVisible(true);
+        this->calculateLayout();
+    }
+    else if (name == "prev_page" && m_current_page > 1)
+    {
+        m_current_page = 1;
+        if (Widget* p1 = getWidget("page_1")) p1->setVisible(true);
+        if (Widget* p2 = getWidget("page_2")) p2->setVisible(false);
+        this->calculateLayout();
+    }
     if (name == "admin_choice")
     {
         std::string selection = ((RibbonWidget*)widget)->getSelectionIDString(PLAYER_ID_GAME_MASTER);
@@ -113,23 +138,27 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
     {
         UserConfigParams::m_input_overlay_offset_y = ((GUIEngine::SpinnerWidget*)widget)->getValue();
     }
-    if (name == "debug_mode")
+    else if (name == "debug_mode")
     {
         UserConfigParams::m_artist_debug_mode = ((CheckBoxWidget*)widget)->getState();
     }
-    if (name == "show_check")
+    else if (name == "show_check")
     {
         UserConfigParams::m_check_debug = ((CheckBoxWidget*)widget)->getState();
     }
-    if (name == "fast_start")
+    else if (name == "show_drive")
+    {
+        UserConfigParams::m_track_debug = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "fast_start")
     {
         UserConfigParams::m_fast_start = ((CheckBoxWidget*)widget)->getState();
     }
-    if (name == "restart_bind")
+    else if (name == "restart_bind")
     {
         UserConfigParams::m_allow_restart_bind = ((CheckBoxWidget*)widget)->getState();
     }
-    if (name == "record_replay")
+    else if (name == "record_replay")
     {
         UserConfigParams::m_always_record_replay = ((CheckBoxWidget*)widget)->getState();
     }
