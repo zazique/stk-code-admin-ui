@@ -752,6 +752,7 @@ namespace GUIEngine
 		video::ITexture* t_key_nitro   = nullptr;
 		video::ITexture* t_key_back    = nullptr;
 		video::ITexture* t_key_powerup = nullptr;
+		video::ITexture* t_key_jump    = nullptr;
 #ifdef ANDROID
         std::mutex m_gui_functions_mutex;
         std::vector<std::function<void()> > m_gui_functions;
@@ -1213,8 +1214,6 @@ namespace GUIEngine
             renderLoading(true, true);
             g_device->getVideoDriver()->endScene();
         }
-        // В STK 1.5 используем перегруженный метод getTexture, 
-        // который сам знает, где лежат GUI_ICON
         t_key_up      = irr_driver->getTexture(FileManager::GUI_ICON, "key_up.png");
         t_key_down    = irr_driver->getTexture(FileManager::GUI_ICON, "key_down.png");
         t_key_left    = irr_driver->getTexture(FileManager::GUI_ICON, "key_left.png");
@@ -1223,6 +1222,7 @@ namespace GUIEngine
         t_key_nitro   = irr_driver->getTexture(FileManager::GUI_ICON, "key_nitro.png");
         t_key_back    = irr_driver->getTexture(FileManager::GUI_ICON, "key_back.png");
         t_key_powerup = irr_driver->getTexture(FileManager::GUI_ICON, "key_powerup.png");
+        t_key_jump    = irr_driver->getTexture(FileManager::GUI_ICON, "key_jump.png");
     }   // init
 
     // -----------------------------------------------------------------------
@@ -1482,6 +1482,7 @@ namespace GUIEngine
                     else if (action_type == 6) pressed = ctrl->getSteer() < -0.1f;
                     else if (action_type == 7) pressed = ctrl->getSteer() > 0.1f;
                     else if (action_type == 8) pressed = ctrl->getLookBack();
+                    else if (action_type == 9) pressed = ctrl->getJump();
                 }
 
                 core::rect<s32> dest(x_base + col * (s + gap), y_base + row * (s + gap),  
@@ -1495,6 +1496,10 @@ namespace GUIEngine
 
             drawInput(t_key_powerup, 1, 0, 5);  
             drawInput(t_key_back,    2, 0, 8); 
+            if (UserConfigParams::m_allow_jump_bind)
+            {
+				drawInput(t_key_jump,    3, 0, 9); 
+			}
             drawInput(t_key_up,      4, 0, 1); 
 
             drawInput(t_key_drift,   1, 1, 4); 
