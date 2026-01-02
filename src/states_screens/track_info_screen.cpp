@@ -311,29 +311,47 @@ void TrackInfoScreen::init()
     // Record race or not
     // -------------
     const bool record_available = (RaceManager::get()->isTimeTrialMode() || RaceManager::get()->isEggHuntMode());
-    m_record_race->setVisible(record_available);
-    getWidget<LabelWidget>("record-race-text")->setVisible(record_available);
-    if (RaceManager::get()->isRecordingRace())
+    if (UserConfigParams::m_always_record_replay && record_available)
     {
-        // isRecordingRace() is true when it's pre-set by ghost replay selection
-        // which force record this race
         m_record_this_race = true;
         m_record_race->setState(true);
         m_record_race->setActive(false);
-        m_ai_kart_spinner->setValue(0);
-        m_ai_kart_spinner->setActive(false);
-        RaceManager::get()->setNumKarts(RaceManager::get()->getNumLocalPlayers());
-        
-        UserConfigParams::m_num_karts_per_gamemode[RaceManager::get()->getMinorMode()] = RaceManager::get()->getNumLocalPlayers();
-    }
-    else if (record_available)
-    {
-        m_record_race->setActive(true);
-        m_record_race->setState(false);
-        m_ai_kart_spinner->setActive(true);
+        m_record_race->setVisible(record_available);
+        if (RaceManager::get()->isTimeTrialMode())
+        {
+			m_ai_kart_spinner->setValue(0);
+			m_ai_kart_spinner->setActive(false);
+		}
+		else
+			m_ai_kart_spinner->setActive(true);
+        getWidget<LabelWidget>("record-race-text")->setVisible(record_available);
     }
     else
-        m_ai_kart_spinner->setActive(true);
+    {
+		m_record_race->setVisible(record_available);
+		getWidget<LabelWidget>("record-race-text")->setVisible(record_available);
+		if (RaceManager::get()->isRecordingRace())
+		{
+			// isRecordingRace() is true when it's pre-set by ghost replay selection
+			// which force record this race
+			m_record_this_race = true;
+			m_record_race->setState(true);
+			m_record_race->setActive(false);
+			m_ai_kart_spinner->setValue(0);
+			m_ai_kart_spinner->setActive(false);
+			RaceManager::get()->setNumKarts(RaceManager::get()->getNumLocalPlayers());
+			
+			UserConfigParams::m_num_karts_per_gamemode[RaceManager::get()->getMinorMode()] = RaceManager::get()->getNumLocalPlayers();
+		}
+		else if (record_available)
+		{
+			m_record_race->setActive(true);
+			m_record_race->setState(false);
+			m_ai_kart_spinner->setActive(true);
+		}
+		else
+			m_ai_kart_spinner->setActive(true);
+	}
 
     // ---- High Scores
     m_highscore_label->setText(_("High Scores"), false);

@@ -384,7 +384,7 @@ void InputManager::handleStaticAction(int key, int value)
                 }
                 else
                 {
-                    ReplayRecorder::get()->save();
+					ReplayRecorder::get()->save();
                 }
             }
             break;

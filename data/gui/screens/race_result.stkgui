@@ -19,6 +19,7 @@
                     <icon-button id="left" icon="gui/icons/green_check.png" width="fit" height="100" raw_text="Left" word_wrap="true"/>
                     <icon-button id="middle" icon="gui/icons/green_check.png" width="fit" height="100" raw_text="Middle" word_wrap="true"/>
                     <icon-button id="right" icon="gui/icons/green_check.png" width="fit" height="100" raw_text="Right" word_wrap="true"/>
+                    <icon-button id="replay" icon="gui/icons/green_check.png" width="fit" height="100" raw_text="Save replay" word_wrap="true"/>
                 </buttonbar>
             </div>
         </roundedbox>

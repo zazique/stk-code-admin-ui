@@ -99,6 +99,7 @@ void RaceResultGUI::init()
     getWidget("left")->setVisible(false);
     getWidget("middle")->setVisible(false);
     getWidget("right")->setVisible(false);
+    getWidget("replay")->setVisible(false);
 
     m_started_race_over_music = false;
     music_manager->stopMusic();
@@ -368,10 +369,15 @@ void RaceResultGUI::enableAllButtons()
         else
         {
             middle->setImage("gui/icons/main_race.png");
-            if (RaceManager::get()->isRecordingRace())
+            if (RaceManager::get()->isRecordingRace() && RaceManager::get()->getMajorMode() == RaceManager::MAJOR_MODE_SINGLE && 
+                RaceManager::get()->getMinorMode() == RaceManager::MINOR_MODE_TIME_TRIAL)
             {
                 middle->setLabel(_("Race against the new ghost replay"));
                 middle->setVisible(!World::getWorld()->hasRaceEndedEarly());
+				if (UserConfigParams::m_always_record_replay)
+				{
+					middle->setActive(false);
+				}
             }
             else
             {
@@ -381,6 +387,27 @@ void RaceResultGUI::enableAllButtons()
             left->setLabel(_("Back to the menu"));
             left->setImage("gui/icons/back.png");
         }
+        left->setVisible(true);
+        
+        GUIEngine::IconButtonWidget *replayBtn = getWidget<GUIEngine::IconButtonWidget>("replay");
+        replayBtn->setVisible(true);
+        if (replayBtn)
+        {
+            if (RaceManager::get()->getMinorMode() == RaceManager::MINOR_MODE_TIME_TRIAL &&
+                UserConfigParams::m_always_record_replay && !RaceManager::get()->isWatchingReplay())
+            {
+                replayBtn->setActive(true);
+                replayBtn->setFocusable(true);
+            }
+            else
+            {
+				replayBtn->setActive(false);
+                replayBtn->setFocusable(false);
+            }
+        }
+        replayBtn->setLabel(_("Save Replay"));
+        replayBtn->setImage("gui/icons/save.png");
+
         left->setVisible(true);
     }
 }   // enableAllButtons
@@ -412,7 +439,26 @@ void RaceResultGUI::eventCallback(GUIEngine::Widget* widget,
     {
         const std::string& action =
             getWidget<GUIEngine::RibbonWidget>("operations")->getSelectionIDString(PLAYER_ID_GAME_MASTER);
-
+		if (action == "replay")
+        {
+            if (ReplayRecorder::get())
+            {
+                ReplayRecorder::get()->save();
+                if (GUIEngine::IconButtonWidget* btn = getWidget<GUIEngine::IconButtonWidget>("replay"))
+                {
+                    btn->setLabel(_("Saved!"));
+                    btn->setActive(false);
+                    btn->setFocusable(false);
+                }
+                if (GUIEngine::IconButtonWidget* middle = getWidget<GUIEngine::IconButtonWidget>("middle"))
+				{
+					middle->setActive(true);
+					middle->setFocusable(true);
+					getWidget<GUIEngine::RibbonWidget>("operations")->select("middle", PLAYER_ID_GAME_MASTER);
+				}
+            }
+            return;
+		}
         // User pressed "Continue" button, go from race results to overall GP results
         if (m_animation_state == RR_WAITING_GP_RESULT && action == "middle")
         {

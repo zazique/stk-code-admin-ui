@@ -308,7 +308,10 @@ void ReplayRecorder::update(int ticks)
     if (world->getPhase() == World::RESULT_DISPLAY_PHASE && !m_complete_replay)
     {
         m_complete_replay = true;
-        save();
+        if (!UserConfigParams::m_always_record_replay)
+        {
+            save();
+        }
     }
 }   // update
 

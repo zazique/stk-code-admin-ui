@@ -37,6 +37,7 @@
 #include "tracks/track_manager.hpp"
 #include "utils/string_utils.hpp"
 #include "utils/translation.hpp"
+#include "config/user_config.hpp"
 
 using namespace GUIEngine;
 using namespace irr::core;
@@ -137,6 +138,15 @@ GhostReplayInfoDialog::GhostReplayInfoDialog(unsigned int replay_id,
 
     m_action_widget->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
     m_action_widget->select("start", PLAYER_ID_GAME_MASTER);
+    if (UserConfigParams::m_always_record_replay)
+    {
+        m_record_race = true;
+        if (m_record_widget)
+        {
+            m_record_widget->setState(true);
+            m_record_widget->setActive(false);
+        }
+    }
 }   // GhostReplayInfoDialog
 // -----------------------------------------------------------------------------
 GhostReplayInfoDialog::~GhostReplayInfoDialog()
@@ -323,8 +333,17 @@ GUIEngine::EventPropagation
     else if (event_source == "watch-only")
     {
         m_watch_only = m_watch_widget->getState();
-        m_record_race = false;
-        m_record_widget->setState(false);
+        if (UserConfigParams::m_always_record_replay && !m_watch_only)
+        {
+            m_record_race = true;
+            m_record_widget->setState(true);
+            m_record_widget->setActive(false); 
+        }
+        else
+        {
+            m_record_race = false;
+            m_record_widget->setState(false);
+        }
         m_record_widget->setVisible(!m_watch_only);
         getWidget<LabelWidget>("record-race-text")->setVisible(!m_watch_only);
         if (!m_watch_only && m_compare_ghost)

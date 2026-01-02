@@ -70,6 +70,12 @@ void AdminScreenBasic::init()
 		start->setTooltip(_("Enables restart bind function.\n"
 							"Bind can be configured in Controls settings."));
 	}
+	if (CheckBoxWidget* replay = getWidget<CheckBoxWidget>("record_replay"))
+	{
+		replay->setState(UserConfigParams::m_always_record_replay);
+		replay->setTooltip(_("Always records replay in Time Trial mode.\n"
+							"You can save replay on race result screen."));
+	}
     if (Widget* w = getWidget("input_overlay_size"))  w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos_y")) w->setActive(active);
@@ -122,6 +128,10 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
     if (name == "restart_bind")
     {
         UserConfigParams::m_allow_restart_bind = ((CheckBoxWidget*)widget)->getState();
+    }
+    if (name == "record_replay")
+    {
+        UserConfigParams::m_always_record_replay = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

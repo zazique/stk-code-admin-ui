@@ -767,9 +767,12 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_camera_far_reset
         PARAM_DEFAULT(BoolUserConfigParam(false, "camera_far_null",
         &m_video_group, "True if camera_far value should be always set to 0"));
-        PARAM_PREFIX BoolUserConfigParam        m_fun_rainbow_kart
+    PARAM_PREFIX BoolUserConfigParam        m_fun_rainbow_kart
         PARAM_DEFAULT(BoolUserConfigParam(false, "kart_hue",
         &m_video_group, "True if kart color should change (only works for kart with implemented color change feature)"));
+    PARAM_PREFIX BoolUserConfigParam        m_always_record_replay
+        PARAM_DEFAULT(BoolUserConfigParam(false, "always_record_replay",
+        &m_video_group, "True if replay should be always recorded in time trials"));
 
     // ---- Recording
     PARAM_PREFIX GroupUserConfigParam        m_recording_group
