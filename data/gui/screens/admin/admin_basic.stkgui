@@ -13,9 +13,9 @@
                 <icon-button id="tab_fun" width="128" height="128" icon="gui/icons/admin_fun.png" text="Fun"/>
             </vertical-tabs>
 
-            <spacer width="1%" height="100%"/>
+            <spacer width="2%" height="100%"/>
 
-            <box width="77%" height="100%" layout="horizontal-row">
+            <box width="78%" height="100%" layout="horizontal-row">
                 
                 <icon-button id="prev_page" width="5%" height="100%" align="center" 
                              icon="skins/classic-coal/left_arrow_focus.png"/>

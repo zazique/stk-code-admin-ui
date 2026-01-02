@@ -43,6 +43,11 @@ void AdminScreenMisc::init()
         privacy->setTooltip(_("Hides save paths shown when you record\n"
 						"video, replay or screenshot."));
     }
+    if (CheckBoxWidget* unlock = getWidget<CheckBoxWidget>("unlock_everything"))
+	{
+		unlock->setState(UserConfigParams::m_unlock_everything > 0);
+		unlock->setTooltip(_("Unlock all karts, tracks and challenges."));
+	}
 }
 
 void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, const int playerID)
@@ -85,6 +90,11 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
     {
 		UserConfigParams::m_privacy_mode = ((CheckBoxWidget*)widget)->getState();
     }
+    else if (name == "unlock_everything")
+	{
+		bool active = ((CheckBoxWidget*)widget)->getState();
+		UserConfigParams::m_unlock_everything = active ? 2 : 0;
+	}
 }
 
 void AdminScreenMisc::tearDown() { Screen::tearDown(); }
