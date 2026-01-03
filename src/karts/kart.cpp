@@ -3512,6 +3512,146 @@ const Vec3& Kart::getRecentPreviousXYZ() const
     return m_previous_xyz[m_xyz_history_size/5];
 }   // getRecentPreviousXYZ
 
+void Kart::saveState()
+{
+    m_save_state.position = getXYZ();
+    
+    if (m_vehicle && m_vehicle->getRigidBody())
+    {
+        btRigidBody* body = m_vehicle->getRigidBody();
+        m_save_state.heading = body->getWorldTransform().getRotation();
+        m_save_state.linear_velocity = body->getLinearVelocity();
+        m_save_state.angular_velocity = body->getAngularVelocity();
+    }
+
+    if (m_max_speed) 
+    {
+        m_save_state.max_speed_limit = m_max_speed->getCurrentMaxSpeed();
+
+        for (int i = 0; i < 6; i++) {
+			m_save_state.increases[i].duration = m_max_speed->getSpeedIncreaseTicksLeft(i);
+			// Сохраняем реальные значения, которые сейчас в памяти MaxSpeed
+			m_save_state.increases[i].add_max_speed = m_max_speed->getAddMaxSpeed(i);
+			m_save_state.increases[i].engine_force  = m_max_speed->getEngineForce(i);
+		}
+    }
+    
+    // Предметы (проверь, что m_powerup не nullptr)
+    if (m_powerup) {
+        m_save_state.powerup_type = (int)m_powerup->getType();
+        m_save_state.powerup_count = m_powerup->getNum();
+    } else {
+        m_save_state.powerup_type = -1;
+    }
+	if (m_startup_boost > 0.0f && World::getWorld()->getTicksSinceStart() < stk_config->time2Ticks(5.1f)) 
+    {
+        m_save_state.startup_boost_ticks = m_max_speed->getSpeedIncreaseTicksLeft(MaxSpeed::MS_INCREASE_ZIPPER);
+    } 
+    else 
+    {
+        m_save_state.startup_boost_ticks = 0;
+    }
+    m_save_state.has_data = true;
+    m_save_state.speed = m_speed;
+    m_save_state.startup_boost = m_startup_boost;
+    m_save_state.nitro = m_collected_energy;
+}
+
+void Kart::loadState()
+{
+    if (!m_save_state.has_data) return;
+    
+    if (m_max_speed) {
+        m_max_speed->reset();
+        const KartProperties* kp = getKartProperties();
+
+		m_startup_boost = m_save_state.startup_boost;
+		if (m_save_state.startup_boost_ticks != 0 && m_startup_boost > 0.0f) {
+            float add_speed = 0.9f * m_startup_boost;
+            float force     = 200.0f;
+            int fade_out    = stk_config->time2Ticks(5.0f);
+            m_max_speed->instantSpeedIncrease(MaxSpeed::MS_INCREASE_ZIPPER, 
+                                              add_speed, 0.0f, force, 
+                                              m_save_state.startup_boost_ticks, fade_out);
+        }
+
+        m_max_speed->setCurrentMaxSpeed(kp->getEngineMaxSpeed());
+		m_startup_boost = m_save_state.startup_boost;
+        for (int i = 0; i < 6; i++) {
+            int16_t ticks = m_save_state.increases[i].duration;
+            if (i == MaxSpeed::MS_INCREASE_ZIPPER && m_save_state.startup_boost_ticks != 0) continue;
+            float add_speed = 5.0f;
+            float force = 400.0f;
+            float fade_time = 1.0f; 
+
+            if (i == MaxSpeed::MS_INCREASE_ZIPPER) {
+				add_speed = kp->getZipperMaxSpeedIncrease();
+				force     = kp->getZipperForce();
+				fade_time = kp->getZipperFadeOutTime();
+            } 
+            else if (i == MaxSpeed::MS_INCREASE_NITRO) {
+                add_speed = kp->getNitroMaxSpeedIncrease();
+                force     = kp->getNitroEngineForce();
+                fade_time = kp->getNitroFadeOutTime();
+            }
+            else if (i == MaxSpeed::MS_INCREASE_SLIPSTREAM) {
+                add_speed = kp->getSlipstreamMaxSpeedIncrease();
+                force     = kp->getSlipstreamAddPower();
+                fade_time = kp->getSlipstreamFadeOutTime();
+            }
+            else if (i == MaxSpeed::MS_INCREASE_SKIDDING) {
+                add_speed = kp->getSkidBonusSpeed()[0];
+                force     = kp->getSkidBonusForce()[0];
+                fade_time = 1.0f;
+            }
+            else if (i == MaxSpeed::MS_INCREASE_RED_SKIDDING) {
+                add_speed = kp->getSkidBonusSpeed()[1];
+                force     = kp->getSkidBonusForce()[1];
+                fade_time = 1.0f;
+            }
+
+            int fade_out_ticks = stk_config->time2Ticks(fade_time);
+
+            if (ticks > -fade_out_ticks && ticks != 0) {
+                m_max_speed->instantSpeedIncrease(i, add_speed, 0.0f, force, ticks, fade_out_ticks);
+            }
+        }
+        m_max_speed->setCurrentMaxSpeed(m_save_state.max_speed_limit);
+    }
+
+    if (m_vehicle && m_vehicle->getRigidBody()) {
+        m_vehicle->setMaxSpeed(m_save_state.max_speed_limit);
+        btRigidBody* body = m_vehicle->getRigidBody();
+        
+        btTransform trans;
+        trans.setOrigin(btVector3(m_save_state.position.getX(), 
+                                  m_save_state.position.getY(), 
+                                  m_save_state.position.getZ()));
+        trans.setRotation(m_save_state.heading);
+        
+        body->setWorldTransform(trans);
+        body->setInterpolationWorldTransform(trans);
+        
+        body->clearForces();
+        body->setLinearVelocity(m_save_state.linear_velocity);
+        body->setAngularVelocity(m_save_state.angular_velocity);
+        body->activate(true);
+    }
+
+    setXYZ(m_save_state.position);
+    m_speed = m_save_state.speed;
+    m_collected_energy = m_save_state.nitro;
+
+    if (m_powerup) {
+        this->setPowerup(PowerupManager::PowerupType::POWERUP_ANVIL, 0);
+        this->setPowerup((PowerupManager::PowerupType)m_save_state.powerup_type, 
+                          m_save_state.powerup_count);
+    }
+}
+
+
+
+
 // ------------------------------------------------------------------------
 void Kart::playSound(SFXBuffer* buffer)
 {

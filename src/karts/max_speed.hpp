@@ -201,6 +201,12 @@ public:
     void  reset();
     void  saveState(BareNetworkString *buffer) const;
     void  rewindTo(BareNetworkString *buffer);
+    void setCurrentMaxSpeed(float s) { m_current_max_speed = s; }
+    int getDuration(int i) const { return m_speed_increase[i].m_duration; }
+
+	float getAddMaxSpeed(int i) const { return m_speed_increase[i].m_max_add_speed; }
+	
+	float getEngineForce(int i) const { return m_speed_increase[i].m_engine_force; }
     // ------------------------------------------------------------------------
     /** Sets the minimum speed a kart should have. This is used to guarantee
      *  that e.g. zippers on ramps will always fast enough for the karts to

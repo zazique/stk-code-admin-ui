@@ -600,7 +600,29 @@ public:
      *  indicating that this kart has really finished the race. */
     int getNetworkConfirmedFinishTicks() const OVERRIDE
                                    { return m_network_confirmed_finish_ticks; }
-
+    struct MaxSpeedState {
+		int32_t duration;
+		float add_max_speed;
+		float engine_force;
+	};
+	
+	struct KartSaveState {
+		Vec3 position;
+		btQuaternion heading;
+		float speed;
+		float max_speed_limit;
+		float nitro;
+		float startup_boost;
+		btVector3 linear_velocity;
+		btVector3 angular_velocity;
+		int16_t startup_boost_ticks;
+		int powerup_type;
+		int powerup_count; 
+		MaxSpeedState increases[6]; 
+		bool has_data = false;
+	} m_save_state;
+	void saveState();
+    void loadState();
 };   // Kart
 
 

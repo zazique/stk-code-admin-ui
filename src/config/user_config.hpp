@@ -1471,6 +1471,10 @@ namespace UserConfigParams
     PARAM_PREFIX StringUserConfigParam      m_commandline
             PARAM_DEFAULT( StringUserConfigParam("", "commandline",
                              "Allows one to set commandline args in config file") );
+                             
+    PARAM_PREFIX BoolUserConfigParam        m_allow_checkpoints
+        PARAM_DEFAULT(BoolUserConfigParam(false, "allow_checkpoints",
+            "If true, you can add binds to save/load checkpoint on track"));
 
     // TODO? implement blacklist for new irrlicht device and GUI
     PARAM_PREFIX std::vector<std::string>   m_blacklist_res;

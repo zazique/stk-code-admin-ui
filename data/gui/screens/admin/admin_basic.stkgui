@@ -65,6 +65,10 @@
                         <div layout="horizontal-row" width="100%" height="fit">
                             <checkbox id="record_replay"/><spacer width="2%"/><label text="Always record replay"/>
                         </div>
+                        <spacer width="100%" height="2%"/>
+                        <div layout="horizontal-row" width="100%" height="fit">
+                            <checkbox id="checkpoints_btn"/><spacer width="2%"/><label text="Allow checkpoint binds"/>
+                        </div>
                     </div>
                 </div>
 

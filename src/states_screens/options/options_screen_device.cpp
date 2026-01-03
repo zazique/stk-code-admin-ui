@@ -174,6 +174,14 @@ void OptionsScreenDevice::init()
     {
         addListItem(actions, PA_JUMP);
     }
+    if (UserConfigParams::m_allow_checkpoints) 
+    {
+        addListItem(actions, PA_SAVE_CHECKPOINT);
+    }
+    if (UserConfigParams::m_allow_checkpoints) 
+    {
+        addListItem(actions, PA_LOAD_CHECKPOINT);
+    }
 
 
     //I18N: Key binding section
@@ -289,6 +297,17 @@ void OptionsScreenDevice::updateInputButtons()
     {
         renameRow(actions, i++, _("Jump"), PA_JUMP);
     }
+    
+    if (UserConfigParams::m_allow_checkpoints) 
+    {
+        renameRow(actions, i++, _("Save checkpoint"), PA_LOAD_CHECKPOINT);
+    }
+    
+    if (UserConfigParams::m_allow_checkpoints) 
+    {
+        renameRow(actions, i++, _("Load checkpoint"), PA_LOAD_CHECKPOINT);
+    }
+
 
     i++; // section header
 

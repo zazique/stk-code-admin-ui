@@ -136,7 +136,9 @@ void GamepadConfig::setDefaultBinds ()
     setBinding(PA_PAUSE_RACE,   Input::IT_STICKBUTTON, 5);
     setBinding(PA_RESTART_RACE, Input::IT_STICKBUTTON, 0); 
     setBinding(PA_JUMP,       	Input::IT_STICKBUTTON, 0);
-
+	setBinding(PA_SAVE_CHECKPOINT,Input::IT_STICKBUTTON, 0); 
+    setBinding(PA_LOAD_CHECKPOINT,Input::IT_STICKBUTTON, 0);
+    
     setBinding(PA_MENU_UP,      Input::IT_STICKMOTION, 1, Input::AD_NEGATIVE);
     setBinding(PA_MENU_DOWN,    Input::IT_STICKMOTION, 1, Input::AD_POSITIVE);
     setBinding(PA_MENU_LEFT,    Input::IT_STICKMOTION, 0, Input::AD_NEGATIVE);

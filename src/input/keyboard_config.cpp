@@ -65,6 +65,8 @@ void KeyboardConfig::setDefaultBinds()
     setBinding(PA_PAUSE_RACE,  Input::IT_KEYBOARD, IRR_KEY_ESCAPE);
     setBinding(PA_RESTART_RACE,Input::IT_KEYBOARD, 0); 
     setBinding(PA_JUMP,        Input::IT_KEYBOARD, 0);
+    setBinding(PA_SAVE_CHECKPOINT,Input::IT_KEYBOARD, 0); 
+    setBinding(PA_LOAD_CHECKPOINT,Input::IT_KEYBOARD, 0);
 
     setBinding(PA_MENU_UP,     Input::IT_KEYBOARD, IRR_KEY_UP);
     setBinding(PA_MENU_DOWN,   Input::IT_KEYBOARD, IRR_KEY_DOWN);

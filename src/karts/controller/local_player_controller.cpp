@@ -34,6 +34,7 @@
 #include "items/powerup.hpp"
 #include "karts/abstract_kart.hpp"
 #include "karts/controller/player_controller.hpp"
+#include "karts/kart.hpp"
 #include "karts/kart_properties.hpp"
 #include "karts/skidding.hpp"
 #include "karts/rescue_animation.hpp"
@@ -191,6 +192,32 @@ bool LocalPlayerController::action(PlayerAction action, int value,
             {
                 this->action(PA_ACCEL, 0);
                 RaceManager::get()->rerunRace();
+            }
+        }
+        return true;
+    }
+
+    if (action == PA_SAVE_CHECKPOINT)
+    {
+        if (value != 0 && UserConfigParams::m_allow_checkpoints)
+        {
+            if (m_kart)
+            {
+                static_cast<Kart*>(m_kart)->saveState();
+                // m_kart->setOnScreenText(L"State Saved"); 
+            }
+        }
+        return true;
+    }
+
+    if (action == PA_LOAD_CHECKPOINT)
+    {
+        if (value != 0 && UserConfigParams::m_allow_checkpoints)
+        {
+            if (m_kart)
+            {
+                static_cast<Kart*>(m_kart)->loadState();
+                // m_kart->setOnScreenText(L"State Loaded");
             }
         }
         return true;

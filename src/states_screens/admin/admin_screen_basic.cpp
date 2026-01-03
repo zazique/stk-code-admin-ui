@@ -85,6 +85,13 @@ void AdminScreenBasic::init()
 		replay->setTooltip(_("Always records replay in Time Trial mode.\n"
 							"You can save replay on race result screen."));
 	}
+	if (CheckBoxWidget* check = getWidget<CheckBoxWidget>("checkpoints_btn"))
+	{
+		check->setState(UserConfigParams::m_allow_checkpoints);
+		check->setTooltip(_("Enables checkpoint bind function, which allows\n"
+							"you to create checkpoint to train part of the track.\n"
+							"Bind can be configured in Controls settings."));
+	}
     if (Widget* w = getWidget("input_overlay_size"))  w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos_y")) w->setActive(active);
@@ -161,6 +168,10 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
     else if (name == "record_replay")
     {
         UserConfigParams::m_always_record_replay = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "checkpoints_btn")
+    {
+        UserConfigParams::m_allow_checkpoints = ((CheckBoxWidget*)widget)->getState();
     }
 }
 
