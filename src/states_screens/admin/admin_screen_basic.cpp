@@ -24,6 +24,12 @@ void AdminScreenBasic::init()
     }
 	if (Widget* p1 = getWidget("page_1")) p1->setVisible(true);
     if (Widget* p2 = getWidget("page_2")) p2->setVisible(false);
+    if (CheckBoxWidget* rename = getWidget<CheckBoxWidget>("allow_replay_rename"))
+    {
+        rename->setState(UserConfigParams::m_allow_rename_replay);
+        rename->setTooltip(_("Allows you to rename replay files from in-game\n"
+							 "menu, which will help you to found replay faster"));
+    }
     if (CheckBoxWidget* inputs = getWidget<CheckBoxWidget>("show_inputs"))
     {
         inputs->setState(UserConfigParams::m_display_inputs);
@@ -123,6 +129,10 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
     else if (name == "back")
     {
         StateManager::get()->escapePressed();
+    }
+    else if (name == "allow_replay_rename")
+    {
+        UserConfigParams::m_allow_rename_replay = ((CheckBoxWidget*)widget)->getState();
     }
     else if (name == "show_inputs")
     {

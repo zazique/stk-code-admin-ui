@@ -23,6 +23,7 @@
 #include "guiengine/widgets/list_widget.hpp"
 #include "race/race_manager.hpp"
 #include "states_screens/dialogs/message_dialog.hpp"
+#include "guiengine/widgets/text_box_widget.hpp"
 
 namespace GUIEngine { class CheckBoxWidget; class Widget; }
 
@@ -33,7 +34,8 @@ namespace GUIEngine { class CheckBoxWidget; class Widget; }
 class GhostReplaySelection : public GUIEngine::Screen,
                              public GUIEngine::ScreenSingleton<GhostReplaySelection>,
                              public GUIEngine::IListWidgetHeaderListener,
-                             public MessageDialog::IConfirmDialogListener
+                             public MessageDialog::IConfirmDialogListener,
+                             public GUIEngine::ITextBoxWidgetListener
 
 {
     friend class GUIEngine::ScreenSingleton<GhostReplaySelection>;
@@ -48,6 +50,7 @@ private:
     GUIEngine::CheckBoxWidget* m_replay_version_toggle_widget;
     GUIEngine::CheckBoxWidget* m_best_times_toggle_widget;
     GUIEngine::CheckBoxWidget* m_compare_toggle_widget;
+    GUIEngine::TextBoxWidget*  m_search_box;
     RaceManager::Difficulty    m_cur_difficulty;
     std::string                m_file_to_be_deleted;
     std::vector<unsigned int>  m_best_times_index;
@@ -112,7 +115,8 @@ public:
 
     /** \brief Implement IConfirmDialogListener callback */
     virtual void onConfirm() OVERRIDE;
-
+    
+	virtual void onTextUpdated() OVERRIDE;
 };   // GhostReplaySelection
 
 #endif

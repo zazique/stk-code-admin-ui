@@ -1475,6 +1475,10 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_allow_checkpoints
         PARAM_DEFAULT(BoolUserConfigParam(false, "allow_checkpoints",
             "If true, you can add binds to save/load checkpoint on track"));
+            
+    PARAM_PREFIX BoolUserConfigParam        m_allow_rename_replay
+        PARAM_DEFAULT(BoolUserConfigParam(false, "allow_rename_replay",
+            "If true, you can rename replays in-game"));
 
     // TODO? implement blacklist for new irrlicht device and GUI
     PARAM_PREFIX std::vector<std::string>   m_blacklist_res;

@@ -182,7 +182,12 @@ void GhostReplaySelection::init()
     m_icon_bank->setScale(1.0f / 128.0f);
     m_icon_bank->setTargetIconSize(128, 128);
     m_replay_list_widget->setIcons(m_icon_bank, 1.25f);
-
+	m_search_box = getWidget<TextBoxWidget>("search");
+	if (m_search_box)
+	{
+		m_search_box->clearListeners();
+		m_search_box->addListener(this);
+	}
     refresh(/*reload replay files*/ false, /* update columns */ true);
 }   // init
 
@@ -193,6 +198,13 @@ void GhostReplaySelection::init()
 void GhostReplaySelection::loadList()
 {
     m_replay_list_widget->clear();
+
+	core::stringw search_query = L"";
+    if (m_search_box)
+    {
+        search_query = m_search_box->getText();
+        search_query.make_lower();
+    }
 
     if (ReplayPlay::get()->getNumReplayFile() == 0)
         return;
@@ -211,7 +223,7 @@ void GhostReplaySelection::loadList()
         for (unsigned int i = 0; i < ReplayPlay::get()->getNumReplayFile() ; i++)
         {
             const ReplayPlay::ReplayData& rd = ReplayPlay::get()->getReplayData(i);
-
+			
             if (m_same_difficulty && m_cur_difficulty !=
                 (RaceManager::Difficulty)rd.m_difficulty)
                 continue;
@@ -324,6 +336,18 @@ void GhostReplaySelection::loadList()
 
         const ReplayPlay::ReplayData& rd = ReplayPlay::get()->getReplayData(i);
 
+		if (!search_query.empty())
+        {
+            Track* track_info = track_manager->getTrack(rd.m_track_name);
+            core::stringw track_name = track_info ? track_info->getName() : core::stringw(rd.m_track_name.c_str());
+            core::stringw player_name = rd.m_user_name.empty() ? L"" : core::stringw(rd.m_user_name.c_str());
+            core::stringw full_info = track_name + L" " + player_name + L" " + core::stringw(rd.m_filename.c_str());
+            full_info.make_lower();
+
+            if (full_info.find(search_query.c_str()) == -1)
+                continue;
+        }
+
         if (m_same_difficulty && m_cur_difficulty !=
             (RaceManager::Difficulty)rd.m_difficulty)
             continue;
@@ -428,7 +452,7 @@ void GhostReplaySelection::loadList()
 void GhostReplaySelection::eventCallback(GUIEngine::Widget* widget,
                                          const std::string& name,
                                          const int playerID)
-{
+{	
     if (name == "back")
     {
         StateManager::get()->escapePressed();
@@ -607,3 +631,8 @@ bool GhostReplaySelection::onEscapePressed()
 }   // onEscapePressed
 
 // ----------------------------------------------------------------------------
+
+void GhostReplaySelection::onTextUpdated()
+{
+    loadList();
+}

@@ -3530,13 +3530,10 @@ void Kart::saveState()
 
         for (int i = 0; i < 6; i++) {
 			m_save_state.increases[i].duration = m_max_speed->getSpeedIncreaseTicksLeft(i);
-			// Сохраняем реальные значения, которые сейчас в памяти MaxSpeed
 			m_save_state.increases[i].add_max_speed = m_max_speed->getAddMaxSpeed(i);
 			m_save_state.increases[i].engine_force  = m_max_speed->getEngineForce(i);
 		}
     }
-    
-    // Предметы (проверь, что m_powerup не nullptr)
     if (m_powerup) {
         m_save_state.powerup_type = (int)m_powerup->getType();
         m_save_state.powerup_count = m_powerup->getNum();

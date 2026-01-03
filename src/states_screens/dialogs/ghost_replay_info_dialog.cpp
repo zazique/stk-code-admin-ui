@@ -27,6 +27,8 @@
 #include "guiengine/widgets/label_widget.hpp"
 #include "guiengine/widgets/list_widget.hpp"
 #include "guiengine/widgets/ribbon_widget.hpp"
+#include "guiengine/widgets/text_box_widget.hpp"
+#include "io/file_manager.hpp"
 #include "karts/kart_properties.hpp"
 #include "karts/kart_properties_manager.hpp"
 #include "race/race_manager.hpp"
@@ -95,10 +97,16 @@ GhostReplayInfoDialog::GhostReplayInfoDialog(unsigned int replay_id,
 
     updateReplayDisplayedInfo();
 
-    LabelWidget *name = getWidget<LabelWidget>("name");
-    assert(name);
-    name->setText(stringw((m_rd.m_custom_replay_file ? StringUtils::getBasename
-        (m_rd.m_filename) : m_rd.m_filename).c_str()), false);
+    TextBoxWidget* name = getWidget<TextBoxWidget>("name");
+
+	if (name)
+	{
+		std::string filename = m_rd.m_custom_replay_file ? 
+							StringUtils::getBasename(m_rd.m_filename) : 
+							m_rd.m_filename;
+							
+		name->setText(core::stringw(filename.c_str()));
+	}
 
     m_back_widget = getWidget<IconButtonWidget>("back");
 
@@ -147,6 +155,20 @@ GhostReplayInfoDialog::GhostReplayInfoDialog(unsigned int replay_id,
             m_record_widget->setActive(false);
         }
     }
+    IconButtonWidget* rename = getWidget<IconButtonWidget>("rename_btn"); 
+
+	if (rename)
+	{
+		if (!UserConfigParams::m_allow_rename_replay)
+		{
+			rename->setImage("gui/icons/gui_lock.png");
+			rename->setTooltip(_("You need to enable replay saving in settings to use this."));
+		}
+		else
+		{
+			rename->setTooltip(_("Click me to save new replay file name."));
+		}
+	}
 }   // GhostReplayInfoDialog
 // -----------------------------------------------------------------------------
 GhostReplayInfoDialog::~GhostReplayInfoDialog()
@@ -244,7 +266,51 @@ void GhostReplayInfoDialog::updateReplayDisplayedInfo()
 GUIEngine::EventPropagation
     GhostReplayInfoDialog::processEvent(const std::string& event_source)
 {
-
+	if (event_source == "rename_btn")
+	{
+		if (!UserConfigParams::m_allow_rename_replay) return GUIEngine::EVENT_BLOCK;
+		TextBoxWidget* nameWidget = getWidget<TextBoxWidget>("name");
+		if (nameWidget && !m_rd.m_filename.empty())
+		{
+			std::string new_name = core::stringc(nameWidget->getText()).c_str();
+			if (new_name.empty()) return GUIEngine::EVENT_BLOCK;
+	
+			std::string suffix = ".replay";
+			if (new_name.size() < suffix.size() || 
+				new_name.compare(new_name.size() - suffix.size(), suffix.size(), suffix) != 0)
+			{
+				new_name += suffix;
+			}
+			std::string replay_dir = file_manager->getReplayDir();
+			std::string old_basename = StringUtils::getBasename(m_rd.m_filename);
+			std::string old_full_path = replay_dir + "/" + old_basename;
+			std::string new_full_path = replay_dir + "/" + new_name;
+	
+			Log::info("GhostReplayInfoDialog", "Renaming: %s -> %s", old_full_path.c_str(), new_full_path.c_str());
+	
+			if (old_full_path == new_full_path) return GUIEngine::EVENT_BLOCK;
+			if (std::rename(old_full_path.c_str(), new_full_path.c_str()) == 0)
+			{
+				Log::info("GhostReplayInfoDialog", "Rename successful!");
+				
+				IconButtonWidget* btn = getWidget<IconButtonWidget>("rename_btn");
+				if (btn)
+				{
+					btn->setActive(false);
+				}
+				m_rd.m_filename = new_full_path;
+	
+				GhostReplaySelection* selectionScreen = dynamic_cast<GhostReplaySelection*>(GUIEngine::getCurrentScreen());
+				if (selectionScreen) selectionScreen->refresh();
+			}
+			else
+			{
+				Log::error("GhostReplayInfoDialog", "System Rename Error: %s", strerror(errno));
+			}
+		}
+		return GUIEngine::EVENT_BLOCK;
+	}
+	
     if (event_source == "actions")
     {
         const std::string& selection =
