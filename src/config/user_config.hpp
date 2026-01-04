@@ -1479,6 +1479,10 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_allow_rename_replay
         PARAM_DEFAULT(BoolUserConfigParam(false, "allow_rename_replay",
             "If true, you can rename replays in-game"));
+    PARAM_PREFIX BoolUserConfigParam        m_disable_fps_limit
+        PARAM_DEFAULT(BoolUserConfigParam(false, "disable_fps_limit",
+            "Disables the frame rate limit."));
+            
 
     // TODO? implement blacklist for new irrlicht device and GUI
     PARAM_PREFIX std::vector<std::string>   m_blacklist_res;

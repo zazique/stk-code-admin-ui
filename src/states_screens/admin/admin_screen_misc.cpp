@@ -1,3 +1,4 @@
+#include "main_loop.hpp"
 #include "states_screens/admin/admin_screen_misc.hpp"
 #include "states_screens/admin/admin_common.hpp"
 #include "guiengine/widgets/ribbon_widget.hpp"
@@ -48,6 +49,11 @@ void AdminScreenMisc::init()
 		unlock->setState(UserConfigParams::m_unlock_everything > 0);
 		unlock->setTooltip(_("Unlock all karts, tracks and challenges."));
 	}
+	if (CheckBoxWidget* fps = getWidget<CheckBoxWidget>("fps_limit"))
+	{
+		fps->setState(UserConfigParams::m_disable_fps_limit);
+		fps->setTooltip(_("If enabled, every frame will render as soon as it can."));
+	}
 }
 
 void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, const int playerID)
@@ -95,6 +101,11 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
 		bool active = ((CheckBoxWidget*)widget)->getState();
 		UserConfigParams::m_unlock_everything = active ? 2 : 0;
 	}
+	else if (name == "fps_limit")
+    {
+		UserConfigParams::m_disable_fps_limit = ((CheckBoxWidget*)widget)->getState();
+		main_loop->setThrottleFPS(!UserConfigParams::m_disable_fps_limit);
+    }
 }
 
 void AdminScreenMisc::tearDown() { Screen::tearDown(); }

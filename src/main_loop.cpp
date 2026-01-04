@@ -105,7 +105,7 @@ MainLoop::MainLoop(unsigned parent_pid, bool download_assets)
 {
     m_curr_time       = std::chrono::steady_clock::now();
     m_prev_time       = std::chrono::steady_clock::now();
-    m_throttle_fps    = true;
+    m_throttle_fps    = !UserConfigParams::m_disable_fps_limit;
     m_allow_large_dt  = false;
     m_frame_before_loading_world = false;
     m_download_assets = download_assets;
