@@ -6,6 +6,7 @@
 #include "states_screens/state_manager.hpp"
 #include "utils/string_utils.hpp"
 #include "config/user_config.hpp"
+#include "guiengine/widgets/label_widget.hpp"
 
 using namespace GUIEngine;
 
@@ -30,6 +31,10 @@ void AdminScreenBasic::init()
         rename->setTooltip(_("Allows you to rename replay files from in-game\n"
 							 "menu, which will help you to found replay faster"));
     }
+    if (LabelWidget* rnm = getWidget<LabelWidget>("rename_label"))
+	{
+		rnm->setColor(video::SColor(255, 0, 191, 255));
+	}
     if (CheckBoxWidget* inputs = getWidget<CheckBoxWidget>("show_inputs"))
     {
         inputs->setState(UserConfigParams::m_display_inputs);
@@ -37,6 +42,10 @@ void AdminScreenBasic::init()
                     "actions, such as drifting, using nitro, or accelerating.\n"
                     "Only active during races."));
     }
+    if (LabelWidget* input = getWidget<LabelWidget>("input_label"))
+	{
+		input->setColor(video::SColor(255, 0, 191, 255));
+	}
     if (GUIEngine::SpinnerWidget* size = getWidget<GUIEngine::SpinnerWidget>("input_overlay_size"))
     {
         size->setValue(UserConfigParams::m_input_overlay_size);
@@ -61,6 +70,10 @@ void AdminScreenBasic::init()
         debug->setTooltip(_("Enables the built-in Artist Debug mode.\n"
 							"Use it to test tracks or just explore."));
     }
+    if (LabelWidget* dbg = getWidget<LabelWidget>("debug_label"))
+	{
+		dbg->setColor(video::SColor(255, 0, 191, 255));
+	}
     if (CheckBoxWidget* check = getWidget<CheckBoxWidget>("show_check"))
 	{
 		check->setState(UserConfigParams::m_check_debug);
@@ -78,6 +91,10 @@ void AdminScreenBasic::init()
 		start->setState(UserConfigParams::m_fast_start);
 		start->setTooltip(_("Disables the fast countdown when starting a race\n"
 							"in Artist Debug mode with no other karts."));
+	}
+	if (LabelWidget* start = getWidget<LabelWidget>("start_label"))
+	{
+		start->setColor(video::SColor(255, 0, 191, 255));
 	}
 	if (CheckBoxWidget* start = getWidget<CheckBoxWidget>("restart_bind"))
 	{
@@ -102,7 +119,22 @@ void AdminScreenBasic::init()
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos_y")) w->setActive(active);
     
+    updatePageIndicator();
+    
     this->calculateLayout();
+}
+
+void AdminScreenBasic::updatePageIndicator()
+{
+    if (LabelWidget* indicator = getWidget<LabelWidget>("page_indicator"))
+    {
+		indicator->setText(_("Page %d/%d", m_current_page, 2), false);
+    }
+    if (Widget* prev = getWidget("prev_page"))
+        prev->setActive(m_current_page > 1);
+        
+    if (Widget* next = getWidget("next_page"))
+        next->setActive(m_current_page < 2);
 }
 
 void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, const int playerID)
@@ -112,6 +144,7 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
         m_current_page = 2;
         if (Widget* p1 = getWidget("page_1")) p1->setVisible(false);
         if (Widget* p2 = getWidget("page_2")) p2->setVisible(true);
+        updatePageIndicator();
         this->calculateLayout();
     }
     else if (name == "prev_page" && m_current_page > 1)
@@ -119,6 +152,7 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
         m_current_page = 1;
         if (Widget* p1 = getWidget("page_1")) p1->setVisible(true);
         if (Widget* p2 = getWidget("page_2")) p2->setVisible(false);
+        updatePageIndicator();
         this->calculateLayout();
     }
     if (name == "admin_choice")

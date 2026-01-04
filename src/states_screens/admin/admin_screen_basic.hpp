@@ -14,6 +14,7 @@ public:
     virtual void eventCallback(GUIEngine::Widget* widget, const std::string& name, const int playerID) OVERRIDE;
     virtual void tearDown() OVERRIDE;
     virtual void loadedFromFile() override {}
+    void updatePageIndicator();
 };
 
 #endif
