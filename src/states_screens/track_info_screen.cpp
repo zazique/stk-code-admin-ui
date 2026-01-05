@@ -45,6 +45,7 @@
 #include "tracks/track_manager.hpp"
 #include "utils/string_utils.hpp"
 #include "utils/translation.hpp"
+#include "attempts/attempt_counter.hpp"
 
 #include <IGUIEnvironment.h>
 #include <IGUIImage.h>
@@ -370,6 +371,29 @@ void TrackInfoScreen::init()
 
     RibbonWidget* bt_start = getWidget<GUIEngine::RibbonWidget>("buttons");
     bt_start->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
+    if (m_track)
+    {
+        std::string track_id = m_track->getIdent();
+        int attempts = AttemptCounter::get()->getAttempts(track_id);
+        bool is_tt = false;
+		if (RaceManager::get())
+		{
+			is_tt = (RaceManager::get()->getMinorMode() == RaceManager::MINOR_MODE_TIME_TRIAL);
+		}
+        if (Widget* w = getWidget("attempts_count"))
+		{
+			LabelWidget* att_label = static_cast<LabelWidget*>(w);
+			if (UserConfigParams::m_save_attempts && is_tt)
+			{
+				att_label->setVisible(true);
+				att_label->setText(_("Attempts: %d", attempts), false);
+			}
+			else
+			{
+				att_label->setVisible(false);
+			}
+		}
+    }
 }   // init
 
 void TrackInfoScreen::setSoccerWidgets(bool has_AI)

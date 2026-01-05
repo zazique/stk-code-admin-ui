@@ -17,7 +17,7 @@
 //  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #include "modes/world.hpp"
-
+#include "attempts/attempt_counter.hpp"
 #include "audio/music_manager.hpp"
 #include "audio/sfx_base.hpp"
 #include "audio/sfx_manager.hpp"
@@ -354,6 +354,14 @@ void World::reset(bool restart)
     // when the race result gui was being shown. In this case restore the
     // race gui (note that the race result gui is cached and so never really
     // destroyed).
+    AttemptCounter* counter = AttemptCounter::get();
+	RaceManager* rm = RaceManager::get();
+	if (UserConfigParams::m_save_attempts && counter && rm->isTimeTrialMode() && rm->getNumPlayers() == 1 && 
+        rm->getNumberOfAIKarts() == 0)
+	{
+		std::string track_id = RaceManager::get()->getTrackName();
+		counter->addAttempt(track_id);
+	}
     bool reset_streak = restart && !m_saved_race_gui;
 
     if(m_saved_race_gui)

@@ -18,6 +18,7 @@
 
 #include "states_screens/race_result_gui.hpp"
 
+#include "attempts/attempt_counter.hpp"
 #include "audio/music_manager.hpp"
 #include "audio/sfx_manager.hpp"
 #include "audio/sfx_base.hpp"
@@ -1972,6 +1973,20 @@ void RaceResultGUI::displayPostRaceInfo()
     if (RaceManager::get()->raceWasStartedFromOverworld())
         current_y = displayChallengeInfo(x, current_y,
                         size_esti_real > UserConfigParams::m_height * 0.85f);
+    if (UserConfigParams::m_save_attempts && RaceManager::get()->isTimeTrialMode())
+    {
+        std::string track_id = RaceManager::get()->getTrackName();
+        int attempts = AttemptCounter::get()->getAttempts(track_id);
+
+        core::stringw s = _("Attempts: ");
+        s += core::stringw(attempts);
+        current_y += m_distance_between_meta_rows;
+        m_font->draw(s.c_str(),
+                     core::rect<int>(x, current_y, x + 400, current_y + m_distance_between_meta_rows),
+                     video::SColor(255, 255, 255, 255));
+        
+        current_y += m_distance_between_meta_rows;
+    }
 #endif
 } // displayPostRaceInfo
 

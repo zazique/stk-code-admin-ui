@@ -73,6 +73,10 @@
 							<div layout="horizontal-row" width="100%" height="fit">
 								<checkbox id="checkpoints_btn"/><spacer width="2%"/><label text="Allow checkpoint binds"/>
 							</div>
+							<spacer width="100%" height="2%"/>
+							<div layout="horizontal-row" width="100%" height="fit">
+								<checkbox id="save_atts"/><spacer width="2%"/><label id="att_label" text="Save attempt counter"/>
+							</div>
 						</div>
 					</div>
 					<div width="100%" height="1%">

@@ -1485,6 +1485,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_disable_accessories
         PARAM_DEFAULT(BoolUserConfigParam(false, "disable_accessories",
             "Disables accessories show on christmas and easter"));
+   PARAM_PREFIX BoolUserConfigParam        m_save_attempts
+        PARAM_DEFAULT(BoolUserConfigParam(false, "save_attempts",
+            "Enables attempt counter for tracks"));
             
 
     // TODO? implement blacklist for new irrlicht device and GUI

@@ -115,6 +115,16 @@ void AdminScreenBasic::init()
 							"you to create checkpoint to train part of the track.\n"
 							"Bind can be configured in Controls settings."));
 	}
+	if (CheckBoxWidget* att = getWidget<CheckBoxWidget>("save_atts"))
+	{
+		att->setState(UserConfigParams::m_save_attempts);
+		att->setTooltip(_("Allows game to save attempt count for tracks in\n"
+						  "Time trial mode when you play alone."));
+	}
+	if (LabelWidget* att = getWidget<LabelWidget>("att_label"))
+	{
+		att->setColor(video::SColor(255, 0, 191, 255));
+	}
     if (Widget* w = getWidget("input_overlay_size"))  w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos_y")) w->setActive(active);
@@ -216,6 +226,10 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
     else if (name == "checkpoints_btn")
     {
         UserConfigParams::m_allow_checkpoints = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "save_atts")
+    {
+        UserConfigParams::m_save_attempts = ((CheckBoxWidget*)widget)->getState();
     }
 }
 
