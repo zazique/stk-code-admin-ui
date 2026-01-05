@@ -129,6 +129,7 @@ KartModel::KartModel(bool is_master)
     m_kart       = NULL;
     m_mesh       = NULL;
     m_hat_location = NULL;
+    m_hat_node = nullptr;
 
     for(unsigned int i=0; i<4; i++)
     {
@@ -570,10 +571,13 @@ scene::ISceneNode* KartModel::attachModel(bool animated_models, bool human_playe
             m_animated_node->getJointNode(m_hat_bone.c_str()) : node;
         scene::IMesh* hat_mesh = irr_driver->getAnimatedMesh
             (file_manager->getAsset(FileManager::MODEL, m_hat_name));
-        scene::ISceneNode* node = irr_driver->addMesh(hat_mesh, "hat", parent,
-            getRenderInfo());
-        configNode(node, *m_hat_location, bone_attachment ?
-                getInverseBoneMatrix(m_hat_bone) : core::matrix4());
+        m_hat_node = irr_driver->addMesh(hat_mesh, "hat", parent, getRenderInfo());
+		
+		if (m_hat_node)
+		{
+			configNode(m_hat_node, *m_hat_location, bone_attachment ?
+						getInverseBoneMatrix(m_hat_bone) : core::matrix4());
+		}
         file_manager->popTextureSearchPath();
     }
 
@@ -1588,3 +1592,11 @@ bool KartModel::handleSPSpotlight(SP::SPMesh* spm)
     }
     return spotlight;
 }   // handleSPSpotlight
+
+void KartModel::updateHatVisibility(bool visible)
+{
+    if (m_hat_node)
+    {
+        m_hat_node->setVisible(visible);
+    }
+}

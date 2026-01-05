@@ -1482,6 +1482,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_disable_fps_limit
         PARAM_DEFAULT(BoolUserConfigParam(false, "disable_fps_limit",
             "Disables the frame rate limit."));
+    PARAM_PREFIX BoolUserConfigParam        m_disable_accessories
+        PARAM_DEFAULT(BoolUserConfigParam(false, "disable_accessories",
+            "Disables accessories show on christmas and easter"));
             
 
     // TODO? implement blacklist for new irrlicht device and GUI

@@ -10,6 +10,15 @@
 #include "config/stk_config.hpp"
 #include "io/file_manager.hpp"
 #include "audio/music_manager.hpp"
+#include "items/attachment_manager.hpp"
+#include "karts/kart_properties_manager.hpp"
+#include "karts/kart_properties.hpp"
+
+extern void handleXmasMode();
+extern void handleEasterEarMode();
+
+extern AttachmentManager* attachment_manager;
+extern KartPropertiesManager* kart_properties_manager;
 
 using namespace GUIEngine;
 
@@ -53,6 +62,11 @@ void AdminScreenMisc::init()
 	{
 		fps->setState(UserConfigParams::m_disable_fps_limit);
 		fps->setTooltip(_("If enabled, every frame will render as soon as it can."));
+	}
+	if (CheckBoxWidget* acc = getWidget<CheckBoxWidget>("accessories"))
+	{
+		acc->setState(UserConfigParams::m_disable_accessories);
+		acc->setTooltip(_("Toggles accessories shown on Christmas and Easter."));
 	}
 }
 
@@ -105,6 +119,31 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
     {
 		UserConfigParams::m_disable_fps_limit = ((CheckBoxWidget*)widget)->getState();
 		main_loop->setThrottleFPS(!UserConfigParams::m_disable_fps_limit);
+    }
+    else if (name == "accessories")
+    {
+		bool is_enabled = ((CheckBoxWidget*)widget)->getState();
+		UserConfigParams::m_xmas_mode = is_enabled ? 2 : 0;
+		UserConfigParams::m_easter_ear_mode = is_enabled ? 2 : 0;
+		UserConfigParams::m_disable_accessories = is_enabled;
+		handleXmasMode();
+		handleEasterEarMode();
+	
+		for (int i = 0; ; i++)
+		{
+			const KartProperties* const_props = kart_properties_manager->getKartById(i);
+			if (!const_props) break;
+			KartProperties* props = const_cast<KartProperties*>(const_props);
+	
+			std::string hat = "";
+			if (!is_enabled) 
+			{
+				if (UserConfigParams::m_xmas_mode == 0) hat = "christmas_hat.spm";
+				else if (UserConfigParams::m_easter_ear_mode == 0) hat = "easter_ears.spm";
+			}
+			
+			props->setHatMeshName(hat); 
+		}
     }
 }
 

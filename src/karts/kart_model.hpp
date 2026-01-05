@@ -387,6 +387,8 @@ private:
 
     /** Exhaust particle file (xml) for the kart, empty if disabled.  */
     std::string m_exhaust_xml;
+    
+    scene::ISceneNode* m_hat_node;
 
     const KartProperties* m_kart_properties;
     // ------------------------------------------------------------------------
@@ -421,6 +423,7 @@ public:
                          int gt_replay_index = -1);
     void          finishedRace();
     void          resetVisualWheelPosition();
+    void updateHatVisibility(bool visible);
     scene::ISceneNode*
                   attachModel(bool animatedModels, bool human_player);
     // ------------------------------------------------------------------------
