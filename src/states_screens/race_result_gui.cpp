@@ -394,8 +394,9 @@ void RaceResultGUI::enableAllButtons()
         replayBtn->setVisible(true);
         if (replayBtn)
         {
-            if (RaceManager::get()->getMinorMode() == RaceManager::MINOR_MODE_TIME_TRIAL &&
-                UserConfigParams::m_always_record_replay && !RaceManager::get()->isWatchingReplay())
+			AbstractKart* playerKart = World::getWorld()->getLocalPlayerKart(0);
+			bool isPlayerEliminated = playerKart && playerKart->isEliminated();
+            if (RaceManager::get()->getMinorMode() == RaceManager::MINOR_MODE_TIME_TRIAL && UserConfigParams::m_always_record_replay && !RaceManager::get()->isWatchingReplay() && !isPlayerEliminated)
             {
                 replayBtn->setActive(true);
                 replayBtn->setFocusable(true);
