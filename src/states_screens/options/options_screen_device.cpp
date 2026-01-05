@@ -166,23 +166,10 @@ void OptionsScreenDevice::init()
     addListItem(actions, PA_LOOK_BACK);
     addListItem(actions, PA_RESCUE);
     addListItem(actions, PA_PAUSE_RACE);
-    if (UserConfigParams::m_allow_restart_bind) 
-    {
-        addListItem(actions, PA_RESTART_RACE);
-    }
-    if (UserConfigParams::m_allow_jump_bind) 
-    {
-        addListItem(actions, PA_JUMP);
-    }
-    if (UserConfigParams::m_allow_checkpoints) 
-    {
-        addListItem(actions, PA_SAVE_CHECKPOINT);
-    }
-    if (UserConfigParams::m_allow_checkpoints) 
-    {
-        addListItem(actions, PA_LOAD_CHECKPOINT);
-    }
-
+    addListItem(actions, PA_RESTART_RACE);
+    addListItem(actions, PA_JUMP);
+    addListItem(actions, PA_SAVE_CHECKPOINT);
+    addListItem(actions, PA_LOAD_CHECKPOINT);
 
     //I18N: Key binding section
     addListItemSubheader(actions, "menu_keys_section", _("Menu Keys"));
@@ -288,25 +275,11 @@ void OptionsScreenDevice::updateInputButtons()
     //I18N: Key binding name
     renameRow(actions, i++, _("Pause Game"), PA_PAUSE_RACE);
     
-    if (UserConfigParams::m_allow_restart_bind)
-    {
-        renameRow(actions, i++, _("Restart Race"), PA_RESTART_RACE);
-    }
-
-	if (UserConfigParams::m_allow_jump_bind)
-    {
-        renameRow(actions, i++, _("Jump"), PA_JUMP);
-    }
-    
-    if (UserConfigParams::m_allow_checkpoints) 
-    {
-        renameRow(actions, i++, _("Save checkpoint"), PA_LOAD_CHECKPOINT);
-    }
-    
-    if (UserConfigParams::m_allow_checkpoints) 
-    {
-        renameRow(actions, i++, _("Load checkpoint"), PA_LOAD_CHECKPOINT);
-    }
+    renameRow(actions, i++, UserConfigParams::m_allow_restart_bind ? _("Restart Race") : _("Restart Race (DISABLED)"), PA_RESTART_RACE);
+	renameRow(actions, i++, UserConfigParams::m_allow_jump_bind ? _("Jump") : _("Jump (DISABLED)"), PA_JUMP);
+	bool cp = UserConfigParams::m_allow_checkpoints;
+	renameRow(actions, i++, cp ? _("Save checkpoint") : _("Save checkpoint (DISABLED)"), PA_SAVE_CHECKPOINT);
+	renameRow(actions, i++, cp ? _("Load checkpoint") : _("Load checkpoint (DISABLED)"), PA_LOAD_CHECKPOINT);
 
 
     i++; // section header
@@ -575,6 +548,9 @@ void OptionsScreenDevice::eventCallback(Widget* widget,
 
         // a player action in the list was clicked. find which one
         const std::string& clicked = actions->getSelectionInternalName();
+		if (!UserConfigParams::m_allow_restart_bind && clicked == "restartrace") return;
+		if (!UserConfigParams::m_allow_jump_bind && clicked == "jump") return;
+		if (!UserConfigParams::m_allow_checkpoints && (clicked == "savecheckpoint" || clicked == "loadcheckpoint")) return;
         for (int n=PA_BEFORE_FIRST+1; n<PA_COUNT; n++)
         {
             if (KartActionStrings[n] == clicked)
