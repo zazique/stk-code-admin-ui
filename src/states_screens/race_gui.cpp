@@ -1500,7 +1500,6 @@ void RaceGUI::drawBestLap(const AbstractKart* kart, const core::rect<s32>& viewp
         last_finished_lap_count[kart_id] = finished_laps;
     }
 
-    // --- ФОРМИРОВАНИЕ ТЕКСТА (как в оригинале) ---
     core::stringw best_sw = L"Best: ";
     if (personal_best_ticks.find(kart_id) != personal_best_ticks.end())
     {
@@ -1520,8 +1519,6 @@ void RaceGUI::drawBestLap(const AbstractKart* kart, const core::rect<s32>& viewp
         else last_sw += time_str;
     }
     else last_sw += L"none";
-
-    // --- ОТРИСОВКА ---
     gui::ScalableFont* font = GUIEngine::getHighresDigitFont();
     font->setBlackBorder(true);
     font->setScale(0.6f); 
@@ -1531,12 +1528,9 @@ void RaceGUI::drawBestLap(const AbstractKart* kart, const core::rect<s32>& viewp
     int icon_height = screen_h / 19;
     int y_start = (screen_h * 12 / 100) + icon_height + 5; 
 
-    // Отрисовка Best
     int best_w = font->getDimension(best_sw.c_str()).Width;
     core::rect<s32> pos_best(screen_w - best_w - 10, y_start, screen_w - 10, y_start + 25);
     font->draw(best_sw, pos_best, video::SColor(255, 255, 255, 255), false, false, NULL, true);
-
-    // Отрисовка Last
     y_start += 25;
     int last_w = font->getDimension(last_sw.c_str()).Width;
     core::rect<s32> pos_last(screen_w - last_w - 10, y_start, screen_w - 10, y_start + 25);

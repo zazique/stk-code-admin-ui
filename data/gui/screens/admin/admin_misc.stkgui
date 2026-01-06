@@ -65,6 +65,14 @@
                 </div>
 
                 <spacer width="5" height="2%"/>
+                
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="replay_merge"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" id="merge_label" text="Allow replay merge" word_wrap="true"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
             </box>
         </div>
     </div>

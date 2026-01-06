@@ -29,6 +29,7 @@
 #include "io/file_manager.hpp"
 #include "karts/kart_properties.hpp"
 #include "karts/kart_properties_manager.hpp"
+#include "replay/replay_merger.hpp"
 #include "states_screens/dialogs/ghost_replay_info_dialog.hpp"
 #include "states_screens/state_manager.hpp"
 #include "states_screens/online/tracks_screen.hpp"
@@ -45,6 +46,8 @@ using namespace GUIEngine;
 GhostReplaySelection::GhostReplaySelection() : Screen("ghost_replay_selection.stkgui")
 {
     m_is_comparing = false;
+    m_is_merging = false;
+    m_merge_base_id = -1;
     m_replay_to_compare_uid = 0;
 }   // GhostReplaySelection
 
@@ -311,9 +314,14 @@ void GhostReplaySelection::loadList()
     // This avoids spurious errors trying to find a replay with UID 0.
     unsigned int compare_index = 0;
     if (m_is_comparing)
+	{
         // In case the requested replay is not found, compare_index will be 0.
         compare_index = ReplayPlay::get()->getReplayIdByUID(m_replay_to_compare_uid);
-
+	}
+	else if (m_is_merging)
+    {
+        compare_index = (unsigned int)m_merge_base_id;
+    }
     // It's better to do this when not comparing than to do it repeatedly in the loop,
     // it will simply be unused if not comparing.
     const ReplayPlay::ReplayData& rd_compare = ReplayPlay::get()->getReplayData(compare_index);
@@ -360,7 +368,7 @@ void GhostReplaySelection::loadList()
             continue;
 
         // Only display replays comparable with the replay selected for comparison
-        if (m_is_comparing)
+        if (m_is_comparing || m_is_merging)
         {
                 // If it's not the same track, check further in the index
                 if (rd.m_track_name != rd_compare.m_track_name)
@@ -473,6 +481,18 @@ void GhostReplaySelection::eventCallback(GUIEngine::Widget* widget,
         {
             return;
         }
+        
+        if (m_is_merging)
+        {
+            Log::info("GhostReplaySelection", "Merging base index %d with second index %d", 
+                      m_merge_base_id, selected_index);
+			ReplayMerger::merge(m_merge_base_id, selected_index);
+            m_is_merging = false;
+            m_merge_base_id = -1;
+            refresh(true, false);
+            return;
+        }
+        
         if (PlayerManager::getCurrentPlayer()->isLocked("difficulty_best"))
         {
             const ReplayPlay::ReplayData& rd = ReplayPlay::get()->getReplayData(selected_index);
@@ -635,4 +655,11 @@ bool GhostReplaySelection::onEscapePressed()
 void GhostReplaySelection::onTextUpdated()
 {
     loadList();
+}
+
+void GhostReplaySelection::setMergeBase(int id)
+{
+    m_is_merging = true;
+    m_merge_base_id = id;
+    refresh(false, true);
 }

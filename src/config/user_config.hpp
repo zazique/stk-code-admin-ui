@@ -1490,7 +1490,10 @@ namespace UserConfigParams
             "Enables attempt counter for tracks"));
 	PARAM_PREFIX BoolUserConfigParam        m_show_lap_times
         PARAM_DEFAULT(BoolUserConfigParam(false, "show_lap_times",
-            "If true, you can see your best and current lap time"));		
+            "If true, you can see your best and current lap time"));
+    PARAM_PREFIX BoolUserConfigParam        m_allow_replay_merge
+        PARAM_DEFAULT(BoolUserConfigParam(false, "allow_replay_merge",
+            "If true, you can merge replays in-game"));	        	
 	
 
     // TODO? implement blacklist for new irrlicht device and GUI

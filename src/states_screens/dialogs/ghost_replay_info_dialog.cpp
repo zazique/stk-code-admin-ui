@@ -169,6 +169,19 @@ GhostReplayInfoDialog::GhostReplayInfoDialog(unsigned int replay_id,
 			rename->setTooltip(_("Click me to save new replay file name."));
 		}
 	}
+	IconButtonWidget* merge = getWidget<IconButtonWidget>("merge"); 
+	if (merge)
+    {
+        if (!UserConfigParams::m_allow_replay_merge)
+        {
+            merge->setImage("gui/icons/gui_lock.png");
+            merge->setTooltip(_("You need to enable replay merging in settings to use this."));
+        }
+        else
+        {
+            merge->setTooltip(_("Click me to Merge this ghost with another one."));
+        }
+    }
 }   // GhostReplayInfoDialog
 // -----------------------------------------------------------------------------
 GhostReplayInfoDialog::~GhostReplayInfoDialog()
@@ -374,6 +387,13 @@ GUIEngine::EventPropagation
 
             // Now quit the dialog
             m_self_destroy = true;
+            return GUIEngine::EVENT_BLOCK;
+        }
+        else if(selection == "merge")
+        {
+			if (!UserConfigParams::m_allow_replay_merge) return GUIEngine::EVENT_BLOCK;
+            GhostReplaySelection::getInstance()->setMergeBase(m_replay_id);
+            m_self_destroy = true; 
             return GUIEngine::EVENT_BLOCK;
         }
         else if(selection == "remove")

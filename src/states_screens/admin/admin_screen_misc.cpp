@@ -74,6 +74,15 @@ void AdminScreenMisc::init()
 		lap->setTooltip(_("If enabled, best, last and current lap\n"
 						  "time will be shown on screen."));
 	}
+	if (CheckBoxWidget* replay = getWidget<CheckBoxWidget>("replay_merge"))
+	{
+		replay->setState(UserConfigParams::m_allow_replay_merge);
+		replay->setTooltip(_("Allows you to merge replays into one."));
+	}
+	if (LabelWidget* merge = getWidget<LabelWidget>("merge_label"))
+	{
+		merge->setColor(video::SColor(255, 0, 191, 255));
+	}
 }
 
 void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, const int playerID)
@@ -154,6 +163,10 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
     else if (name == "lap_times")
     {
 		UserConfigParams::m_show_lap_times = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "replay_merge")
+    {
+		UserConfigParams::m_allow_replay_merge = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

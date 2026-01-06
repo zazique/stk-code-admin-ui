@@ -54,6 +54,9 @@
                         <icon-button id="start" width="128" height="128"
                                      icon="gui/icons/green_check.png"
                                      I18N="Ghost replay info screen action" text="Start Race" word_wrap="true" />
+                        <icon-button id="merge" width="128" height="128"
+                                     icon="gui/icons/blue_plus.png"
+                                     I18N="Ghost replay info screen action" text="Merge Replay" word_wrap="true" />
                     </buttonbar>
                 </div>
                 <spacer width="10" height="10%"/>

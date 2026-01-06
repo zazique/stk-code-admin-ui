@@ -60,6 +60,8 @@ private:
     bool                       m_best_times;
     bool                       m_is_comparing;
     bool                       m_active_mode_is_linear;
+    bool 					   m_is_merging;
+    int  					   m_merge_base_id;
     RaceManager::MinorRaceModeType m_active_mode;
     // The index id of a replay file can change with sorting, etc.
     // Using the UID guarantees exact matchess
@@ -117,6 +119,10 @@ public:
     virtual void onConfirm() OVERRIDE;
     
 	virtual void onTextUpdated() OVERRIDE;
+	
+	void setMergeBase(int id);
+    void cancelMerge() { m_is_merging = false; refresh(); }
+    bool isMerging() const { return m_is_merging; }
 };   // GhostReplaySelection
 
 #endif
