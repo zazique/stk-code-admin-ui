@@ -68,6 +68,12 @@ void AdminScreenMisc::init()
 		acc->setState(UserConfigParams::m_disable_accessories);
 		acc->setTooltip(_("Toggles accessories shown on Christmas and Easter."));
 	}
+	if (CheckBoxWidget* lap = getWidget<CheckBoxWidget>("lap_times"))
+	{
+		lap->setState(UserConfigParams::m_show_lap_times);
+		lap->setTooltip(_("If enabled, best, last and current lap\n"
+						  "time will be shown on screen."));
+	}
 }
 
 void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, const int playerID)
@@ -144,6 +150,10 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
 			
 			props->setHatMeshName(hat); 
 		}
+    }
+    else if (name == "lap_times")
+    {
+		UserConfigParams::m_show_lap_times = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

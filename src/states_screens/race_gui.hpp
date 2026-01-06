@@ -132,7 +132,7 @@ private:
                                 const core::vector2df &offset,
                                 float min_ratio, int meter_width,
                                 int meter_height, float dt);
-
+	void drawBestLap(const AbstractKart* kart, const core::rect<s32>& viewport, float scaling);
     /* Helper functions for drawing meters */
 
     void drawMeterTexture(video::ITexture *meter_texture, video::S3DVertex vertices[], unsigned int count, bool reverse = false);
@@ -145,7 +145,6 @@ private:
     void drawGlobalMiniMap     ();
     void drawGlobalTimer       ();
     void drawLiveDifference    ();
-
 public:
 
          RaceGUI();

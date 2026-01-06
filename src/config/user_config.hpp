@@ -1488,7 +1488,10 @@ namespace UserConfigParams
    PARAM_PREFIX BoolUserConfigParam        m_save_attempts
         PARAM_DEFAULT(BoolUserConfigParam(false, "save_attempts",
             "Enables attempt counter for tracks"));
-            
+	PARAM_PREFIX BoolUserConfigParam        m_show_lap_times
+        PARAM_DEFAULT(BoolUserConfigParam(false, "show_lap_times",
+            "If true, you can see your best and current lap time"));		
+	
 
     // TODO? implement blacklist for new irrlicht device and GUI
     PARAM_PREFIX std::vector<std::string>   m_blacklist_res;

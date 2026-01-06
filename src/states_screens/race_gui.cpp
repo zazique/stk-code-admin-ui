@@ -320,7 +320,17 @@ void RaceGUI::renderGlobal(float dt)
     //drawGlobalTimer checks if it should display in the current phase/mode
     FontDrawer::startBatching();
     drawGlobalTimer();
-
+	
+	if (UserConfigParams::m_show_lap_times)
+    {
+        AbstractKart* kart = world->getLocalPlayerKart(0);
+        if (kart)
+        {
+            core::rect<s32> dummy_rect; 
+            drawBestLap(kart, dummy_rect, 1.0f);
+        }
+    }
+	
     if (!m_is_tutorial)
     {
         if (RaceManager::get()->isLinearRaceMode() &&
@@ -440,8 +450,36 @@ void RaceGUI::drawGlobalTimer()
         float time_target = RaceManager::get()->getTimeTarget();
         elapsed_time = time_target - elapsed_time;
     }
-
+	gui::ScalableFont* font = (use_digit_font ? GUIEngine::getHighresDigitFont() : GUIEngine::getFont());
     sw = core::stringw (StringUtils::timeToString(elapsed_time).c_str() );
+	if (UserConfigParams::m_show_lap_times)
+    {
+        LinearWorld* lin_world = dynamic_cast<LinearWorld*>(World::getWorld());
+        AbstractKart* kart = World::getWorld()->getLocalPlayerKart(0);
+        if (kart && lin_world)
+        {
+            int start_ticks = lin_world->getTicksAtLapForKart(kart->getWorldKartId());
+            int current_ticks = lin_world->getTimeTicks();
+            float lap_time = (float)(current_ticks - start_ticks) / 120.0f;
+            if (lap_time < 0) lap_time = 0;
+			core::stringw lap_time_str = core::stringw(StringUtils::timeToString(lap_time).c_str());
+            
+            sw += L" (";
+            if (lap_time_str.size() > 3)
+                sw += lap_time_str.subString(3, lap_time_str.size() - 3);
+            else
+                sw += lap_time_str;
+            
+            sw += L")";
+        }
+	
+		if (sw.size() > 15)
+			font->setScale(0.8f); 
+		else
+			font->setScale(1.0f);
+		int actual_string_width = font->getDimension(sw.c_str()).Width;
+		dist_from_right = actual_string_width + 95;
+    }
 
     // Use colors to draw player attention to countdowns in challenges and FTL
     if (RaceManager::get()->hasTimeTarget())
@@ -481,7 +519,7 @@ void RaceGUI::drawGlobalTimer()
         pos += core::vector2d<s32>(0, irr_driver->getActualScreenSize().Height - irr_driver->getSplitscreenWindow(0).getHeight());
     }
 
-    gui::ScalableFont* font = (use_digit_font ? GUIEngine::getHighresDigitFont() : GUIEngine::getFont());
+    font = (use_digit_font ? GUIEngine::getHighresDigitFont() : GUIEngine::getFont());
     font->setScale(1.0f);
     font->setBlackBorder(true);
     font->draw(sw, pos, time_color, false, false, NULL,
@@ -1420,3 +1458,90 @@ void RaceGUI::drawLap(const AbstractKart* kart,
     font->setScale(1.0f);
 #endif
 } // drawLap
+
+void RaceGUI::drawBestLap(const AbstractKart* kart, const core::rect<s32>& viewport, float scaling)
+{
+    static std::map<int, int> personal_best_ticks;
+    static std::map<int, int> lap_start_ticks;
+    static std::map<int, int> last_finished_lap_count;
+    static std::map<int, int> last_lap_ticks; 
+
+    LinearWorld* lin_world = dynamic_cast<LinearWorld*>(World::getWorld());
+    if (!lin_world || !kart) return;
+
+    int kart_id = kart->getWorldKartId();
+    int finished_laps = lin_world->getFinishedLapsOfKart(kart_id);
+
+    if (lin_world->getTime() < 0.5f)
+    {
+        personal_best_ticks.clear();
+        lap_start_ticks.clear();
+        last_finished_lap_count.clear();
+        last_lap_ticks.clear();
+    }
+
+    if (finished_laps > last_finished_lap_count[kart_id])
+    {
+        int time_at_finish = lin_world->getTicksAtLapForKart(kart_id);
+        int current_lap_duration = time_at_finish - lap_start_ticks[kart_id];
+
+        if (current_lap_duration > 0)
+        {
+            last_lap_ticks[kart_id] = current_lap_duration;
+
+            if (personal_best_ticks.find(kart_id) == personal_best_ticks.end() || 
+                current_lap_duration < personal_best_ticks[kart_id])
+            {
+                personal_best_ticks[kart_id] = current_lap_duration;
+            }
+        }
+
+        lap_start_ticks[kart_id] = time_at_finish;
+        last_finished_lap_count[kart_id] = finished_laps;
+    }
+
+    // --- ФОРМИРОВАНИЕ ТЕКСТА (как в оригинале) ---
+    core::stringw best_sw = L"Best: ";
+    if (personal_best_ticks.find(kart_id) != personal_best_ticks.end())
+    {
+        float seconds = (float)personal_best_ticks[kart_id] / 120.0f;
+        core::stringw time_str = core::stringw(StringUtils::timeToString(seconds).c_str());
+        if (time_str.size() > 3) best_sw += time_str.subString(3, time_str.size() - 3);
+        else best_sw += time_str;
+    }
+    else best_sw += L"none";
+
+    core::stringw last_sw = L"Last: ";
+    if (last_lap_ticks.find(kart_id) != last_lap_ticks.end())
+    {
+        float seconds = (float)last_lap_ticks[kart_id] / 120.0f;
+        core::stringw time_str = core::stringw(StringUtils::timeToString(seconds).c_str());
+        if (time_str.size() > 3) last_sw += time_str.subString(3, time_str.size() - 3);
+        else last_sw += time_str;
+    }
+    else last_sw += L"none";
+
+    // --- ОТРИСОВКА ---
+    gui::ScalableFont* font = GUIEngine::getHighresDigitFont();
+    font->setBlackBorder(true);
+    font->setScale(0.6f); 
+
+    int screen_w = irr_driver->getActualScreenSize().Width;
+    int screen_h = irr_driver->getActualScreenSize().Height;
+    int icon_height = screen_h / 19;
+    int y_start = (screen_h * 12 / 100) + icon_height + 5; 
+
+    // Отрисовка Best
+    int best_w = font->getDimension(best_sw.c_str()).Width;
+    core::rect<s32> pos_best(screen_w - best_w - 10, y_start, screen_w - 10, y_start + 25);
+    font->draw(best_sw, pos_best, video::SColor(255, 255, 255, 255), false, false, NULL, true);
+
+    // Отрисовка Last
+    y_start += 25;
+    int last_w = font->getDimension(last_sw.c_str()).Width;
+    core::rect<s32> pos_last(screen_w - last_w - 10, y_start, screen_w - 10, y_start + 25);
+    font->draw(last_sw, pos_last, video::SColor(255, 255, 255, 255), false, false, NULL, true);
+
+    font->setBlackBorder(false);
+    font->setScale(1.0f); 
+}
