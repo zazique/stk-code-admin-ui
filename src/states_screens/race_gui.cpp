@@ -1554,8 +1554,6 @@ void RaceGUI::drawBestLap(const AbstractKart* kart, const core::rect<s32>& viewp
 void RaceGUI::drawDebugCoordinates(const AbstractKart* kart)
 {
     if (!kart) return;
-
-    // Получаем "сырые" координаты из физического движка
     Vec3 pos = kart->getTrans().getOrigin();
 
     gui::ScalableFont* font = GUIEngine::getHighresDigitFont();

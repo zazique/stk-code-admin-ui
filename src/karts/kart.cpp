@@ -2704,9 +2704,10 @@ void Kart::updatePhysics(int ticks)
             if (UserConfigParams::m_jump_mode)
             {
 				float velocityMS = getSpeed(); 
-				float kmh = velocityMS * 3.6f;
+				float kmh = std::abs(velocityMS) * 3.6f;
 				float multiplier = 0.9f + (kmh / 200.0f);
 				if (multiplier > 1.7f) multiplier = 1.7f;
+				if (multiplier < 0.9f) multiplier = 0.9f;
 				
 				jumpVelocity *= multiplier;
             }
