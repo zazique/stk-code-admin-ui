@@ -655,7 +655,10 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_prev_fullscreen
             PARAM_DEFAULT(  BoolUserConfigParam(false, "prev_fullscreen",
                             &m_video_group) );
-
+	PARAM_PREFIX BoolUserConfigParam         m_show_coordinates
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "show_coordinates",
+                            &m_video_group, "If true, kart coordinates will be shown") );
+	
 
     PARAM_PREFIX BoolUserConfigParam        m_remember_window_location
             PARAM_DEFAULT(  BoolUserConfigParam(false, "remember_window_location",

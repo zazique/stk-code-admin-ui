@@ -330,6 +330,15 @@ void RaceGUI::renderGlobal(float dt)
             drawBestLap(kart, dummy_rect, 1.0f);
         }
     }
+    
+    if (UserConfigParams::m_show_coordinates) 
+    {
+        AbstractKart* kart = world->getLocalPlayerKart(0);
+        if (kart)
+        {
+            drawDebugCoordinates(kart);
+        }
+    }
 	
     if (!m_is_tutorial)
     {
@@ -1538,4 +1547,49 @@ void RaceGUI::drawBestLap(const AbstractKart* kart, const core::rect<s32>& viewp
 
     font->setBlackBorder(false);
     font->setScale(1.0f); 
+}
+
+#include <string> // для std::to_wstring
+
+void RaceGUI::drawDebugCoordinates(const AbstractKart* kart)
+{
+    if (!kart) return;
+
+    // Получаем "сырые" координаты из физического движка
+    Vec3 pos = kart->getTrans().getOrigin();
+
+    gui::ScalableFont* font = GUIEngine::getHighresDigitFont();
+    font->setBlackBorder(false);
+    font->setScale(0.4f);
+
+    int screen_w = irr_driver->getActualScreenSize().Width;
+    int screen_h = irr_driver->getActualScreenSize().Height;
+    int icon_height = screen_h / 19;
+    
+    int y_offset = (screen_h * 12 / 100) + icon_height + 5 + 50; 
+
+    double values[] = { (double)pos.getX(), (double)pos.getY(), (double)pos.getZ() };
+    const wchar_t* labels[] = { L"X: ", L"Y: ", L"Z: " };
+
+    for (int i = 0; i < 3; ++i)
+    {
+        core::stringw str = labels[i];
+        
+        str += std::to_wstring(values[i]).c_str();
+
+        int text_w = font->getDimension(str.c_str()).Width;
+        
+        int x_start = screen_w - text_w - 10;
+
+        if (x_start < 10) x_start = 10;
+
+        core::rect<s32> pos_rect(x_start, y_offset, screen_w - 10, y_offset + 20);
+        
+        font->draw(str, pos_rect, video::SColor(255, 255, 255, 255), false, false, NULL, true);
+        
+        y_offset += 20;
+    }
+
+    font->setBlackBorder(false);
+    font->setScale(1.0f);
 }

@@ -133,6 +133,7 @@ private:
                                 float min_ratio, int meter_width,
                                 int meter_height, float dt);
 	void drawBestLap(const AbstractKart* kart, const core::rect<s32>& viewport, float scaling);
+	void drawDebugCoordinates(const AbstractKart* kart);
     /* Helper functions for drawing meters */
 
     void drawMeterTexture(video::ITexture *meter_texture, video::S3DVertex vertices[], unsigned int count, bool reverse = false);

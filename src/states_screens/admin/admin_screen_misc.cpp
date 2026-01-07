@@ -84,6 +84,11 @@ void AdminScreenMisc::init()
 	{
 		merge->setColor(video::SColor(255, 0, 191, 255));
 	}
+	if (CheckBoxWidget* coord = getWidget<CheckBoxWidget>("show_coords"))
+	{
+		coord->setState(UserConfigParams::m_show_coordinates);
+		coord->setTooltip(_("Shows your kart coorinates on screen."));
+	}
 	if (World::getWorld())
     {
 		getWidget<CheckBoxWidget>("accessories")->setActive(false);
@@ -178,6 +183,10 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
     else if (name == "replay_merge")
     {
 		UserConfigParams::m_allow_replay_merge = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "show_coords")
+    {
+		UserConfigParams::m_show_coordinates = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

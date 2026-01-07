@@ -73,6 +73,14 @@
                 </div>
 
                 <spacer width="5" height="2%"/>
+                
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="show_coords"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Show kart coordinates" word_wrap="true"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
             </box>
         </div>
     </div>
