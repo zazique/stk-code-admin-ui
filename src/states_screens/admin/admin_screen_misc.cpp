@@ -87,10 +87,12 @@ void AdminScreenMisc::init()
 	if (World::getWorld())
     {
 		getWidget<CheckBoxWidget>("accessories")->setActive(false);
+		getWidget<GUIEngine::SpinnerWidget>("menu_music")->setActive(false);
 	}
 	else
 	{
 		getWidget<CheckBoxWidget>("accessories")->setActive(true);
+		getWidget<GUIEngine::SpinnerWidget>("menu_music")->setActive(true);
 	}
 }
 
