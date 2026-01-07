@@ -61,6 +61,12 @@ void AdminScreenFun::init()
         power->setState(UserConfigParams::m_infinite_powerup);
         power->setTooltip(_("If enabled, you can use same powerup infinitely."));
     }
+    if (CheckBoxWidget* noclip = getWidget<CheckBoxWidget>("noclip"))
+    {
+        noclip->setState(UserConfigParams::m_allow_noclip);
+        noclip->setTooltip(_("Enables noclip/ghost mode, which allows you to\n"
+							 "ignore walls. Pretty bugged as of now."));
+    }
     if (World::getWorld())
     {
 		getWidget<CheckBoxWidget>("camera_far_null")->setActive(false);
@@ -112,6 +118,10 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "infinite_powerup")
     {
 		UserConfigParams::m_infinite_powerup = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "noclip")
+    {
+		UserConfigParams::m_allow_noclip = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

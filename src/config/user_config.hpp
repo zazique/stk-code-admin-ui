@@ -1504,8 +1504,10 @@ namespace UserConfigParams
             "If true, you can see your best and current lap time"));
     PARAM_PREFIX BoolUserConfigParam        m_allow_replay_merge
         PARAM_DEFAULT(BoolUserConfigParam(false, "allow_replay_merge",
-            "If true, you can merge replays in-game"));	  	       	
-	
+            "If true, you can merge replays in-game"));
+	PARAM_PREFIX BoolUserConfigParam        m_allow_noclip
+        PARAM_DEFAULT(BoolUserConfigParam(false, "allow_noclip",
+            "Enables ghost mode"));
 
     // TODO? implement blacklist for new irrlicht device and GUI
     PARAM_PREFIX std::vector<std::string>   m_blacklist_res;

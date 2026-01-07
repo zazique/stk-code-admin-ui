@@ -2717,6 +2717,30 @@ void Kart::updatePhysics(int ticks)
     }
 
     m_jump_pressed_last_frame = is_jump_pressed;
+
+	if (UserConfigParams::m_allow_noclip)
+	{
+		btRigidBody* body = m_vehicle->getRigidBody();
+		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+		bool isOnGround = false;
+		for (int i = 0; i < 4; i++)
+		{
+			const btWheelInfo& wheel = m_vehicle->getWheelInfo(i);
+			if (wheel.m_raycastInfo.m_isInContact)
+			{
+				btVector3 groundNormal = wheel.m_raycastInfo.m_contactNormalWS;
+				if (groundNormal.y() > 0.7f) 
+				{
+					isOnGround = true;
+					break;
+				}
+			}
+		}
+	
+		if (isOnGround)
+		{
+		}
+	}
     // ------------------
 #ifdef XX
     Log::info("Kart","angVel %f %f %f heading %f suspension %f %f %f %f"
