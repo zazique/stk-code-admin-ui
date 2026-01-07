@@ -821,11 +821,13 @@ namespace UserConfigParams
         
     PARAM_PREFIX BoolUserConfigParam m_fast_start
 		PARAM_DEFAULT( BoolUserConfigParam(false, "fast_start", 
-                   &m_video_group, "True if fast start in debug mode should be removed"));
+		&m_video_group, "True if fast start in debug mode should be removed"));
 
-    // ---- Debug - not saved to config file
+    // ---- Debug - partially saved to config file
     /** If high scores will not be saved. For repeated testing on tracks. */
-    PARAM_PREFIX bool m_no_high_scores PARAM_DEFAULT(false);
+    PARAM_PREFIX BoolUserConfigParam m_no_high_scores
+		PARAM_DEFAULT( BoolUserConfigParam(false, "no_high_scores", 
+        "True if high scores shouldn't be saved"));
 
     /** If unit testing is enabled. */
     PARAM_PREFIX bool m_unit_testing PARAM_DEFAULT(false);

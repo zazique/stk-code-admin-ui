@@ -89,6 +89,11 @@ void AdminScreenMisc::init()
 		coord->setState(UserConfigParams::m_show_coordinates);
 		coord->setTooltip(_("Shows your kart coorinates on screen."));
 	}
+	if (CheckBoxWidget* coord = getWidget<CheckBoxWidget>("highscores"))
+	{
+		coord->setState(UserConfigParams::m_no_high_scores);
+		coord->setTooltip(_("If enabled, your time records will not be saved."));
+	}
 	if (World::getWorld())
     {
 		getWidget<CheckBoxWidget>("accessories")->setActive(false);
@@ -187,6 +192,10 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
     else if (name == "show_coords")
     {
 		UserConfigParams::m_show_coordinates = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "highscores")
+    {
+		UserConfigParams::m_no_high_scores = ((CheckBoxWidget*)widget)->getState();
     }
 }
 
