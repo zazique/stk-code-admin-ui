@@ -4,9 +4,17 @@
 #include "utils/log.hpp"
 #include <fstream>
 #include <sstream>
+#include <ctime>
+#include <cstdlib>
 
 bool ReplayMerger::merge(int id1, int id2)
 {
+	const ReplayPlay::ReplayData& rd1 = ReplayPlay::get()->getReplayData(id1);
+    const ReplayPlay::ReplayData& rd2 = ReplayPlay::get()->getReplayData(id2);
+	if (rd1.m_track_name != rd2.m_track_name || rd1.m_laps != rd2.m_laps) {
+		Log::error("ReplayMerger", "Incompatible replays! Track or Laps mismatch.");
+		return false;
+	}
     std::string path1 = file_manager->getReplayDir() + ReplayPlay::get()->getReplayData(id1).m_filename;
     std::string path2 = file_manager->getReplayDir() + ReplayPlay::get()->getReplayData(id2).m_filename;
 
@@ -19,35 +27,45 @@ bool ReplayMerger::merge(int id1, int id2)
     std::ofstream outFile(outPath);
 
     std::vector<std::string> kart_lines_from_2;
-    std::vector<std::string> data_lines_from_2;
     std::string line;
+    std::stringstream all_data_from_2;
+    bool found_first_size = false;
 
-    bool collecting_data = false;
     while (std::getline(file2, line)) {
         if (line.find("kart:") == 0 || line.find("kart_color:") == 0) {
             kart_lines_from_2.push_back(line);
+            continue;
         }
-        if (collecting_data) {
-            if (!line.empty()) data_lines_from_2.push_back(line);
+
+        if (!found_first_size && line.find("size:") == 0) {
+            found_first_size = true;
         }
-        if (line.find("size:") == 0) {
-            collecting_data = true;
-            data_lines_from_2.push_back(line); 
+
+        if (found_first_size) {
+            all_data_from_2 << line << "\n";
         }
     }
-
+	
+	srand(time(NULL));
+    uint64_t new_uid = ((uint64_t)rand() << 32) | rand();
+	
     file1.clear();
     file1.seekg(0);
     while (std::getline(file1, line)) {
+		if (line.find("replay_uid:") == 0) {
+            outFile << "replay_uid: " << new_uid << "\n";
+            continue;
+        }
+		
         if (line.find("kart_list_end") == 0) {
-            for (const auto& kl : kart_lines_from_2) outFile << kl << "\n";
+            for (const auto& kl : kart_lines_from_2) {
+                outFile << kl << "\n";
+            }
         }
         outFile << line << "\n";
     }
 
-    for (const auto& dl : data_lines_from_2) {
-        outFile << dl << "\n";
-    }
+    outFile << all_data_from_2.str();
 
     Log::info("ReplayMerger", "Successfully merged into %s", outPath.c_str());
     return true;

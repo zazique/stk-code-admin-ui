@@ -313,15 +313,11 @@ void GhostReplaySelection::loadList()
     // Only compute the compare index if we are actually going to compare.
     // This avoids spurious errors trying to find a replay with UID 0.
     unsigned int compare_index = 0;
-    if (m_is_comparing)
+    if (m_is_comparing|| m_is_merging)
 	{
         // In case the requested replay is not found, compare_index will be 0.
         compare_index = ReplayPlay::get()->getReplayIdByUID(m_replay_to_compare_uid);
 	}
-	else if (m_is_merging)
-    {
-        compare_index = (unsigned int)m_merge_base_id;
-    }
     // It's better to do this when not comparing than to do it repeatedly in the loop,
     // it will simply be unused if not comparing.
     const ReplayPlay::ReplayData& rd_compare = ReplayPlay::get()->getReplayData(compare_index);
@@ -373,6 +369,10 @@ void GhostReplaySelection::loadList()
                 // If it's not the same track, check further in the index
                 if (rd.m_track_name != rd_compare.m_track_name)
                     continue;
+                    
+                // If it's not the same game mode, check further in the index
+				if (rd.m_minor_mode != rd_compare.m_minor_mode) 
+					continue;
 
                 // If it's not the same direction, check further in the index
                 if (rd.m_reverse != rd_compare.m_reverse)
@@ -463,6 +463,12 @@ void GhostReplaySelection::eventCallback(GUIEngine::Widget* widget,
 {	
     if (name == "back")
     {
+		if (m_is_merging)
+		{
+			m_is_merging = false;
+			m_merge_base_id = -1;
+			refresh(false, true);
+		}
         StateManager::get()->escapePressed();
     }
     else if (name == "reload")
@@ -484,9 +490,10 @@ void GhostReplaySelection::eventCallback(GUIEngine::Widget* widget,
         
         if (m_is_merging)
         {
+			int base_index = ReplayPlay::get()->getReplayIdByUID(m_replay_to_compare_uid);
             Log::info("GhostReplaySelection", "Merging base index %d with second index %d", 
-                      m_merge_base_id, selected_index);
-			ReplayMerger::merge(m_merge_base_id, selected_index);
+                      base_index, selected_index);
+			ReplayMerger::merge(base_index, selected_index);
             m_is_merging = false;
             m_merge_base_id = -1;
             refresh(true, false);
@@ -646,6 +653,9 @@ void GhostReplaySelection::defaultSort()
 bool GhostReplaySelection::onEscapePressed()
 {
     // Reset it when leave this screen
+    m_is_merging = false;
+    m_merge_base_id = -1;
+    m_is_comparing = false;
     RaceManager::get()->setRecordRace(false);
     return true;
 }   // onEscapePressed
@@ -660,6 +670,6 @@ void GhostReplaySelection::onTextUpdated()
 void GhostReplaySelection::setMergeBase(int id)
 {
     m_is_merging = true;
-    m_merge_base_id = id;
+    m_replay_to_compare_uid = ReplayPlay::get()->getReplayData(id).m_replay_uid;
     refresh(false, true);
 }
