@@ -652,7 +652,7 @@ UserConfig *user_config;
 
 UserConfig::UserConfig()
 {
-    m_filename = "config.xml";
+    m_filename = "config_admin.xml";
     m_warning  = "";
     //m_blacklist_res.clear();
 

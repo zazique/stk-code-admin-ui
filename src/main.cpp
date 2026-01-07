@@ -588,7 +588,7 @@ void cmdLineHelp()
     "  -t,  --track=NAME       Start track NAME.\n"
     "       --gp=NAME          Start the specified Grand Prix.\n"
     "       --add-gp-dir=DIR   Load Grand Prix files in DIR. Setting will be saved"
-                              "in config.xml under additional_gp_directory. Use"
+                              "in config_admin.xml under additional_gp_directory. Use"
                               "--add-gp-dir=\"\" to unset.\n"
     "       --stk-config=FILE  use ./data/FILE instead of "
                               "./data/stk_config.xml\n"
