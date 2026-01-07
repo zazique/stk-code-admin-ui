@@ -2701,6 +2701,15 @@ void Kart::updatePhysics(int ticks)
         if (validGroundContacts > 0 && localUp.y() > 0.0f)
         {
             float jumpVelocity = 8.5f;
+            if (UserConfigParams::m_jump_mode)
+            {
+				float velocityMS = getSpeed(); 
+				float kmh = velocityMS * 3.6f;
+				float multiplier = 0.9f + (kmh / 200.0f);
+				if (multiplier > 1.7f) multiplier = 1.7f;
+				
+				jumpVelocity *= multiplier;
+            }
             btVector3 currentVel = body->getLinearVelocity();
             body->setLinearVelocity(currentVel + localUp * jumpVelocity);
         }
