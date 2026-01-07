@@ -425,13 +425,22 @@ void Swatter::squashThingsAround()
             RaceGUIBase* gui = World::getWorld()->getRaceGUI();
             if (gui)
             {
-                core::stringw wide_msg = translations->STK_GETTEXT(getSwatterHitString());
-                wide_msg.replace(L"%0", m_closest_kart->getName().c_str());
-                wide_msg.replace(L"%1", m_kart->getName().c_str());
-
-                gui->addMessage(wide_msg, NULL, 3.0f, 
-                                video::SColor(255, 255, 255, 255), 
-                                false, true, true);
+                core::stringw victim_name = (m_closest_kart->getController()->isPlayerController()) 
+											? core::stringw(m_closest_kart->getController()->getName().c_str()) 
+											: m_closest_kart->getName();
+			
+				core::stringw owner_name = (m_kart->getController()->isPlayerController()) 
+										   ? core::stringw(m_kart->getController()->getName().c_str()) 
+										   : m_kart->getName();
+			
+				core::stringw wide_msg = translations->STK_GETTEXT(getSwatterHitString());
+				
+				wide_msg.replace(L"%0", victim_name.c_str());
+				wide_msg.replace(L"%1", owner_name.c_str());
+			
+				gui->addMessage(wide_msg, NULL, 3.0f, 
+								video::SColor(255, 255, 255, 255), 
+								false, true, true);
             }
         }
 

@@ -457,7 +457,15 @@ void Powerup::use()
                 }
 				if (world->getRaceGUI() && UserConfigParams::m_show_powerup_msg)
 				{
-					core::stringw victim_name = kart->getName();
+					core::stringw victim_name;
+					if (kart->getController()->isPlayerController())
+					{
+						victim_name = core::stringw(kart->getController()->getName().c_str());
+					}
+					else
+					{
+						victim_name = kart->getName();
+					}
 					core::stringw wide_msg = translations->STK_GETTEXT(getAnchorString());
 					int pos = wide_msg.findFirst('%');
 					if (pos != -1 && pos + 1 < (int)wide_msg.size() && wide_msg[pos + 1] == 's')

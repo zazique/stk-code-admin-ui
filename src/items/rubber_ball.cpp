@@ -26,6 +26,7 @@
 #include "items/attachment.hpp"
 #include "items/projectile_manager.hpp"
 #include "karts/abstract_kart.hpp"
+#include "karts/controller/controller.hpp"
 #include "karts/kart_properties.hpp"
 #include "modes/linear_world.hpp"
 #include "network/network_string.hpp"
@@ -886,10 +887,26 @@ bool RubberBall::hit(AbstractKart* kart, PhysicalObject* object)
             RaceGUIBase* gui = World::getWorld()->getRaceGUI();
             if (gui)
             {
-                core::stringw wide_msg = translations->STK_GETTEXT("%0 is squashed by %1's ball");
-                wide_msg.replace(L"%0", kart->getName().c_str());
-                wide_msg.replace(L"%1", m_owner->getName().c_str());
-                gui->addMessage(wide_msg, NULL, 3.0f, video::SColor(255, 255, 255, 255), false, true, true);
+				static float last_msg_time = 0.0f;
+				float current_time = World::getWorld()->getTime();
+				if (current_time - last_msg_time > 2.0f)
+				{
+					core::stringw victim_name = (kart->getController()->isPlayerController()) 
+												? core::stringw(kart->getController()->getName().c_str()) 
+												: kart->getName();
+		
+					core::stringw owner_name = (m_owner->getController()->isPlayerController()) 
+											? core::stringw(m_owner->getController()->getName().c_str()) 
+											: m_owner->getName();
+		
+					core::stringw wide_msg = translations->STK_GETTEXT("%0 is squashed by %1's ball");
+					wide_msg.replace(L"%0", victim_name.c_str());
+					wide_msg.replace(L"%1", owner_name.c_str());
+		
+					gui->addMessage(wide_msg, NULL, 3.0f, video::SColor(255, 255, 255, 255), false, true, true);
+					
+					last_msg_time = current_time;
+				}
             }
         }
         
@@ -910,10 +927,19 @@ bool RubberBall::hit(AbstractKart* kart, PhysicalObject* object)
                 RaceGUIBase* gui = World::getWorld()->getRaceGUI();
                 if (gui)
                 {
-                    core::stringw wide_msg = translations->STK_GETTEXT(getRubberBallString());
-                    wide_msg.replace(L"%0", kart->getName().c_str());
-                    wide_msg.replace(L"%1", m_owner->getName().c_str());
-                    gui->addMessage(wide_msg, NULL, 3.0f, video::SColor(255, 255, 255, 255), false, true, true);
+                    core::stringw victim_name = (kart->getController()->isPlayerController()) 
+												? core::stringw(kart->getController()->getName().c_str()) 
+												: kart->getName();
+			
+					core::stringw owner_name = (m_owner->getController()->isPlayerController()) 
+											   ? core::stringw(m_owner->getController()->getName().c_str()) 
+											   : m_owner->getName();
+			
+					core::stringw wide_msg = translations->STK_GETTEXT(getRubberBallString());
+					wide_msg.replace(L"%0", victim_name.c_str());
+					wide_msg.replace(L"%1", owner_name.c_str());
+			
+					gui->addMessage(wide_msg, NULL, 3.0f, video::SColor(255, 255, 255, 255), false, true, true);
                 }
             }
             explode(kart, object);

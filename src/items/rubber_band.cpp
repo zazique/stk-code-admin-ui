@@ -27,6 +27,7 @@
 #include "items/plunger.hpp"
 #include "items/projectile_manager.hpp"
 #include "karts/abstract_kart.hpp"
+#include "karts/controller/controller.hpp"
 #include "karts/kart_properties.hpp"
 #include "karts/max_speed.hpp"
 #include "modes/world.hpp"
@@ -395,13 +396,21 @@ void RubberBand::hit(AbstractKart *kart_hit, const Vec3 *track_xyz)
             RaceGUIBase* gui = World::getWorld()->getRaceGUI();
             if (gui)
             {
-                core::stringw wide_msg = translations->STK_GETTEXT(getPlungerString());
-                wide_msg.replace(L"%0", kart_hit->getName().c_str());
-                wide_msg.replace(L"%1", m_owner->getName().c_str());
-
-                gui->addMessage(wide_msg, NULL, 3.0f, 
-                                video::SColor(255, 255, 255, 255), 
-                                false, true, true);
+                core::stringw victim_name = (kart_hit->getController()->isPlayerController()) 
+											? core::stringw(kart_hit->getController()->getName().c_str()) 
+											: kart_hit->getName();
+			
+				core::stringw owner_name = (m_owner->getController()->isPlayerController()) 
+										   ? core::stringw(m_owner->getController()->getName().c_str()) 
+										   : m_owner->getName();
+			
+				core::stringw wide_msg = translations->STK_GETTEXT(getPlungerString());
+				wide_msg.replace(L"%0", victim_name.c_str());
+				wide_msg.replace(L"%1", owner_name.c_str());
+			
+				gui->addMessage(wide_msg, NULL, 3.0f, 
+								video::SColor(255, 255, 255, 255), 
+								false, true, true);
             }
         }
         

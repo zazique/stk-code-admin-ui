@@ -607,34 +607,44 @@ void Flyable::explode(AbstractKart *kart_hit, PhysicalObject *object,
         if (gui)
         {
             core::stringw wide_msg = L"";
-            
-            if (m_type == PowerupManager::POWERUP_CAKE)
-            {
-                wide_msg = translations->STK_GETTEXT(getCakeString());
-                wide_msg.replace(L"%0", kart_hit->getName().c_str());
-                wide_msg.replace(L"%1", m_owner->getName().c_str());
-            }
-            else if (m_type == PowerupManager::POWERUP_BOWLING)
-            {
-                if (kart_hit == m_owner)
-                {
-                    wide_msg = translations->STK_GETTEXT(getSelfBowlingString());
-                    wide_msg.replace(L"%s", m_owner->getName().c_str());
-                }
-                else
-                {
-                    wide_msg = translations->STK_GETTEXT(getBowlingString());
-                    wide_msg.replace(L"%0", kart_hit->getName().c_str());
-                    wide_msg.replace(L"%1", m_owner->getName().c_str());
-                }
-            }
-
-            if (wide_msg.size() > 0)
-            {
-                gui->addMessage(wide_msg, NULL, 3.0f, 
-                                video::SColor(255, 255, 255, 255), 
-                                false, true, true);
-            }
+    
+			// 1. Определяем имя жертвы (кто получил удар)
+			core::stringw victim_name = (kart_hit->getController()->isPlayerController()) 
+										? core::stringw(kart_hit->getController()->getName().c_str()) 
+										: kart_hit->getName();
+		
+			// 2. Определяем имя владельца (кто запустил)
+			core::stringw owner_name = (m_owner->getController()->isPlayerController()) 
+									? core::stringw(m_owner->getController()->getName().c_str()) 
+									: m_owner->getName();
+		
+			if (m_type == PowerupManager::POWERUP_CAKE)
+			{
+				wide_msg = translations->STK_GETTEXT(getCakeString());
+				wide_msg.replace(L"%0", victim_name.c_str());
+				wide_msg.replace(L"%1", owner_name.c_str());
+			}
+			else if (m_type == PowerupManager::POWERUP_BOWLING)
+			{
+				if (kart_hit == m_owner)
+				{
+					wide_msg = translations->STK_GETTEXT(getSelfBowlingString());
+					wide_msg.replace(L"%s", owner_name.c_str());
+				}
+				else
+				{
+					wide_msg = translations->STK_GETTEXT(getBowlingString());
+					wide_msg.replace(L"%0", victim_name.c_str());
+					wide_msg.replace(L"%1", owner_name.c_str());
+				}
+			}
+		
+			if (wide_msg.size() > 0)
+			{
+				gui->addMessage(wide_msg, NULL, 3.0f, 
+								video::SColor(255, 255, 255, 255), 
+								false, true, true);
+			}
         }
     }
     // Apply explosion effect

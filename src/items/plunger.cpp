@@ -221,13 +221,21 @@ bool Plunger::hit(AbstractKart *kart, PhysicalObject *obj)
                 RaceGUIBase* gui = World::getWorld()->getRaceGUI();
                 if (gui)
                 {
-                    core::stringw wide_msg = translations->STK_GETTEXT(getPlungerInFaceString());
-                    wide_msg.replace(L"%0", kart->getName().c_str());
-                    wide_msg.replace(L"%1", m_owner->getName().c_str());
-
-                    gui->addMessage(wide_msg, NULL, 3.0f, 
-                                    video::SColor(255, 255, 255, 255), 
-                                    false, true, true);
+					core::stringw victim_name = (kart->getController()->isPlayerController()) 
+												? core::stringw(kart->getController()->getName().c_str()) 
+												: kart->getName();
+			
+					core::stringw owner_name = (m_owner->getController()->isPlayerController()) 
+											? core::stringw(m_owner->getController()->getName().c_str()) 
+											: m_owner->getName();
+			
+					core::stringw wide_msg = translations->STK_GETTEXT(getPlungerInFaceString());
+					wide_msg.replace(L"%0", victim_name.c_str());
+					wide_msg.replace(L"%1", owner_name.c_str());
+			
+					gui->addMessage(wide_msg, NULL, 3.0f, 
+									video::SColor(255, 255, 255, 255), 
+									false, true, true);
                 }
             }
             
