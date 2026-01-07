@@ -371,7 +371,7 @@ void RaceResultGUI::enableAllButtons()
         {
             middle->setImage("gui/icons/main_race.png");
             if (RaceManager::get()->isRecordingRace() && RaceManager::get()->getMajorMode() == RaceManager::MAJOR_MODE_SINGLE && 
-                RaceManager::get()->getMinorMode() == RaceManager::MINOR_MODE_TIME_TRIAL)
+                (RaceManager::get()->isTimeTrialMode() || RaceManager::get()->isEggHuntMode()))
             {
                 middle->setLabel(_("Race against the new ghost replay"));
                 middle->setVisible(!World::getWorld()->hasRaceEndedEarly());
@@ -396,7 +396,7 @@ void RaceResultGUI::enableAllButtons()
         {
 			AbstractKart* playerKart = World::getWorld()->getLocalPlayerKart(0);
 			bool isPlayerEliminated = playerKart && playerKart->isEliminated();
-            if (RaceManager::get()->getMinorMode() == RaceManager::MINOR_MODE_TIME_TRIAL && UserConfigParams::m_always_record_replay && !RaceManager::get()->isWatchingReplay() && !isPlayerEliminated)
+            if ((RaceManager::get()->isTimeTrialMode() || RaceManager::get()->isEggHuntMode()) && UserConfigParams::m_always_record_replay && !RaceManager::get()->isWatchingReplay() && !isPlayerEliminated)
             {
                 replayBtn->setActive(true);
                 replayBtn->setFocusable(true);
