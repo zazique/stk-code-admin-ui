@@ -2,11 +2,11 @@
 <stkgui>
     <icon-button id="back" x="1%" y="0" height="9%" icon="gui/icons/back.png"/>
 
-    <div x="1%" y="1%" width="98%" height="98%" layout="vertical-row" >
+    <div x="1%" y="1%" width="98%" height="98%" layout="vertical-row">
         <header width="80%" height="8%" align="center" text="Admin Control Panel" text_align="center"/>
         <spacer width="100%" height="1%"/>
 
-        <div width="100%" height="91%" layout="horizontal-row" >
+        <div width="100%" height="91%" layout="horizontal-row">
 
             <vertical-tabs id="admin_choice" height="100%" width="20%">
                 <icon-button id="tab_basic" width="128" height="128" icon="gui/icons/admin_basic.png" text="Basic"/>
@@ -16,79 +16,105 @@
 
             <spacer width="2%" height="100%"/>
 
-            <box width="78%" height="100%" layout="vertical-row">
-                <spacer width="5" height="2%"/>
-
-                <div width="100%" height="fit" layout="horizontal-row">
-                    <spinner id="menu_music" width="10f" align="center" />
-                    <label height="100%" x="0" y="0" text="Menu music"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
+            <box width="78%" height="100%" layout="horizontal-row">
                 
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="privacy_mode"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Hide save paths" word_wrap="true"/>
+                <icon-button id="prev_page" width="5%" height="100%" align="center" 
+                             icon="skins/classic-coal/left_arrow_focus.png"/>
+
+                <div id="page_container" width="90%" height="100%" layout="vertical-row">
+                    <div width="90%" height="97%">
+                        <div id="page_1" x="20" y="0" width="100%" height="98%" layout="vertical-row">
+                            <spacer width="5" height="2%"/>
+
+                            <div width="100%" height="fit" layout="horizontal-row">
+                                <spinner id="menu_music" width="10f" align="center" />
+                                <spacer width="2%"/>
+                                <label height="100%" x="0" y="0" text="Menu music"/>
+                            </div>
+
+                            <spacer width="5" height="2%"/>
+                            
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="privacy_mode"/>
+                                <spacer width="2%" height="100%" />
+                                <label height="100%" text="Hide save paths" word_wrap="true"/>
+                            </div>
+
+                            <spacer width="5" height="2%"/>
+                            
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="unlock_everything"/>
+                                <spacer width="2%" height="100%" />
+                                <label height="100%" text="Unlock everything" word_wrap="true"/>
+                            </div>
+
+                            <spacer width="5" height="2%"/>
+                            
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="fps_limit"/>
+                                <spacer width="2%" height="100%" />
+                                <label height="100%" text="Disable FPS limit" word_wrap="true"/>
+                            </div>
+
+                            <spacer width="5" height="2%"/>
+                            
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="accessories"/>
+                                <spacer width="2%" height="100%" />
+                                <label height="100%" text="Disable accessories" word_wrap="true"/>
+                            </div>
+
+                            <spacer width="5" height="2%"/>
+                            
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="lap_times"/>
+                                <spacer width="2%" height="100%" />
+                                <label height="100%" text="Show lap times" word_wrap="true"/>
+                            </div>
+
+                            <spacer width="5" height="2%"/>
+                            
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="replay_merge"/>
+                                <spacer width="2%" height="100%" />
+                                <label height="100%" id="merge_label" text="Allow replay merge" word_wrap="true"/>
+                            </div>
+
+                            <spacer width="5" height="2%"/>
+                            
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="show_coords"/>
+                                <spacer width="2%" height="100%" />
+                                <label height="100%" text="Show kart coordinates" word_wrap="true"/>
+                            </div>
+
+                            <spacer width="5" height="2%"/>
+                            
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="highscores"/>
+                                <spacer width="2%" height="100%" />
+                                <label height="100%" text="Don't save highscores" word_wrap="true"/>
+                            </div>
+                        </div>
+
+                        <div id="page_2" x="0" y="0" width="100%" height="98%" layout="vertical-row" visible="false">
+                            <spacer width="100%" height="2%"/>
+							<div layout="horizontal-row" width="100%" height="fit">
+								<gauge id="ghost_opacity" width="10f" min_value="1" max_value="100"/><spacer width="2%"/><label text="Select ghost opacity"/>
+							</div>
+                        </div>
+                    </div>
+
+                    <div width="100%" height="1%">
+                        <label id="page_indicator" 
+                               x="-10" y="70%" 
+                               width="25%" height="25" 
+                               text="Page 1/2" text_align="right" font="full"/>
+                    </div>
                 </div>
 
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="unlock_everything"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Unlock everything" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="fps_limit"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Disable FPS limit" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="accessories"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Disable accessories" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="lap_times"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Show lap times" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="replay_merge"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" id="merge_label" text="Allow replay merge" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="show_coords"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Show kart coordinates" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
-                
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="highscores"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Don't save highscores" word_wrap="true"/>
-                </div>
-
-                <spacer width="5" height="2%"/>
+                <icon-button id="next_page" width="5%" height="100%" align="center" 
+                             icon="skins/classic-coal/right_arrow_focus.png"/>
             </box>
         </div>
     </div>

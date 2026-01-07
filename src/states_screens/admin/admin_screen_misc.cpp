@@ -28,13 +28,15 @@ AdminScreenMisc::AdminScreenMisc() : Screen("admin/admin_misc.stkgui") {}
 void AdminScreenMisc::init()
 {
     Screen::init();
-    
+    m_current_page = 1;
     RibbonWidget* tabs = getWidget<RibbonWidget>("admin_choice");
     if (tabs) 
     {
         tabs->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
         tabs->select("tab_misc", PLAYER_ID_GAME_MASTER);
     }
+    if (Widget* p1 = getWidget("page_1")) p1->setVisible(true);
+    if (Widget* p2 = getWidget("page_2")) p2->setVisible(false);
     if (GUIEngine::SpinnerWidget* menu_music = getWidget<GUIEngine::SpinnerWidget>("menu_music"))
     {
         menu_music->m_properties[PROP_WRAP_AROUND] = "true";
@@ -94,6 +96,11 @@ void AdminScreenMisc::init()
 		coord->setState(UserConfigParams::m_no_high_scores);
 		coord->setTooltip(_("If enabled, your time records will not be saved."));
 	}
+	if (GUIEngine::SpinnerWidget* ghost = getWidget<GUIEngine::SpinnerWidget>("ghost_opacity"))
+    {
+        ghost->setValue(UserConfigParams::m_replay_ghost_opacity);
+        ghost->setTooltip(_("Adjusts opacity of ghosts in replays."));
+    }
 	if (World::getWorld())
     {
 		getWidget<CheckBoxWidget>("accessories")->setActive(false);
@@ -104,10 +111,41 @@ void AdminScreenMisc::init()
 		getWidget<CheckBoxWidget>("accessories")->setActive(true);
 		getWidget<GUIEngine::SpinnerWidget>("menu_music")->setActive(true);
 	}
+	updatePageIndicator();
+    this->calculateLayout();
+}
+
+void AdminScreenMisc::updatePageIndicator()
+{
+    if (LabelWidget* indicator = getWidget<LabelWidget>("page_indicator"))
+    {
+		indicator->setText(_("Page %d/%d", m_current_page, 2), false);
+    }
+    if (Widget* prev = getWidget("prev_page"))
+        prev->setActive(m_current_page > 1);
+        
+    if (Widget* next = getWidget("next_page"))
+        next->setActive(m_current_page < 2);
 }
 
 void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, const int playerID)
 {
+	if (name == "next_page" && m_current_page < 2)
+    {
+        m_current_page = 2;
+        if (Widget* p1 = getWidget("page_1")) p1->setVisible(false);
+        if (Widget* p2 = getWidget("page_2")) p2->setVisible(true);
+        updatePageIndicator();
+        this->calculateLayout();
+    }
+    else if (name == "prev_page" && m_current_page > 1)
+    {
+        m_current_page = 1;
+        if (Widget* p1 = getWidget("page_1")) p1->setVisible(true);
+        if (Widget* p2 = getWidget("page_2")) p2->setVisible(false);
+        updatePageIndicator();
+        this->calculateLayout();
+    }
     if (name == "admin_choice")
     {
         std::string selection = ((RibbonWidget*)widget)->getSelectionIDString(PLAYER_ID_GAME_MASTER);
@@ -196,6 +234,10 @@ void AdminScreenMisc::eventCallback(Widget* widget, const std::string& name, con
     else if (name == "highscores")
     {
 		UserConfigParams::m_no_high_scores = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "ghost_opacity")
+    {
+        UserConfigParams::m_replay_ghost_opacity = ((GUIEngine::SpinnerWidget*)widget)->getValue();
     }
 }
 

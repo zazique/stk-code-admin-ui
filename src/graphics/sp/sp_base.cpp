@@ -1333,6 +1333,14 @@ void draw(RenderPass rp, DrawCallType dct)
                     p.second[j].second[k].second/*material_id*/);
                 if (p.first->getName().rfind("ghost", 0) == 0)
                 {
+					p.first->use(rp);
+					GLint current_prog = 0;
+					glGetIntegerv(GL_CURRENT_PROGRAM, &current_prog);
+					GLint loc = glGetUniformLocation(current_prog, "custom_alpha");
+					if (loc != -1)
+					{
+						glUniform1f(loc, UserConfigParams::m_replay_ghost_opacity/100.0f);
+					}
                     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
                     glEnable(GL_BLEND);
                     glBlendEquation(GL_FUNC_ADD);

@@ -1508,6 +1508,10 @@ namespace UserConfigParams
 	PARAM_PREFIX BoolUserConfigParam        m_allow_noclip
         PARAM_DEFAULT(BoolUserConfigParam(false, "allow_noclip",
             "Enables ghost mode"));
+    PARAM_PREFIX IntUserConfigParam        m_replay_ghost_opacity
+            PARAM_DEFAULT( IntUserConfigParam(50, "replay_ghost_opacity",
+            "Changes replay ghost opacity") );
+
 
     // TODO? implement blacklist for new irrlicht device and GUI
     PARAM_PREFIX std::vector<std::string>   m_blacklist_res;
