@@ -55,6 +55,11 @@ void AdminScreenFun::init()
         rescue->setState(UserConfigParams::m_disable_auto_rescue);
         rescue->setTooltip(_("Bird cannot rescue you automatically if enabled."));
     }
+    if (CheckBoxWidget* power = getWidget<CheckBoxWidget>("infinite_powerup"))
+    {
+        power->setState(UserConfigParams::m_infinite_powerup);
+        power->setTooltip(_("If enabled, you can use same powerup infinitely."));
+    }
     if (Widget* w = getWidget("jump_mode")) w->setActive(UserConfigParams::m_allow_jump_bind);
 }
 
@@ -94,6 +99,10 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "disable_rescue")
     {
 		UserConfigParams::m_disable_auto_rescue = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "infinite_powerup")
+    {
+		UserConfigParams::m_infinite_powerup = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

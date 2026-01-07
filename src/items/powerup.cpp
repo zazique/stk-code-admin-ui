@@ -309,7 +309,10 @@ void Powerup::use()
         m_sound_use = SFXManager::get()->createSoundSource("shoot");
     }
 
-    m_number--;
+    if (!UserConfigParams::m_infinite_powerup)
+	{
+		m_number--;
+	}
     World *world = World::getWorld();
     ItemManager* im = Track::getCurrentTrack()->getItemManager();
     switch (m_type)
