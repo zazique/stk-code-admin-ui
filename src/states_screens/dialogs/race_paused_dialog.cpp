@@ -41,6 +41,7 @@
 #include "network/network_string.hpp"
 #include "network/stk_host.hpp"
 #include "race/race_manager.hpp"
+#include "states_screens/admin_screen.hpp"
 #include "states_screens/help/help_screen_1.hpp"
 #include "states_screens/main_menu_screen.hpp"
 #include "states_screens/race_gui_base.hpp"
@@ -435,6 +436,12 @@ GUIEngine::EventPropagation
         {
             dynamic_cast<OverWorld*>(World::getWorld())->scheduleSelectKart();
             ModalDialog::dismiss();
+            return GUIEngine::EVENT_BLOCK;
+        }
+        else if (selection == "admin")
+        {
+            dismiss();
+            AdminScreen::getInstance()->push();
             return GUIEngine::EVENT_BLOCK;
         }
     }

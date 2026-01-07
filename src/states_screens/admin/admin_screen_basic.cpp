@@ -7,6 +7,7 @@
 #include "utils/string_utils.hpp"
 #include "config/user_config.hpp"
 #include "guiengine/widgets/label_widget.hpp"
+#include "modes/world.hpp"
 
 using namespace GUIEngine;
 
@@ -128,7 +129,16 @@ void AdminScreenBasic::init()
     if (Widget* w = getWidget("input_overlay_size"))  w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos_y")) w->setActive(active);
-    
+    if (World::getWorld())
+    {
+		getWidget<CheckBoxWidget>("show_check")->setActive(false);
+		getWidget<CheckBoxWidget>("show_drive")->setActive(false);
+	}
+	else
+	{
+		getWidget<CheckBoxWidget>("show_check")->setActive(true);
+		getWidget<CheckBoxWidget>("show_drive")->setActive(true);
+	}
     updatePageIndicator();
     
     this->calculateLayout();

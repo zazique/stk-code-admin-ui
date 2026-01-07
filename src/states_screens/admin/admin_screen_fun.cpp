@@ -6,6 +6,7 @@
 #include "states_screens/state_manager.hpp"
 #include "utils/string_utils.hpp"
 #include "config/user_config.hpp"
+#include "modes/world.hpp"
 
 using namespace GUIEngine;
 
@@ -60,6 +61,14 @@ void AdminScreenFun::init()
         power->setState(UserConfigParams::m_infinite_powerup);
         power->setTooltip(_("If enabled, you can use same powerup infinitely."));
     }
+    if (World::getWorld())
+    {
+		getWidget<CheckBoxWidget>("camera_far_null")->setActive(false);
+	}
+	else
+	{
+		getWidget<CheckBoxWidget>("camera_far_null")->setActive(true);
+	}
     if (Widget* w = getWidget("jump_mode")) w->setActive(UserConfigParams::m_allow_jump_bind);
 }
 

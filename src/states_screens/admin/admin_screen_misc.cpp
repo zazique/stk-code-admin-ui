@@ -13,6 +13,7 @@
 #include "items/attachment_manager.hpp"
 #include "karts/kart_properties_manager.hpp"
 #include "karts/kart_properties.hpp"
+#include "modes/world.hpp"
 
 extern void handleXmasMode();
 extern void handleEasterEarMode();
@@ -82,6 +83,14 @@ void AdminScreenMisc::init()
 	if (LabelWidget* merge = getWidget<LabelWidget>("merge_label"))
 	{
 		merge->setColor(video::SColor(255, 0, 191, 255));
+	}
+	if (World::getWorld())
+    {
+		getWidget<CheckBoxWidget>("accessories")->setActive(false);
+	}
+	else
+	{
+		getWidget<CheckBoxWidget>("accessories")->setActive(true);
 	}
 }
 

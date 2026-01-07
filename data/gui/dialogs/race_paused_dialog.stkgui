@@ -33,7 +33,9 @@
 
             <icon-button id="help" width="128" height="128" icon="gui/icons/main_help.png"
                     I18N="Race paused button" text="Help" word_wrap="true"/>
-
+			
+			<icon-button id="admin" width="128" height="128" icon="gui/icons/main_admin.png"
+                    I18N="Race paused button" text="ADMIN UI" word_wrap="true"/>
         </buttonbar>
 
         <spacer width="20" height="5%" />
