@@ -3,6 +3,7 @@
 #include "states_screens/admin/admin_screen_basic.hpp"
 #include "states_screens/admin/admin_screen_misc.hpp"
 #include "states_screens/admin/admin_screen_fun.hpp"
+#include "states_screens/admin/admin_screen_chaos.hpp"
 
 namespace AdminCommon
 {
@@ -16,14 +17,15 @@ namespace AdminCommon
             screen = AdminScreenMisc::getInstance();
         else if (tab == "tab_fun")
             screen = AdminScreenFun::getInstance();
+        else if (tab == "tab_chaos")
+            screen = AdminScreenChaos::getInstance();
+
 
         if (screen)
-            // Использовать именно это!
             StateManager::get()->replaceTopMostScreen(screen);
 	}
 
     void setTabStatus()
     {
-        // Пока оставляем пустым, как в оригинале для управления доступом
     }
 }

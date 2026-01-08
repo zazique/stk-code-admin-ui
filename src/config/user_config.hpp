@@ -1511,6 +1511,13 @@ namespace UserConfigParams
     PARAM_PREFIX IntUserConfigParam        m_replay_ghost_opacity
             PARAM_DEFAULT( IntUserConfigParam(50, "replay_ghost_opacity",
             "Changes replay ghost opacity") );
+            
+            
+	PARAM_PREFIX GroupUserConfigParam m_shader_group
+		PARAM_DEFAULT( GroupUserConfigParam("Shader", "Custom Shader Settings") );
+	PARAM_PREFIX BoolUserConfigParam      m_shader_bw
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_bw",
+            &m_shader_group, "Enable or disable Black-White shader") );
 
 
     // TODO? implement blacklist for new irrlicht device and GUI

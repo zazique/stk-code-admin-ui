@@ -12,6 +12,7 @@
                 <icon-button id="tab_basic" width="128" height="128" icon="gui/icons/admin_basic.png" text="Basic"/>
                 <icon-button id="tab_misc" width="128" height="128" icon="gui/icons/admin_misc.png" text="Misc"/>
                 <icon-button id="tab_fun" width="128" height="128" icon="gui/icons/admin_fun.png" text="Fun"/>
+                <icon-button id="tab_chaos" width="128" height="128" icon="gui/icons/admin_chaos.png" text="Chaos"/>
             </vertical-tabs>
 
             <spacer width="2%" height="100%"/>
@@ -24,15 +25,7 @@
                     <spacer width="1%" height="100%" />
                     <label height="100%" text="Enable powerup messages" word_wrap="true"/>
                 </div>
-
-                <spacer width="5" height="2%"/>
                 
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="camera_far_null"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Set camera_far value to 0 (SEIZURE WARNING)" word_wrap="true"/>
-                </div>
-
                 <spacer width="5" height="2%"/>
                 
                 <div layout="horizontal-row" width="100%" height="fit">

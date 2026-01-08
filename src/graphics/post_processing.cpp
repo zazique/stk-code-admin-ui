@@ -56,6 +56,28 @@ using namespace video;
 using namespace scene;
 
 // ============================================================================
+class GrayscaleShader : public TextureShader < GrayscaleShader, 1, float >
+{
+private:
+    GrayscaleShader* m_grayscale_shader;
+public:
+    GrayscaleShader()
+    {
+        loadProgram(OBJECT, GL_VERTEX_SHADER, "screenquad.vert",
+                            GL_FRAGMENT_SHADER, "grayscale.frag");
+        assignUniforms("u_enabled");
+        assignSamplerNames(0, "tex", ST_BILINEAR_FILTERED);
+    }
+
+    void render(unsigned tex)
+    {
+        setTextureUnits(tex);
+        // drawFullScreenEffect сам сделает 'use()', прибиндит VAO и вызовет отрисовку
+        drawFullScreenEffect(UserConfigParams::m_shader_bw ? 1.0f : 0.0f);
+    }
+};
+
+// ============================================================================
 class Gaussian3HBlurShader : public TextureShader<Gaussian3HBlurShader, 1,
                                            core::vector2df>
 {
@@ -727,6 +749,7 @@ PostProcessing::PostProcessing()
     // For preloading shaders
     MotionBlurShader::getInstance();
     LightningShader::getInstance();
+    GrayscaleShader::getInstance();
 }   // PostProcessing
 
 // ----------------------------------------------------------------------------
@@ -1295,6 +1318,22 @@ FrameBuffer *PostProcessing::render(scene::ICameraSceneNode * const camnode,
         }
         PROFILER_POP_CPU_MARKER();
     }
+    if (UserConfigParams::m_shader_bw && out_fbo != nullptr)
+	{
+		FrameBuffer* current_input = out_fbo;
+		
+		FrameBuffer* next_output = (current_input == &rtts->getFBO(FBO_RGBA_1)) 
+								? &rtts->getFBO(FBO_RGBA_2) 
+								: &rtts->getFBO(FBO_RGBA_1);
+	
+		if (next_output != nullptr)
+		{
+			next_output->bind();
+			GrayscaleShader::getInstance()->render(current_input->getRTT()[0]);
+			
+			out_fbo = next_output;
+		}
+	}
 
     if (UserConfigParams::m_mlaa) // MLAA. Must be the last pp filter.
     {
@@ -1305,7 +1344,6 @@ FrameBuffer *PostProcessing::render(scene::ICameraSceneNode * const camnode,
                   *out_fbo);
         PROFILER_POP_CPU_MARKER();
     }
-
     return out_fbo;
 }   // render
 

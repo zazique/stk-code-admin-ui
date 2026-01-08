@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stkgui>
+    <icon-button id="back" x="1%" y="0" height="9%" icon="gui/icons/back.png"/>
+
+    <div x="1%" y="1%" width="98%" height="98%" layout="vertical-row" >
+        <header width="80%" height="8%" align="center" text="Admin Control Panel" text_align="center"/>
+        <spacer width="100%" height="1%"/>
+
+        <div width="100%" height="91%" layout="horizontal-row" >
+
+            <vertical-tabs id="admin_choice" height="100%" width="20%">
+                <icon-button id="tab_basic" width="128" height="128" icon="gui/icons/admin_basic.png" text="Basic"/>
+                <icon-button id="tab_misc" width="128" height="128" icon="gui/icons/admin_misc.png" text="Misc"/>
+                <icon-button id="tab_fun" width="128" height="128" icon="gui/icons/admin_fun.png" text="Fun"/>
+                <icon-button id="tab_chaos" width="128" height="128" icon="gui/icons/admin_chaos.png" text="Chaos"/>
+            </vertical-tabs>
+
+            <spacer width="2%" height="100%"/>
+
+            <box width="78%" height="100%" layout="vertical-row">
+                <spacer width="5" height="2%"/>
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="camera_far_null"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Set camera_far value to 0 (SEIZURE WARNING)" word_wrap="true"/>
+                </div>
+                <spacer width="5" height="2%"/>
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="bw_shader"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Enable Grayscale shader" word_wrap="true"/>
+                </div>
+                <spacer width="5" height="2%"/>
+            </box>
+        </div>
+    </div>
+</stkgui>

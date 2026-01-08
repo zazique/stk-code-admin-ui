@@ -27,11 +27,6 @@ void AdminScreenFun::init()
         check->setTooltip(_("Enables classic STK 0.7-style messages when powerups are used. \n"
                             "Includes updated messages for modern powerups."));
     }
-    if (CheckBoxWidget* camera = getWidget<CheckBoxWidget>("camera_far_null"))
-    {
-        camera->setState(UserConfigParams::m_camera_far_reset);
-        camera->setTooltip(_("Always sets camera distance to 0."));
-    }
     if (CheckBoxWidget* hue = getWidget<CheckBoxWidget>("kart_hue"))
     {
         hue->setState(UserConfigParams::m_fun_rainbow_kart);
@@ -69,11 +64,11 @@ void AdminScreenFun::init()
     }
     if (World::getWorld())
     {
-		getWidget<CheckBoxWidget>("camera_far_null")->setActive(false);
+		// currently unused
 	}
 	else
 	{
-		getWidget<CheckBoxWidget>("camera_far_null")->setActive(true);
+		// currently unused
 	}
     if (Widget* w = getWidget("jump_mode")) w->setActive(UserConfigParams::m_allow_jump_bind);
 }
@@ -93,10 +88,6 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "show_powerup_msg")
     {
 		UserConfigParams::m_show_powerup_msg = ((CheckBoxWidget*)widget)->getState();
-    }
-    else if (name == "camera_far_null")
-    {
-		UserConfigParams::m_camera_far_reset = ((CheckBoxWidget*)widget)->getState();
     }
     else if (name == "kart_hue")
     {
