@@ -6,9 +6,18 @@ uniform float u_inversion_enabled;
 uniform float u_distort_enabled;
 uniform float u_time;
 uniform float u_new_distort_enabled;
+uniform float u_mirror_enabled;
 void main()
 {
     vec2 uv = gl_FragCoord.xy / u_screen;
+    if (u_mirror_enabled > 0.001) 
+    {
+        bool mirX = (u_mirror_enabled > 0.25 && u_mirror_enabled <= 0.5) || (u_mirror_enabled > 0.75);
+        bool mirY = (u_mirror_enabled > 0.5);
+
+        if (mirX) uv.x = 1.0 - uv.x;
+        if (mirY) uv.y = 1.0 - uv.y;
+    }
     vec4 col = texture(tex, uv);
     
 	if (u_new_distort_enabled > 0.5)

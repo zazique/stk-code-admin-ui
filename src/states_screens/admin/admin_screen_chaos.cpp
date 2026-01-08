@@ -50,6 +50,12 @@ void AdminScreenChaos::init()
         dist->setTooltip(_("If enabled, distorts the image on the screen.\n"
 							 "Requires Advanced pipeline option enabled."));
     }
+    if (CheckBoxWidget* dist = getWidget<CheckBoxWidget>("mirror_shader"))
+    {
+        dist->setState(UserConfigParams::m_shader_mirror);
+        dist->setTooltip(_("If enabled, mirrors image on the screen.\n"
+							 "Requires Advanced pipeline option enabled."));
+    }
     if (World::getWorld())
     {
 		getWidget<CheckBoxWidget>("camera_far_null")->setActive(false);
@@ -91,6 +97,10 @@ void AdminScreenChaos::eventCallback(Widget* widget, const std::string& name, co
     else if (name == "distortion_shader2")
     {
 		UserConfigParams::m_shader_distortion2 = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "mirror_shader")
+    {
+		UserConfigParams::m_shader_mirror = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

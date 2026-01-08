@@ -1527,7 +1527,10 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam      m_shader_distortion2
             PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_distortion2",
             &m_shader_group, "Enable or disable second Image Destortion shader") );
-            
+    PARAM_PREFIX BoolUserConfigParam      m_shader_mirror
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_mirror",
+            &m_shader_group, "Enable or disable Mirror shader") );
+                    
             
 
     // TODO? implement blacklist for new irrlicht device and GUI

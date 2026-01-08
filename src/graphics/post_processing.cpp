@@ -56,26 +56,37 @@ using namespace video;
 using namespace scene;
 
 // ============================================================================
-class ChaosShader : public TextureShader < ChaosShader, 1, float, float, float, float, float >
+class ChaosShader : public TextureShader < ChaosShader, 1, float, float, float, float, float, float >
 {
 public:
     ChaosShader()
     {
         loadProgram(OBJECT, GL_VERTEX_SHADER, "screenquad.vert",
                             GL_FRAGMENT_SHADER, "chaos.frag");
-        assignUniforms("u_bw_enabled", "u_inversion_enabled", "u_distort_enabled", "u_time", "u_new_distort_enabled");
+        assignUniforms("u_bw_enabled", "u_inversion_enabled", "u_distort_enabled", "u_time", "u_new_distort_enabled", "u_mirror_enabled");
         assignSamplerNames(0, "tex", ST_BILINEAR_FILTERED);
     }
 
     void render(unsigned tex)
     {
+		static float lastUpdateTime = 0.0f;
+		static float currentRngValue = 0.0f;
+		
+		float currentTime = StkTime::getRealTime();
+	
+		if (currentTime - lastUpdateTime >= 1.0f) 
+		{
+			currentRngValue = (float)rand() / (float)RAND_MAX;
+			lastUpdateTime = currentTime;
+		}
         setTextureUnits(tex);
         drawFullScreenEffect(
             UserConfigParams::m_shader_bw ? 1.0f : 0.0f,
             UserConfigParams::m_shader_inversion ? 1.0f : 0.0f,
             UserConfigParams::m_shader_distortion ? 1.0f : 0.0f,
             StkTime::getRealTime(),
-            UserConfigParams::m_shader_distortion2 ? 1.0f : 0.0f
+            UserConfigParams::m_shader_distortion2 ? 1.0f : 0.0f,
+            UserConfigParams::m_shader_mirror ? currentRngValue : 0.0f
         );
     }
 };
@@ -1321,7 +1332,7 @@ FrameBuffer *PostProcessing::render(scene::ICameraSceneNode * const camnode,
         }
         PROFILER_POP_CPU_MARKER();
     }
-    if ((UserConfigParams::m_shader_bw || UserConfigParams::m_shader_inversion || UserConfigParams::m_shader_distortion || UserConfigParams::m_shader_distortion2) && out_fbo != nullptr)
+    if ((UserConfigParams::m_shader_bw || UserConfigParams::m_shader_inversion || UserConfigParams::m_shader_distortion || UserConfigParams::m_shader_distortion2 || UserConfigParams::m_shader_mirror) && out_fbo != nullptr)
 	{
 		FrameBuffer* current_input = out_fbo;
 		
