@@ -1521,6 +1521,11 @@ namespace UserConfigParams
 	PARAM_PREFIX BoolUserConfigParam      m_shader_inversion
             PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_inversion",
             &m_shader_group, "Enable or disable Color Inversion shader") );
+    PARAM_PREFIX BoolUserConfigParam      m_shader_distortion
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_distortion",
+            &m_shader_group, "Enable or disable Image Destortion shader") );
+            
+            
 
     // TODO? implement blacklist for new irrlicht device and GUI
     PARAM_PREFIX std::vector<std::string>   m_blacklist_res;

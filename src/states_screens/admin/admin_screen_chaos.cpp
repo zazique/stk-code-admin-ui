@@ -38,6 +38,12 @@ void AdminScreenChaos::init()
         camera->setTooltip(_("If enabled, inverts colors of the game.\n"
 							 "Requires Advanced pipeline option enabled."));
     }
+    if (CheckBoxWidget* camera = getWidget<CheckBoxWidget>("distortion_shader"))
+    {
+        camera->setState(UserConfigParams::m_shader_distortion);
+        camera->setTooltip(_("If enabled, distorts the image on the screen.\n"
+							 "Requires Advanced pipeline option enabled."));
+    }
     if (World::getWorld())
     {
 		getWidget<CheckBoxWidget>("camera_far_null")->setActive(false);
@@ -71,6 +77,10 @@ void AdminScreenChaos::eventCallback(Widget* widget, const std::string& name, co
     else if (name == "negative_shader")
     {
 		UserConfigParams::m_shader_inversion = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "distortion_shader")
+    {
+		UserConfigParams::m_shader_distortion = ((CheckBoxWidget*)widget)->getState();
     }
 }
 
