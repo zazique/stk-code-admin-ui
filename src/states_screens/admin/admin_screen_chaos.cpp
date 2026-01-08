@@ -26,22 +26,28 @@ void AdminScreenChaos::init()
         camera->setState(UserConfigParams::m_camera_far_reset);
         camera->setTooltip(_("Always sets camera distance to 0."));
     }
-    if (CheckBoxWidget* camera = getWidget<CheckBoxWidget>("bw_shader"))
+    if (CheckBoxWidget* bw = getWidget<CheckBoxWidget>("bw_shader"))
     {
-        camera->setState(UserConfigParams::m_shader_bw);
-        camera->setTooltip(_("If enabled, turns your game black-white.\n"
+        bw->setState(UserConfigParams::m_shader_bw);
+        bw->setTooltip(_("If enabled, turns your game black-white.\n"
 							 "Requires Advanced pipeline option enabled."));
     }
-    if (CheckBoxWidget* camera = getWidget<CheckBoxWidget>("negative_shader"))
+    if (CheckBoxWidget* neg = getWidget<CheckBoxWidget>("negative_shader"))
     {
-        camera->setState(UserConfigParams::m_shader_inversion);
-        camera->setTooltip(_("If enabled, inverts colors of the game.\n"
+        neg->setState(UserConfigParams::m_shader_inversion);
+        neg->setTooltip(_("If enabled, inverts colors of the game.\n"
 							 "Requires Advanced pipeline option enabled."));
     }
-    if (CheckBoxWidget* camera = getWidget<CheckBoxWidget>("distortion_shader"))
+    if (CheckBoxWidget* dist = getWidget<CheckBoxWidget>("distortion_shader"))
     {
-        camera->setState(UserConfigParams::m_shader_distortion);
-        camera->setTooltip(_("If enabled, distorts the image on the screen.\n"
+        dist->setState(UserConfigParams::m_shader_distortion);
+        dist->setTooltip(_("If enabled, distorts the image on the screen.\n"
+							 "Requires Advanced pipeline option enabled."));
+    }
+    if (CheckBoxWidget* dist = getWidget<CheckBoxWidget>("distortion_shader2"))
+    {
+        dist->setState(UserConfigParams::m_shader_distortion2);
+        dist->setTooltip(_("If enabled, distorts the image on the screen.\n"
 							 "Requires Advanced pipeline option enabled."));
     }
     if (World::getWorld())
@@ -81,6 +87,10 @@ void AdminScreenChaos::eventCallback(Widget* widget, const std::string& name, co
     else if (name == "distortion_shader")
     {
 		UserConfigParams::m_shader_distortion = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "distortion_shader2")
+    {
+		UserConfigParams::m_shader_distortion2 = ((CheckBoxWidget*)widget)->getState();
     }
 }
 

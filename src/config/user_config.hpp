@@ -1524,6 +1524,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam      m_shader_distortion
             PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_distortion",
             &m_shader_group, "Enable or disable Image Destortion shader") );
+    PARAM_PREFIX BoolUserConfigParam      m_shader_distortion2
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_distortion2",
+            &m_shader_group, "Enable or disable second Image Destortion shader") );
             
             
 
