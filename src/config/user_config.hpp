@@ -1518,7 +1518,9 @@ namespace UserConfigParams
 	PARAM_PREFIX BoolUserConfigParam      m_shader_bw
             PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_bw",
             &m_shader_group, "Enable or disable Black-White shader") );
-
+	PARAM_PREFIX BoolUserConfigParam      m_shader_inversion
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_inversion",
+            &m_shader_group, "Enable or disable Color Inversion shader") );
 
     // TODO? implement blacklist for new irrlicht device and GUI
     PARAM_PREFIX std::vector<std::string>   m_blacklist_res;

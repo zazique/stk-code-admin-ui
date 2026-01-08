@@ -56,24 +56,24 @@ using namespace video;
 using namespace scene;
 
 // ============================================================================
-class GrayscaleShader : public TextureShader < GrayscaleShader, 1, float >
+class ChaosShader : public TextureShader < ChaosShader, 1, float, float >
 {
-private:
-    GrayscaleShader* m_grayscale_shader;
 public:
-    GrayscaleShader()
+    ChaosShader()
     {
         loadProgram(OBJECT, GL_VERTEX_SHADER, "screenquad.vert",
-                            GL_FRAGMENT_SHADER, "grayscale.frag");
-        assignUniforms("u_enabled");
+                            GL_FRAGMENT_SHADER, "chaos.frag");
+        assignUniforms("u_bw_enabled", "u_inversion_enabled");
         assignSamplerNames(0, "tex", ST_BILINEAR_FILTERED);
     }
 
     void render(unsigned tex)
     {
         setTextureUnits(tex);
-        // drawFullScreenEffect сам сделает 'use()', прибиндит VAO и вызовет отрисовку
-        drawFullScreenEffect(UserConfigParams::m_shader_bw ? 1.0f : 0.0f);
+        drawFullScreenEffect(
+            UserConfigParams::m_shader_bw ? 1.0f : 0.0f,
+            UserConfigParams::m_shader_inversion ? 1.0f : 0.0f
+        );
     }
 };
 
@@ -749,7 +749,7 @@ PostProcessing::PostProcessing()
     // For preloading shaders
     MotionBlurShader::getInstance();
     LightningShader::getInstance();
-    GrayscaleShader::getInstance();
+    ChaosShader::getInstance();
 }   // PostProcessing
 
 // ----------------------------------------------------------------------------
@@ -1318,7 +1318,7 @@ FrameBuffer *PostProcessing::render(scene::ICameraSceneNode * const camnode,
         }
         PROFILER_POP_CPU_MARKER();
     }
-    if (UserConfigParams::m_shader_bw && out_fbo != nullptr)
+    if ((UserConfigParams::m_shader_bw || UserConfigParams::m_shader_inversion) && out_fbo != nullptr)
 	{
 		FrameBuffer* current_input = out_fbo;
 		
@@ -1329,7 +1329,7 @@ FrameBuffer *PostProcessing::render(scene::ICameraSceneNode * const camnode,
 		if (next_output != nullptr)
 		{
 			next_output->bind();
-			GrayscaleShader::getInstance()->render(current_input->getRTT()[0]);
+			ChaosShader::getInstance()->render(current_input->getRTT()[0]);
 			
 			out_fbo = next_output;
 		}
