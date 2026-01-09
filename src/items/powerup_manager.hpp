@@ -79,6 +79,7 @@ class PowerupManager : public NoCopy
 {
 public:
     LEAK_CHECK();
+    void reloadConfig();
 private:
     // ------------------------------------------------------------------------
     /** This object stores all the weights for one particular number of

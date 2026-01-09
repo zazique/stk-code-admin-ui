@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stkgui>
+    <div x="5%" y="5%" width="90%" height="90%" layout="vertical-row" >
+        <header id="title" width="100%" height="fit" text_align="center" text="Powerup Selection Settings" />
+
+        <spacer height="20" width="10" />
+
+        <div layout="horizontal-row" width="100%" height="fit">
+            <checkbox id="enable_powerup_sel"/>
+            <spacer width="10" height="10"/>
+            <label text="Enable custom powerup selection" />
+        </div>
+
+        <spacer height="25" width="10" />
+
+        <div layout="horizontal-row" width="100%" proportion="1">
+            
+            <div layout="vertical-row" proportion="1" height="100%">
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_bubblegum"/> <spacer width="10" height="10"/> <label text="Bubble Gum" />
+                </div>
+                <spacer height="10" width="10"/>
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_zipper"/> <spacer width="10" height="10"/> <label text="Zipper" />
+                </div>
+                <spacer height="10" width="10"/>
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_cake"/> <spacer width="10" height="10"/> <label text="Cake" />
+                </div>
+                <spacer height="10" width="10"/>
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_plunger"/> <spacer width="10" height="10"/> <label text="Plunger" />
+                </div>
+                <spacer height="10" width="10"/>
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_bowling"/> <spacer width="10" height="10"/> <label text="Bowling Ball" />
+                </div>
+            </div>
+
+            <spacer width="20" height="10"/>
+
+            <div layout="vertical-row" proportion="1" height="100%">
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_parachute"/> <spacer width="10" height="10"/> <label text="Parachute" />
+                </div>
+                <spacer height="10" width="10"/>
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_swapper"/> <spacer width="10" height="10"/> <label text="Swapper" />
+                </div>
+                <spacer height="10" width="10"/>
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_basketball"/> <spacer width="10" height="10"/> <label text="Basket Ball" />
+                </div>
+                <spacer height="10" width="10"/>
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_swatter"/> <spacer width="10" height="10"/> <label text="Swatter" />
+                </div>
+                <spacer height="10" width="10"/>
+                <div layout="horizontal-row" height="fit" width="100%">
+                    <checkbox id="item_anvil"/> <spacer width="10" height="10"/> <label text="Anvil" />
+                </div>
+            </div>
+        </div>
+
+        <spacer height="20" width="10" />
+
+        <buttonbar id="buttons" height="15%" width="40%" align="center">
+            <icon-button id="cancel" width="128" height="128" icon="gui/icons/red_x.png" text="Cancel" align="center"/>
+            <icon-button id="apply" width="128" height="128" icon="gui/icons/green_check.png" text="Apply" align="center"/>
+        </buttonbar>
+    </div>
+</stkgui>

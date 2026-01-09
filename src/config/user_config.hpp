@@ -1534,6 +1534,45 @@ namespace UserConfigParams
             PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_mirror",
             &m_shader_group, "Enable or disable Mirror shader") );
                     
+                    
+    PARAM_PREFIX GroupUserConfigParam m_item_group
+		PARAM_DEFAULT( GroupUserConfigParam("Item", "Custom Item Configuration") );
+	PARAM_PREFIX BoolUserConfigParam      m_enable_powerup_sel
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "enable_powerup_sel",
+            &m_item_group, "Enable or disable custom item configuration") );	
+	PARAM_PREFIX BoolUserConfigParam      m_item_bubblegum
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_bubblegum",
+            &m_item_group, "Enable or disable bubblegum") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_zipper
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_zipper",
+            &m_item_group, "Enable or disable zipper") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_cake
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_cake",
+            &m_item_group, "Enable or disable cake") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_plunger
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_plunger",
+            &m_item_group, "Enable or disable plunger") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_bowling
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_bowling",
+            &m_item_group, "Enable or disable bowling ball") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_parachute
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_parachute",
+            &m_item_group, "Enable or disable parachute") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_swapper
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_swapper",
+            &m_item_group, "Enable or disable swapper") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_basketball
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_basketball",
+            &m_item_group, "Enable or disable basketball") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_swatter
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_swatter",
+            &m_item_group, "Enable or disable swatter") );
+    PARAM_PREFIX BoolUserConfigParam      m_item_anvil
+        PARAM_DEFAULT(  BoolUserConfigParam(true, "item_anvil",
+            &m_item_group, "Enable or disable anvil") );
+            
+            
+            	
             
 
     // TODO? implement blacklist for new irrlicht device and GUI

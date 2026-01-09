@@ -3,10 +3,12 @@
 #include "guiengine/widgets/ribbon_widget.hpp"
 #include "guiengine/widgets/spinner_widget.hpp"
 #include "guiengine/widgets/check_box_widget.hpp"
+#include "guiengine/widgets/button_widget.hpp"
 #include "states_screens/state_manager.hpp"
 #include "utils/string_utils.hpp"
 #include "config/user_config.hpp"
 #include "modes/world.hpp"
+#include "states_screens/dialogs/admin_items_settings.hpp"
 
 using namespace GUIEngine;
 
@@ -62,6 +64,11 @@ void AdminScreenFun::init()
         noclip->setTooltip(_("Enables noclip/ghost mode, which allows you to\n"
 							 "ignore walls. Pretty bugged as of now."));
     }
+    if (ButtonWidget* power = getWidget<ButtonWidget>("powerup_conf"))
+    {
+        power->setTooltip(_("Click to configure powerup usage."));
+    }
+    
     if (World::getWorld())
     {
 		// currently unused
@@ -113,6 +120,10 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "noclip")
     {
 		UserConfigParams::m_allow_noclip = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if(name == "powerup_conf")
+    {
+        new AdminItemsSettingsDialog(0.8f, 0.9f);
     }
 }
 

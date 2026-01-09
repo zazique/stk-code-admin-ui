@@ -34,6 +34,7 @@
 #include "race/race_manager.hpp"
 #include "utils/constants.hpp"
 #include "utils/string_utils.hpp"
+#include "config/user_config.hpp"
 
 #include <IMesh.h>
 
@@ -121,8 +122,20 @@ PowerupManager::PowerupType
  */
 void PowerupManager::loadPowerupsModels()
 {
-    const std::string file_name = file_manager->getAsset("powerup.xml");
-    XMLNode *root               = file_manager->createXMLTree(file_name);
+    std::string xml_name = "powerup.xml";
+    if (UserConfigParams::m_enable_powerup_sel)
+    {
+        xml_name = "powerup_admin.xml";
+    }
+
+    const std::string file_name = file_manager->getAsset(xml_name);
+    XMLNode *root = file_manager->createXMLTree(file_name);
+    
+    if (!root)
+    {
+        Log::fatal("PowerupManager", "Could not find %s!", xml_name.c_str());
+        exit(-1);
+    }
     for(unsigned int i=0; i<root->getNumNodes(); i++)
     {
         const XMLNode *node=root->getNode(i);
@@ -243,6 +256,35 @@ void PowerupManager::WeightsData::readData(int num_karts, const XMLNode *node)
                          l_string[j].c_str(), node->getName().c_str());
             }
         }
+        
+        if (UserConfigParams::m_enable_powerup_sel)
+        {
+            bool active[] = {
+                UserConfigParams::m_item_bubblegum,
+                UserConfigParams::m_item_cake,
+                UserConfigParams::m_item_bowling,
+                UserConfigParams::m_item_zipper,
+                UserConfigParams::m_item_plunger,
+                UserConfigParams::m_item_swapper,
+                UserConfigParams::m_item_swatter,
+                UserConfigParams::m_item_basketball,
+                UserConfigParams::m_item_parachute,
+                UserConfigParams::m_item_anvil
+            };
+
+            for (int j = 0; j < 10; j++)
+            {
+                if (!active[j])
+                {
+                    if (j < (int)l.size()) 
+                        l[j] = 0;
+                    int multi_index = j + (int)POWERUP_LAST; 
+                    if (multi_index < (int)l.size())
+                        l[multi_index] = 0;
+                }
+            }
+        }
+        
         // Make sure we have the right number of entries
         if (l.size() < 2 * (int)POWERUP_LAST)
         {
@@ -682,3 +724,24 @@ void PowerupManager::unitTesting()
         assert(count[i] == wd.m_weights_for_section[section][i]);
     }
 }   // unitTesting
+
+void PowerupManager::reloadConfig()
+{
+    for(auto& key_pair : m_all_weights)
+    {
+        for(WeightsData* p : key_pair.second)
+        {
+            delete p;
+        }
+        key_pair.second.clear();
+    }
+    m_all_weights.clear();
+
+    loadPowerupsModels();
+
+    if (World::getWorld() && RaceManager::get())
+    {
+        int num_karts = RaceManager::get()->getNumberOfKarts();
+        computeWeightsForRace(num_karts);
+    }
+}

@@ -1241,15 +1241,10 @@ void World::update(int ticks)
 
                         btTransform trans = body->getWorldTransform();
                         Vec3 pos = trans.getOrigin();
-                        
-                        // В STK ось Z (колонка 2) - это обычно направление вперед.
-                        // Смещаем позицию банана назад, чтобы карт на него сразу не наехал.
                         btVector3 forward = trans.getBasis().getColumn(2); 
                         pos.setX(pos.getX() - forward.getX() * 2.0f);
                         pos.setY(pos.getY() - forward.getY() * 2.0f);
                         pos.setZ(pos.getZ() - forward.getZ() * 2.0f);
-
-                        // Кладем банан. В качестве нормали (верха) используем (0, 1, 0)
                         im->placeItem(Item::ITEM_BANANA, pos, Vec3(0, 1, 0));
                     }
                 }

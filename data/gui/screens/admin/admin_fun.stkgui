@@ -75,6 +75,11 @@
                 </div>
 
                 <spacer width="5" height="2%"/>
+                <div width="100%" height="fit" layout="vertical-row">
+					<button id="powerup_conf" text="Powerup configuration"/>
+				</div>
+				
+                <spacer width="5" height="2%"/>
             </box>
         </div>
     </div>
