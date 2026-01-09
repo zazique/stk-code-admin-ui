@@ -1533,8 +1533,11 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam      m_shader_mirror
             PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_mirror",
             &m_shader_group, "Enable or disable Mirror shader") );
-                    
-                    
+    PARAM_PREFIX BoolUserConfigParam      m_shader_rainbow
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_rainbow",
+            &m_shader_group, "Enable or disable Rainbow shader") );
+    
+     
     PARAM_PREFIX GroupUserConfigParam m_item_group
 		PARAM_DEFAULT( GroupUserConfigParam("Item", "Custom Item Configuration") );
 	PARAM_PREFIX BoolUserConfigParam      m_enable_powerup_sel

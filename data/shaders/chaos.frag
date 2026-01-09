@@ -7,6 +7,9 @@ uniform float u_distort_enabled;
 uniform float u_time;
 uniform float u_new_distort_enabled;
 uniform float u_mirror_enabled;
+uniform float u_rainbow_enabled;
+uniform float u_rainbow_time;
+
 void main()
 {
     vec2 uv = gl_FragCoord.xy / u_screen;
@@ -62,6 +65,21 @@ void main()
     if (u_inversion_enabled > 0.5)
     {
         col.rgb = 1.0 - col.rgb;
+    }
+	if (u_rainbow_enabled > 0.5)
+    {
+        float t = u_rainbow_time; 
+
+        float r = sin(t) * 0.5 + 0.5;
+        float g = sin(t + 2.094) * 0.5 + 0.5;
+        float b = sin(t + 4.188) * 0.5 + 0.5;
+        
+        vec3 rainbow = vec3(r, g, b);
+        float gray = dot(col.rgb, vec3(0.2126, 0.7152, 0.0722));
+
+        vec3 rainbowTarget = rainbow * gray * 2.0;
+
+        col.rgb = mix(col.rgb, rainbowTarget, 0.5);
     }
     FragColor = col;
 }

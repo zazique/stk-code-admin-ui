@@ -56,6 +56,12 @@
                 </div>
                 <spacer width="5" height="2%"/>
                 <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="rainbow_shader"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Enable Rainbow shader" word_wrap="true"/>
+                </div>
+                <spacer width="5" height="2%"/>
+                <div layout="horizontal-row" width="100%" height="fit">
                     <checkbox id="banana_trail"/>
                     <spacer width="1%" height="100%" />
                     <label height="100%" text="Enable banana trail" word_wrap="true"/>

@@ -56,14 +56,14 @@ using namespace video;
 using namespace scene;
 
 // ============================================================================
-class ChaosShader : public TextureShader < ChaosShader, 1, float, float, float, float, float, float >
+class ChaosShader : public TextureShader < ChaosShader, 1, float, float, float, float, float, float, float, float >
 {
 public:
     ChaosShader()
     {
         loadProgram(OBJECT, GL_VERTEX_SHADER, "screenquad.vert",
                             GL_FRAGMENT_SHADER, "chaos.frag");
-        assignUniforms("u_bw_enabled", "u_inversion_enabled", "u_distort_enabled", "u_time", "u_new_distort_enabled", "u_mirror_enabled");
+        assignUniforms("u_bw_enabled", "u_inversion_enabled", "u_distort_enabled", "u_time", "u_new_distort_enabled", "u_mirror_enabled", "u_rainbow_enabled", "u_rainbow_time");
         assignSamplerNames(0, "tex", ST_BILINEAR_FILTERED);
     }
 
@@ -71,6 +71,7 @@ public:
     {
 		static float lastUpdateTime = 0.0f;
 		static float currentRngValue = 0.0f;
+		static float rainbowAccumulator = 0.0f;
 		
 		float currentTime = StkTime::getRealTime();
 	
@@ -79,6 +80,9 @@ public:
 			currentRngValue = (float)rand() / (float)RAND_MAX;
 			lastUpdateTime = currentTime;
 		}
+		
+		rainbowAccumulator += 0.01f;
+	    if (rainbowAccumulator > 100.0f) rainbowAccumulator = 0.0f;
         setTextureUnits(tex);
         drawFullScreenEffect(
             UserConfigParams::m_shader_bw ? 1.0f : 0.0f,
@@ -86,7 +90,9 @@ public:
             UserConfigParams::m_shader_distortion ? 1.0f : 0.0f,
             StkTime::getRealTime(),
             UserConfigParams::m_shader_distortion2 ? 1.0f : 0.0f,
-            UserConfigParams::m_shader_mirror ? currentRngValue : 0.0f
+            UserConfigParams::m_shader_mirror ? currentRngValue : 0.0f,
+            UserConfigParams::m_shader_rainbow ? 1.0f : 0.0f,
+            rainbowAccumulator
         );
     }
 };
@@ -1332,7 +1338,7 @@ FrameBuffer *PostProcessing::render(scene::ICameraSceneNode * const camnode,
         }
         PROFILER_POP_CPU_MARKER();
     }
-    if ((UserConfigParams::m_shader_bw || UserConfigParams::m_shader_inversion || UserConfigParams::m_shader_distortion || UserConfigParams::m_shader_distortion2 || UserConfigParams::m_shader_mirror) && out_fbo != nullptr)
+    if ((UserConfigParams::m_shader_bw || UserConfigParams::m_shader_inversion || UserConfigParams::m_shader_distortion || UserConfigParams::m_shader_distortion2 || UserConfigParams::m_shader_mirror || UserConfigParams::m_shader_rainbow) && out_fbo != nullptr)
 	{
 		FrameBuffer* current_input = out_fbo;
 		
