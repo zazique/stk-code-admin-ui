@@ -1511,6 +1511,9 @@ namespace UserConfigParams
     PARAM_PREFIX IntUserConfigParam        m_replay_ghost_opacity
             PARAM_DEFAULT( IntUserConfigParam(50, "replay_ghost_opacity",
             "Changes replay ghost opacity") );
+    PARAM_PREFIX BoolUserConfigParam        m_banana_trail
+            PARAM_DEFAULT( BoolUserConfigParam(false, "banana_trail",
+            "Enables banana trail after karts") );
             
             
 	PARAM_PREFIX GroupUserConfigParam m_shader_group

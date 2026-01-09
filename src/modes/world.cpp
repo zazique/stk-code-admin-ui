@@ -37,6 +37,7 @@
 #include "input/device_manager.hpp"
 #include "input/keyboard_device.hpp"
 #include "items/projectile_manager.hpp"
+#include "items/item_manager.hpp"
 #include "karts/controller/battle_ai.hpp"
 #include "karts/ghost_kart.hpp"
 #include "karts/controller/end_controller.hpp"
@@ -1217,6 +1218,45 @@ void World::update(int ticks)
             m_karts[i]->makeKartRest();
     }
     PROFILER_POP_CPU_MARKER();
+    
+    if (UserConfigParams::m_banana_trail && !NetworkConfig::get()->isNetworking() && isRacePhase())
+    {
+        static int globalBananaTimerTicks = 0;
+        globalBananaTimerTicks += ticks;
+        if (globalBananaTimerTicks >= stk_config->time2Ticks(0.5f))
+        {
+            globalBananaTimerTicks = 0;
+            ItemManager* im = Track::getCurrentTrack()->getItemManager();
+
+            if (im)
+            {
+                for (int i = 0; i < (int)m_karts.size(); ++i)
+                {
+                    AbstractKart* kart = m_karts[i].get();
+                    
+                    if (kart && !kart->isEliminated() && !kart->isGhostKart())
+                    {
+                        btRigidBody* body = kart->getBody();
+                        if (!body) continue;
+
+                        btTransform trans = body->getWorldTransform();
+                        Vec3 pos = trans.getOrigin();
+                        
+                        // В STK ось Z (колонка 2) - это обычно направление вперед.
+                        // Смещаем позицию банана назад, чтобы карт на него сразу не наехал.
+                        btVector3 forward = trans.getBasis().getColumn(2); 
+                        pos.setX(pos.getX() - forward.getX() * 2.0f);
+                        pos.setY(pos.getY() - forward.getY() * 2.0f);
+                        pos.setZ(pos.getZ() - forward.getZ() * 2.0f);
+
+                        // Кладем банан. В качестве нормали (верха) используем (0, 1, 0)
+                        im->placeItem(Item::ITEM_BANANA, pos, Vec3(0, 1, 0));
+                    }
+                }
+            }
+        }
+    }
+    
     if(RaceManager::get()->isRecordingRace()) ReplayRecorder::get()->update(ticks);
 
     PROFILER_PUSH_CPU_MARKER("World::update (projectiles)", 0xa0, 0x7F, 0x00);

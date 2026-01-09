@@ -56,6 +56,11 @@ void AdminScreenChaos::init()
         dist->setTooltip(_("If enabled, mirrors image on the screen.\n"
 							 "Requires Advanced pipeline option enabled."));
     }
+    if (CheckBoxWidget* trail = getWidget<CheckBoxWidget>("banana_trail"))
+    {
+        trail->setState(UserConfigParams::m_banana_trail);
+        trail->setTooltip(_("If enabled, karts leave banana trail on track"));
+    }
     if (World::getWorld())
     {
 		getWidget<CheckBoxWidget>("camera_far_null")->setActive(false);
@@ -101,6 +106,10 @@ void AdminScreenChaos::eventCallback(Widget* widget, const std::string& name, co
     else if (name == "mirror_shader")
     {
 		UserConfigParams::m_shader_mirror = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "banana_trail")
+    {
+		UserConfigParams::m_banana_trail = ((CheckBoxWidget*)widget)->getState();
     }
 }
 
