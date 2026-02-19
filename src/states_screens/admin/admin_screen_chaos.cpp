@@ -15,12 +15,15 @@ AdminScreenChaos::AdminScreenChaos() : Screen("admin/admin_chaos.stkgui") {}
 void AdminScreenChaos::init()
 {
     Screen::init();
+    m_current_page = 1;
     RibbonWidget* tabs = getWidget<RibbonWidget>("admin_choice");
     if (tabs) 
     {
         tabs->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
         tabs->select("tab_chaos", PLAYER_ID_GAME_MASTER);
     }
+    if (Widget* p1 = getWidget("page_1")) p1->setVisible(true);
+    if (Widget* p2 = getWidget("page_2")) p2->setVisible(false);
     if (CheckBoxWidget* camera = getWidget<CheckBoxWidget>("camera_far_null"))
     {
         camera->setState(UserConfigParams::m_camera_far_reset);
@@ -62,6 +65,12 @@ void AdminScreenChaos::init()
         rainbow->setTooltip(_("If enabled, Adds rainbow effect to image.\n"
 							 "Requires Advanced pipeline option enabled."));
     }
+    if (CheckBoxWidget* end = getWidget<CheckBoxWidget>("end_shader"))
+    {
+        end->setState(UserConfigParams::m_shader_end);
+        end->setTooltip(_("If enabled, Adds distortion effects to image.\n"
+							 "Requires Advanced pipeline option enabled."));
+    }
     if (CheckBoxWidget* trail = getWidget<CheckBoxWidget>("banana_trail"))
     {
         trail->setState(UserConfigParams::m_banana_trail);
@@ -75,11 +84,41 @@ void AdminScreenChaos::init()
 	{
 		getWidget<CheckBoxWidget>("camera_far_null")->setActive(true);
 	}
+	updatePageIndicator();
+	this->calculateLayout();
 }
 
+void AdminScreenChaos::updatePageIndicator()
+{
+    if (LabelWidget* indicator = getWidget<LabelWidget>("page_indicator"))
+    {
+		indicator->setText(_("Page %d/%d", m_current_page, 2), false);
+    }
+    if (Widget* prev = getWidget("prev_page"))
+        prev->setActive(m_current_page > 1);
+        
+    if (Widget* next = getWidget("next_page"))
+        next->setActive(m_current_page < 2);
+}
 
 void AdminScreenChaos::eventCallback(Widget* widget, const std::string& name, const int playerID)
 {
+	if (name == "next_page" && m_current_page < 2)
+    {
+        m_current_page = 2;
+        if (Widget* p1 = getWidget("page_1")) p1->setVisible(false);
+        if (Widget* p2 = getWidget("page_2")) p2->setVisible(true);
+        updatePageIndicator();
+        this->calculateLayout();
+    }
+    else if (name == "prev_page" && m_current_page > 1)
+    {
+        m_current_page = 1;
+        if (Widget* p1 = getWidget("page_1")) p1->setVisible(true);
+        if (Widget* p2 = getWidget("page_2")) p2->setVisible(false);
+        updatePageIndicator();
+        this->calculateLayout();
+    }
     if (name == "admin_choice")
     {
         std::string selection = ((RibbonWidget*)widget)->getSelectionIDString(PLAYER_ID_GAME_MASTER);
@@ -116,6 +155,10 @@ void AdminScreenChaos::eventCallback(Widget* widget, const std::string& name, co
     else if (name == "rainbow_shader")
     {
 		UserConfigParams::m_shader_rainbow = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "end_shader")
+    {
+		UserConfigParams::m_shader_end = ((CheckBoxWidget*)widget)->getState();
     }
     else if (name == "banana_trail")
     {

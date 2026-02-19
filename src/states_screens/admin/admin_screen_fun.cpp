@@ -64,6 +64,13 @@ void AdminScreenFun::init()
         noclip->setTooltip(_("Enables noclip/ghost mode, which allows you to\n"
 							 "ignore walls. Pretty bugged as of now."));
     }
+    if (CheckBoxWidget* hue = getWidget<CheckBoxWidget>("kart_black"))
+    {
+        hue->setState(UserConfigParams::m_fun_black_kart);
+        hue->setTooltip(_("Changes kart color to black.\n"
+						"(NOTE: this feature woks only for karts\n"
+						"where it is implemented)"));
+    }
     if (ButtonWidget* power = getWidget<ButtonWidget>("powerup_conf"))
     {
         power->setTooltip(_("Click to configure powerup usage."));
@@ -99,6 +106,8 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "kart_hue")
     {
 		UserConfigParams::m_fun_rainbow_kart = ((CheckBoxWidget*)widget)->getState();
+		UserConfigParams::m_fun_black_kart = false;
+		getWidget<CheckBoxWidget>("kart_black")->setState(UserConfigParams::m_fun_black_kart);
     }
     else if (name == "jump_bind")
     {
@@ -120,6 +129,12 @@ void AdminScreenFun::eventCallback(Widget* widget, const std::string& name, cons
     else if (name == "noclip")
     {
 		UserConfigParams::m_allow_noclip = ((CheckBoxWidget*)widget)->getState();
+    }
+    else if (name == "kart_black")
+    {
+		UserConfigParams::m_fun_black_kart = ((CheckBoxWidget*)widget)->getState();
+		UserConfigParams::m_fun_rainbow_kart = false;
+		getWidget<CheckBoxWidget>("kart_hue")->setState(UserConfigParams::m_fun_rainbow_kart);
     }
     else if(name == "powerup_conf")
     {

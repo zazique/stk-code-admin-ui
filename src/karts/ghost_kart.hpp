@@ -22,10 +22,23 @@
 #include "karts/kart.hpp"
 #include "replay/replay_play.hpp"
 #include "utils/cpp2011.hpp"
+#include "graphics/sp/sp_mesh.hpp"
+#include "graphics/sp/sp_mesh_buffer.hpp"
+#include "graphics/sp/sp_mesh_node.hpp"
 
 #include "LinearMath/btTransform.h"
 
 #include <vector>
+#include <deque>
+#include <SMesh.h>
+#include <SMeshBuffer.h>
+
+namespace irr {
+    namespace video {
+        class IVideoDriver;
+    }
+}
+using namespace irr;
 
 /** \defgroup karts */
 
@@ -58,13 +71,21 @@ private:
     // ----------------------------------------------------------------------------
     /** Update sound effect upon ghost replay data */
     void          updateSound(float dt);
-
+    
+	struct TrailPoint {
+		core::vector3df left;
+		core::vector3df right;
+	};
+	std::deque<TrailPoint> m_debug_trail;
+	btVector3 m_last_trail_pos;
+	float m_trail_width;
 public:
                   GhostKart(const std::string& ident, unsigned int world_kart_id,
                             int position, float color_hue,
                             const ReplayPlay::ReplayData& rd);
     virtual void  update(int ticks) OVERRIDE;
     virtual void  updateGraphics(float dt) OVERRIDE;
+    virtual ~GhostKart();
     virtual void  reset() OVERRIDE;
     // ------------------------------------------------------------------------
     /** No physics for ghost kart. */

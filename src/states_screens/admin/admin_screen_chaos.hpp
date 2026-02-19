@@ -7,12 +7,14 @@ class AdminScreenChaos : public GUIEngine::Screen, public GUIEngine::ScreenSingl
 {
     AdminScreenChaos();
     friend class GUIEngine::ScreenSingleton<AdminScreenChaos>;
+    int m_current_page = 1;
 
 public:
     virtual void init() OVERRIDE;
     virtual void eventCallback(GUIEngine::Widget* widget, const std::string& name, const int playerID) OVERRIDE;
     virtual void tearDown() OVERRIDE;
     virtual void loadedFromFile() override {}
+    void updatePageIndicator();
 };
 
 #endif

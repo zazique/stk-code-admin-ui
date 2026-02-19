@@ -126,6 +126,11 @@ void AdminScreenBasic::init()
 	{
 		att->setColor(video::SColor(255, 0, 191, 255));
 	}
+	/*if (CheckBoxWidget* att = getWidget<CheckBoxWidget>("ghost_trail"))
+	{
+		att->setState(UserConfigParams::m_show_replay_trail);
+		att->setTooltip(_("Shows kart trail in replay mode."));
+	}*/
     if (Widget* w = getWidget("input_overlay_size"))  w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos"))   w->setActive(active);
     if (Widget* w = getWidget("input_overlay_pos_y")) w->setActive(active);
@@ -241,6 +246,10 @@ void AdminScreenBasic::eventCallback(Widget* widget, const std::string& name, co
     {
         UserConfigParams::m_save_attempts = ((CheckBoxWidget*)widget)->getState();
     }
+    /*else if (name == "ghost_trail")
+    {
+        UserConfigParams::m_show_replay_trail = ((CheckBoxWidget*)widget)->getState();
+    } */
 }
 
 void AdminScreenBasic::tearDown() { Screen::tearDown(); }

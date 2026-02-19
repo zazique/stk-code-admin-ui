@@ -75,6 +75,15 @@
                 </div>
 
                 <spacer width="5" height="2%"/>
+                
+                <div layout="horizontal-row" width="100%" height="fit">
+                    <checkbox id="kart_black"/>
+                    <spacer width="1%" height="100%" />
+                    <label height="100%" text="Enable black kart coloring" word_wrap="true"/>
+                </div>
+
+                <spacer width="5" height="2%"/>
+                
                 <div width="100%" height="fit" layout="vertical-row">
 					<button id="powerup_conf" text="Powerup configuration"/>
 				</div>

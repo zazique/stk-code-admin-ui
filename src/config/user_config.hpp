@@ -658,6 +658,9 @@ namespace UserConfigParams
 	PARAM_PREFIX BoolUserConfigParam         m_show_coordinates
             PARAM_DEFAULT(  BoolUserConfigParam(false, "show_coordinates",
                             &m_video_group, "If true, kart coordinates will be shown") );
+    PARAM_PREFIX BoolUserConfigParam         m_show_replay_trail
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "show_replay_trail",
+                            &m_video_group, "If true, ghost hitbox trail will be shown (CURRENTLY NOT FINISHED!!!)") );
 	
 
     PARAM_PREFIX BoolUserConfigParam        m_remember_window_location
@@ -779,6 +782,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_fun_rainbow_kart
         PARAM_DEFAULT(BoolUserConfigParam(false, "kart_hue",
         &m_video_group, "True if kart color should change (only works for kart with implemented color change feature)"));
+    PARAM_PREFIX BoolUserConfigParam        m_fun_black_kart
+        PARAM_DEFAULT(BoolUserConfigParam(false, "kart_black",
+        &m_video_group, "True if kart color should be black (only works for kart with implemented color change feature)"));
     PARAM_PREFIX BoolUserConfigParam        m_always_record_replay
         PARAM_DEFAULT(BoolUserConfigParam(false, "always_record_replay",
         &m_video_group, "True if replay should be always recorded in time trials"));
@@ -1536,6 +1542,9 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam      m_shader_rainbow
             PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_rainbow",
             &m_shader_group, "Enable or disable Rainbow shader") );
+    PARAM_PREFIX BoolUserConfigParam      m_shader_end
+            PARAM_DEFAULT(  BoolUserConfigParam(false, "shader_end",
+            &m_shader_group, "Enable or disable World's End shader") );
     
      
     PARAM_PREFIX GroupUserConfigParam m_item_group

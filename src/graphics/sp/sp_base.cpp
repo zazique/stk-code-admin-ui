@@ -870,8 +870,15 @@ void addObject(SPMeshNode* node)
             g_skinning_offset = skinning_offset;
         }
 
-        float hue = node->getRenderInfo(m) ?
-            node->getRenderInfo(m)->getHue() : 0.0f;
+        float hue = 0.0f;
+		if (node->getRenderInfo(m))
+		{
+			hue = node->getRenderInfo(m)->getHue();
+			if (UserConfigParams::m_fun_black_kart) 
+			{
+				hue = 2.0f; 
+			}
+		}
         SPInstancedData id = SPInstancedData
             (node->getAbsoluteTransformation(), node->getTextureMatrix(m)[0],
             node->getTextureMatrix(m)[1], hue,

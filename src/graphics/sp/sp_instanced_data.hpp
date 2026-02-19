@@ -76,8 +76,8 @@ public:
             };
         memcpy(m_data + 36, tm, 4);
         memcpy(m_data + 40, &skinning_offset, 2);
-        short hue_packed = short(core::clamp(int(hue * 100.0f), 0, 100));
-        memcpy(m_data + 42, &hue_packed, 2);
+        short hue_packed = short(core::clamp(int(hue * 100.0f), 0, 255)); 
+		memcpy(m_data + 42, &hue_packed, 2);
     }
     // ------------------------------------------------------------------------
     const void* getData() const                              { return m_data; }

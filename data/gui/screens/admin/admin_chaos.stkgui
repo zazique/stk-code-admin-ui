@@ -2,11 +2,11 @@
 <stkgui>
     <icon-button id="back" x="1%" y="0" height="9%" icon="gui/icons/back.png"/>
 
-    <div x="1%" y="1%" width="98%" height="98%" layout="vertical-row" >
+    <div x="1%" y="1%" width="98%" height="98%" layout="vertical-row">
         <header width="80%" height="8%" align="center" text="Admin Control Panel" text_align="center"/>
         <spacer width="100%" height="1%"/>
 
-        <div width="100%" height="91%" layout="horizontal-row" >
+        <div width="100%" height="91%" layout="horizontal-row">
 
             <vertical-tabs id="admin_choice" height="100%" width="20%">
                 <icon-button id="tab_basic" width="128" height="128" icon="gui/icons/admin_basic.png" text="Basic"/>
@@ -17,56 +17,86 @@
 
             <spacer width="2%" height="100%"/>
 
-            <box width="78%" height="100%" layout="vertical-row">
-                <spacer width="5" height="2%"/>
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="camera_far_null"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Set camera_far value to 0 (SEIZURE WARNING)" word_wrap="true"/>
+            <box width="78%" height="100%" layout="horizontal-row">
+                
+                <icon-button id="prev_page" width="5%" height="100%" align="center" 
+                             icon="skins/classic-coal/left_arrow_focus.png"/>
+
+                <div id="page_container" width="90%" height="100%" layout="vertical-row">
+                    <div width="90%" height="97%">
+                        <div id="page_1" x="20" y="0" width="100%" height="98%" layout="vertical-row">
+                            <spacer width="5" height="2%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="camera_far_null"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Set camera_far value to 0 (SEIZURE WARNING)" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="bw_shader"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Enable Grayscale shader" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="negative_shader"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Enable Color Inversion shader" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="distortion_shader"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Enable Image Distortion shader" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="distortion_shader2"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Enable Image Distortion shader (SEIZURE WARNING; second variant)" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="mirror_shader"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Enable Mirror shader" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="rainbow_shader"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Enable Rainbow shader" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="end_shader"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Enable World's End shader" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                        </div>
+
+                        <div id="page_2" x="0" y="0" width="100%" height="100%" layout="vertical-row" visible="false">
+                            <spacer width="100%" height="5%"/>
+                            <div layout="horizontal-row" width="100%" height="fit">
+                                <checkbox id="banana_trail"/>
+                                <spacer width="1%" height="100%" />
+                                <label height="100%" text="Enable banana trail" word_wrap="true"/>
+                            </div>
+                            <spacer width="5" height="2%"/>
+                        </div>
+                    </div>
+
+                    <div width="100%" height="1%">
+                        <label id="page_indicator" 
+                               x="-10" y="70%" 
+                               width="25%" height="25" 
+                               text="Page 1/2" text_align="right" font="full"/>
+                    </div>
                 </div>
-                <spacer width="5" height="2%"/>
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="bw_shader"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable Grayscale shader" word_wrap="true"/>
-                </div>
-                <spacer width="5" height="2%"/>
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="negative_shader"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable Color Inversion shader" word_wrap="true"/>
-                </div>
-                <spacer width="5" height="2%"/>
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="distortion_shader"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable Image Distortion shader" word_wrap="true"/>
-                </div>
-                <spacer width="5" height="2%"/>
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="distortion_shader2"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable Image Distortion shader (SEIZURE WARNING; second variant)" word_wrap="true"/>
-                </div>
-                <spacer width="5" height="2%"/>
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="mirror_shader"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable Mirror shader" word_wrap="true"/>
-                </div>
-                <spacer width="5" height="2%"/>
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="rainbow_shader"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable Rainbow shader" word_wrap="true"/>
-                </div>
-                <spacer width="5" height="2%"/>
-                <div layout="horizontal-row" width="100%" height="fit">
-                    <checkbox id="banana_trail"/>
-                    <spacer width="1%" height="100%" />
-                    <label height="100%" text="Enable banana trail" word_wrap="true"/>
-                </div>
-                <spacer width="5" height="2%"/>
+
+                <icon-button id="next_page" width="5%" height="100%" align="center" 
+                             icon="skins/classic-coal/right_arrow_focus.png"/>
             </box>
         </div>
     </div>

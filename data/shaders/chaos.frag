@@ -9,6 +9,7 @@ uniform float u_new_distort_enabled;
 uniform float u_mirror_enabled;
 uniform float u_rainbow_enabled;
 uniform float u_rainbow_time;
+uniform float u_worldsend_enabled;
 
 void main()
 {
@@ -80,6 +81,20 @@ void main()
         vec3 rainbowTarget = rainbow * gray * 2.0;
 
         col.rgb = mix(col.rgb, rainbowTarget, 0.5);
+    }
+    if (u_worldsend_enabled > 0.5)
+    {
+        float gray = dot(col.rgb, vec3(0.2126, 0.7152, 0.0722));
+        
+        vec3 bloodRed = vec3(gray * 1.4, gray * 0.1, gray * 0.05) * 0.5;
+
+        float staticNoise = fract(sin(dot(uv.xy, vec2(12.9898, 78.233))) * 43758.5453);
+        bloodRed += (staticNoise - 0.5) * 0.12;
+        vec2 dist_uv = uv - 0.5;
+        float vignette = 1.0 - dot(dist_uv, dist_uv) * 3.5;
+        bloodRed *= clamp(vignette, 0.0, 1.0);
+
+        col.rgb = bloodRed;
     }
     FragColor = col;
 }

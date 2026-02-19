@@ -19,16 +19,35 @@ void main(void)
         float mask = col.a;
         vec3 old_hsv = rgbToHsv(col.rgb);
         float mask_step = step(mask, 0.5);
-#if !defined(Advanced_Lighting_Enabled)
-        // For similar color
-        float saturation = mask * 1.825; // 2.5 * 0.5 ^ (1. / 2.2)
+        if (hue_change > 1.5) 
+        {
+			float paint_area = mask_step; 
+            vec3 final_black;
+
+#if defined(Advanced_Lighting_Enabled)
+            vec3 lacquer_base = vec3(0.003, 0.003, 0.004); 
+            final_black = lacquer_base + (col.rgb * 0.02); 
 #else
-        float saturation = mask * 2.5;
+            float luminance = dot(col.rgb, vec3(0.299, 0.587, 0.114));
+            vec3 grayscale = vec3(luminance);
+            final_black = grayscale * 0.25; 
 #endif
-        vec2 new_xy = mix(vec2(old_hsv.x, old_hsv.y), vec2(hue_change,
-            max(old_hsv.y, saturation)), vec2(mask_step, mask_step));
-        vec3 new_color = hsvToRgb(vec3(new_xy.x, new_xy.y, old_hsv.z));
-        col = vec4(new_color.r, new_color.g, new_color.b, 1.0);
+
+            col.rgb = mix(col.rgb, final_black, paint_area);
+        }
+        else 
+        {
+#if !defined(Advanced_Lighting_Enabled)
+			// For similar color
+			float saturation = mask * 1.825; // 2.5 * 0.5 ^ (1. / 2.2)
+#else
+			float saturation = mask * 2.5;
+#endif
+			vec2 new_xy = mix(vec2(old_hsv.x, old_hsv.y), vec2(hue_change,
+				max(old_hsv.y, saturation)), vec2(mask_step, mask_step));
+			vec3 new_color = hsvToRgb(vec3(new_xy.x, new_xy.y, old_hsv.z));
+			col = vec4(new_color.r, new_color.g, new_color.b, 1.0);
+		}
     }
 
     vec3 final_color = col.xyz * color.xyz;

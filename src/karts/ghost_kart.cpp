@@ -30,10 +30,22 @@
 #include "replay/replay_recorder.hpp"
 #include "tracks/terrain_info.hpp"
 #include "tracks/track.hpp"
-
+#include "config/user_config.hpp"
+#include "graphics/irr_driver.hpp"
+#include "graphics/material_manager.hpp"
+#include "graphics/sp/sp_base.hpp"
+#include "mini_glm.hpp"
+#include "physics/irr_debug_drawer.hpp"
 #include "LinearMath/btQuaternion.h"
+#include "physics/physics.hpp"
 
 #include <ge_render_info.hpp>
+#include <IVideoDriver.h>
+#include <SMaterial.h>
+#include <SColor.h>
+#include <ISceneManager.h>
+#include <IMeshSceneNode.h>
+#include <ISceneNode.h>
 
 GhostKart::GhostKart(const std::string& ident, unsigned int world_kart_id,
                      int position, float color_hue,
@@ -46,6 +58,8 @@ GhostKart::GhostKart(const std::string& ident, unsigned int world_kart_id,
 {
     m_graphical_y_offset = 0;
     m_finish_computed = false;
+	m_last_trail_pos = getTrans().getOrigin();
+    m_trail_width = getKartModel()->getWidth();
 }   // GhostKart
 
 // ----------------------------------------------------------------------------
@@ -58,6 +72,11 @@ void GhostKart::reset()
     updateGraphics(0);
     m_last_egg_idx = 0;
 }   // reset
+
+GhostKart::~GhostKart()
+{
+    m_debug_trail.clear();
+}
 
 // ----------------------------------------------------------------------------
 void GhostKart::addReplayEvent(float time,
@@ -102,7 +121,42 @@ void GhostKart::updateGraphics(float dt)
     Moveable::updateGraphics(center_shift, btQuaternion(0, 0, 0, 1));
     // Also update attachment's graphics
     m_attachment->updateGraphics(dt);
-
+	if (UserConfigParams::m_show_replay_trail && m_debug_trail.size() >= 2)
+	{
+		btVector3 color(1.0f, 0.0f, 0.0f);
+		
+		// 1. Отрисовка линий через DebugDrawer (то, что сейчас не видно)
+		if (Physics::get() && Physics::get()->getDebugDrawer())
+		{
+			IrrDebugDrawer* drawer = Physics::get()->getDebugDrawer();
+			for (size_t i = 1; i < m_debug_trail.size(); ++i)
+			{
+				btVector3 p1_l(m_debug_trail[i-1].left.X,  m_debug_trail[i-1].left.Y,  m_debug_trail[i-1].left.Z);
+				btVector3 p2_l(m_debug_trail[i].left.X,    m_debug_trail[i].left.Y,    m_debug_trail[i].left.Z);
+				drawer->drawLine(p1_l, p2_l, color);
+				
+				// 2. ХАК: Проверяем, почему "итемы" видны, а линии нет.
+				// Спавним "физическую" сферу (как итем) только для ПОСЛЕДНЕЙ добавленной точки
+				// чтобы не заспавнить миллион сфер.
+				if (i == m_debug_trail.size() - 1 && i % 5 == 0) 
+				{
+					scene::ISceneManager* smgr = irr_driver->getSceneManager();
+					// addSphereSceneNode создает реальный объект в дереве сцены Irrlicht
+					scene::ISceneNode* node = smgr->addSphereSceneNode(0.2f, 16, smgr->getRootSceneNode());
+					if (node)
+					{
+						node->setPosition(m_debug_trail[i].left);
+						node->setMaterialFlag(video::EMF_LIGHTING, false); // чтобы светилась без ламп
+						node->setMaterialFlag(video::EMF_ZBUFFER, true);
+						node->setAutomaticCulling(scene::EAC_FRUSTUM_BOX);
+						
+						// Этот узел будет виден ВСЕГДА, пока мы его не удалим.
+						// Если эти сферы появятся, значит DebugDrawer просто не рисует поверх ландшафта.
+					}
+				}
+			}
+		}
+	}
     updateSound(dt);
 }   // updateGraphics
 
@@ -243,9 +297,29 @@ void GhostKart::update(int ticks)
         getKartModel()->setAnimation(KartModel::AF_DEFAULT);
     }
 
+	if (UserConfigParams::m_show_replay_trail)
+	{
+		btTransform trans = getTrans();
+		float half_width = getKartModel()->getWidth() * 0.5f;
+		
+		TrailPoint tp;
+		// Конвертируем btVector3 в core::vector3df вручную
+		btVector3 left_bt  = trans(btVector3(-half_width, 0.1f, 0));
+		btVector3 right_bt = trans(btVector3( half_width, 0.1f, 0));
+	
+		tp.left  = core::vector3df(left_bt.getX(), left_bt.getY(), left_bt.getZ());
+		tp.right = core::vector3df(right_bt.getX(), right_bt.getY(), right_bt.getZ());
+	
+		m_debug_trail.push_back(tp);
+	
+		if (m_debug_trail.size() > 500) 
+			m_debug_trail.pop_front();
+	}
+	
     m_terrain_info->update(getTrans().getBasis(),
             getXYZ() + getTrans().getBasis().getColumn(1) * 0.1f);
 }   // update
+
 
 // ----------------------------------------------------------------------------
 void GhostKart::updateSound(float dt)

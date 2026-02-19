@@ -67,6 +67,7 @@
 #include "items/attachment_manager.hpp"
 #include "items/projectile_manager.hpp"
 #include "karts/abstract_kart.hpp"
+#include "karts/ghost_kart.hpp"
 #include "karts/kart_properties_manager.hpp"
 #include "main_loop.hpp"
 #include "modes/world.hpp"
@@ -2215,7 +2216,6 @@ void IrrDriver::update(float dt, bool is_loading)
 #ifndef SERVER_ONLY
         updateDisplace(dt);
         m_renderer->render(dt, is_loading);
-
         GUIEngine::Screen* current_screen = GUIEngine::getCurrentScreen();
         if (current_screen != NULL && current_screen->needs3D())
         {
